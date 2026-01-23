@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up Controle - Admin</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f0f2f5; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .admin-container { max-width: 1000px; margin: auto; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h2 { color: var(--primary); margin-top: 0; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; color: #555; text-transform: uppercase; font-size: 0.8em; }
+        
+        .status-saida { background: #fff0f6; color: #ff0080; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .status-devolucao { background: #e6ffed; color: #28a745; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .justificativa-box { background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-top: 5px; color: #856404; font-style: italic; }
+        
+        .btn-refresh { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; float: right; }
+        @media (max-width: 600px) { table, thead, tbody, th, td, tr { display: block; } th { display: none; } tr { margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; padding: 10px; background: #fff; } td { border: none; padding: 5px; } td:before { content: attr(data-label); font-weight: bold; display: block; color: var(--primary); } }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <header>
+        <h1>Painel Admin - Up Controle</h1>
+        <p>Relatório de Entradas e Saídas de Materiais</p>
+    </header>
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Movimentações</h2>
+            <button class="btn-refresh" onclick="location.reload()">Atualizar Dados</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Evento</th>
+                    <th>Responsável</th>
+                    <th>Ação</th>
+                    <th>Resumo dos Itens</th>
+                </tr>
+            </thead>
+            <tbody id="corpo-tabela">
+                <tr><td colspan="5" style="text-align:center">Carregando relatórios...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBYe0mjBHOY9C-X2u3PzLkJZkmnWCcv8gc",
+        authDomain: "up-controle-bd307.firebaseapp.com",
+        projectId: "up-controle-bd307",
+        storageBucket: "up-controle-bd307.firebasestorage.app",
+        messagingSenderId: "56963795860",
+        appId: "1:56963795860:web:eb9ba04de1ac98e7299d81"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Lendo os dados do Firebase
+    db.collection("movimentacoes").orderBy("dataRegistro", "desc").onSnapshot(snap => {
+        const tabela = document.getElementById('corpo-tabela');
+        tabela.innerHTML = "";
+
+        if (snap.empty) {
+            tabela.innerHTML = "<tr><td colspan='5' style='text-align:center'>Nenhum registro encontrado.</td></tr>";
+            return;
+        }
+
+        snap.forEach(doc => {
+            const m = doc.data();
+            const dataReg = m.dataRegistro ? new Date(m.dataRegistro).toLocaleString("pt-BR") : "--";
+            const dataEvento = m.dataEvento ? m.dataEvento.split('-').reverse().join('/') : "--";
+
+            // Montar texto dos itens
+            let listaItens = "";
+            for (let item in m.itens) {
+                if(m.itens[item] > 0) {
+                    listaItens += `<b>${m.itens[item]}</b> ${item}, `;
+                }
+            }
+            // Remove a última vírgula
+            listaItens = listaItens.replace(/, $/ , "");
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="Data/Hora">${dataReg}</td>
+                <td data-label="Evento"><b>${m.evento.toUpperCase()}</b><br><small>Festa em: ${dataEvento}</small></td>
+                <td data-label="Responsável">${m.responsavel.toUpperCase()}</td>
+                <td data-label="Ação"><span class="${m.tipo === 'Saída' ? 'status-saida' : 'status-devolucao'}">${m.tipo}</span></td>
+                <td data-label="Detalhes">
+                    <div>${listaItens || 'Nenhum item marcado'}</div>
+                    ${m.justificativa ? `<div class="justificativa-box"><b>Ocorrência:</b> ${m.justificativa}</div>` : ''}
+                </td>
+            `;
+            tabela.appendChild(tr);
+        });
+    });
+</script>
+</body>
+</html>
