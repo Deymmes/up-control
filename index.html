@@ -8,11 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { 
-            --primary: #1a73e8; 
-            --secondary: #ff0080; 
-            --success: #25D366; 
-        }
+        :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f4f7f6; --success: #25D366; }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
@@ -22,108 +18,73 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundo.jpg'); 
+            background-image: url('fundo.jpg'); 
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
-        /* Container Geral */
+        /* Estilo Geral do Card (Login e Perda) */
         .app-container { 
-            width: 92%; 
+            width: 90%; 
             max-width: 450px; 
-            background: rgba(255, 255, 255, 0.78); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px); 
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4); 
-            border-radius: 30px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-            margin: 20px auto; 
+            border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            margin: auto; 
             overflow: hidden; 
         }
 
-        /* AJUSTE ESPECÍFICO PARA A TELA DE ITENS (REMOÇÃO DO EFEITO VIDRO) */
-        #tela-app { 
-            background: white !important; /* Branco sólido para melhor leitura */
-            backdrop-filter: none !important; 
-            -webkit-backdrop-filter: none !important;
-            margin: 15px; /* Cria o respiro interno em relação à borda do app-container */
-            border-radius: 20px;
+        /* MODO LISTA: Remove o card flutuante e o vidro apenas na lista */
+        body.modo-lista { background: white; align-items: flex-start; }
+        body.modo-lista .app-container { 
+            width: 100%; 
+            max-width: 100%; 
+            border-radius: 0; 
+            box-shadow: none; 
+            background: white; 
+            backdrop-filter: none; 
+            border: none; 
         }
 
-        header { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; 
-            padding: 25px 15px; 
-            text-align: center; 
-        }
+        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 20px; text-align: center; }
 
-        .tela { padding: 30px 20px; display: none; }
+        .tela { padding: 25px; display: none; }
         .ativa { display: block; }
 
-        /* Respiro na lista de itens */
-        #lista-itens {
-            padding: 0 15px; /* Dá mais espaço nas laterais da lista */
-        }
-
-        .item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 0; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06); 
-        }
-
-        .item-nome { font-weight: 600; color: #333; font-size: 0.95em; }
-        .controles { display: flex; align-items: center; gap: 10px; }
-
-        .btn-status { 
-            border: none; 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 10px; 
-            font-size: 1.2em; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: white; 
-        }
-
-        .btn-mais { background: var(--primary); }
-        .btn-menos { background: #d1d1d1; color: #555; }
-        .contador { font-weight: 700; font-size: 1.2em; min-width: 30px; text-align: center; }
-
-        input, textarea { 
-            width: 100%; 
-            padding: 18px; 
-            margin-bottom: 22px; 
-            border: 1.5px solid rgba(0,0,0,0.1); 
-            border-radius: 15px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            background: rgba(255, 255, 255, 0.6); 
-        }
-
-        .btn-grande { 
-            width: 100%; 
-            padding: 20px; 
-            border: none; 
-            border-radius: 18px; 
-            font-size: 1.1em; 
-            font-weight: 800; 
+        /* Categorias da Lista */
+        .categoria-header {
+            background: #f1f3f4;
+            padding: 12px 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #5f6368;
             text-transform: uppercase;
-            cursor: pointer; 
-            color: white; 
-            margin-top: 15px; 
+            letter-spacing: 1px;
+            margin-top: 10px;
         }
 
-        .label-bold { font-weight: 700; display: block; margin-bottom: 10px; color: #444; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 18px 10px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        .item-nome { font-weight: bold; color: #333; }
+        .controles { display: flex; align-items: center; gap: 12px; }
+        .btn-status { border: none; width: 44px; height: 44px; border-radius: 12px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
+        .btn-mais { background: var(--primary); }
+        .btn-menos { background: #bbb; color: white; }
+        .contador { font-weight: bold; font-size: 1.2em; min-width: 35px; text-align: center; }
+
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
+        .btn-grande { width: 100%; padding: 20px; border: none; border-radius: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <header><h2 style="margin:0; letter-spacing: 2px;">UP CONTROLE</h2></header>
+    <header><h2 style="margin:0">Up Controle</h2></header>
 
     <div id="tela-login" class="tela ativa">
         <label class="label-bold">Data do Evento</label>
@@ -131,15 +92,15 @@
         <label class="label-bold">Responsável</label>
         <input type="text" id="nome-resp" placeholder="Seu nome">
         <label class="label-bold">Evento</label>
-        <input type="text" id="nome-evento" placeholder="Nome da festa">
+        <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:20px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #eee; line-height: 1.4;"></div>
+        <div id="info-header" style="padding:15px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
         <div id="lista-itens"></div>
-        <div style="padding:25px">
+        <div style="padding:30px 20px">
             <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
@@ -147,13 +108,12 @@
     <div id="tela-perda" class="tela">
         <h3>⚠️ Itens Faltantes</h3>
         <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
-        <textarea id="justificativa" rows="4"></textarea>
-        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO</button>
+        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
+        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
     </div>
 </div>
 
 <script>
-    // Configurações do Firebase (Mantenha as mesmas)
     const firebaseConfig = {
         apiKey: "AIzaSyBYe0mjBHOY9C-X2u3PzLkJZkmnWCcv8gc",
         authDomain: "up-controle-bd307.firebaseapp.com",
@@ -172,10 +132,16 @@
     let memoriaRetirada = {};
     let contagem = {};
 
-    const itensPDF = [
-        "Bola grande", "Bola pequena", "Fitas coloridas", "Cartas personagens", "Up coins", 
-        "Livro marcas", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", 
-        "Pregadores", "Compressor ar", "Balões", "Som", "Microfone", "Peteca", "Fantasia"
+    const itensPrincipais = [
+        "Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", 
+        "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", 
+        "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", 
+        "Balões", "Som", "Microfone"
+    ];
+
+    const itensOpcionais = [
+        "Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", 
+        "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"
     ];
 
     async function fluxo(acao) {
@@ -189,7 +155,7 @@
         const dataFormatada = dataEvento.split('-').reverse().join('/');
         document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
 
-        itensPDF.forEach(i => contagem[i] = 0);
+        [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
 
         if(acao === 'Devolução') {
             const q = await db.collection("movimentacoes")
@@ -205,6 +171,7 @@
             }
         }
 
+        document.body.classList.add('modo-lista');
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
@@ -212,24 +179,29 @@
 
     function desenhar() {
         const div = document.getElementById('lista-itens');
-        div.innerHTML = "";
-        itensPDF.forEach(item => {
-            div.innerHTML += `
-                <div class="item">
-                    <span class="item-nome">${item}</span>
-                    <div class="controles">
-                        <button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button>
-                        <span class="contador" id="c-${item}">${contagem[item] || 0}</span>
-                        <button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>
-                    </div>
-                </div>`;
-        });
+        div.innerHTML = `<div class="categoria-header">Itens Principais</div>`;
+        itensPrincipais.forEach(item => div.innerHTML += templateItem(item));
+        
+        div.innerHTML += `<div class="categoria-header">Materiais Opcionais</div>`;
+        itensOpcionais.forEach(item => div.innerHTML += templateItem(item));
+    }
+
+    function templateItem(item) {
+        return `
+            <div class="item">
+                <span class="item-nome">${item}</span>
+                <div class="controles">
+                    <button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button>
+                    <span class="contador" id="c-${item}">${contagem[item] || 0}</span>
+                    <button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>
+                </div>
+            </div>`;
     }
 
     function mudar(i, v) {
         if((contagem[i] || 0) + v >= 0) {
             contagem[i] += v;
-            document.getElementById(`c-${i}`).innerText = contagem[i];
+            document.getElementById('c-' + i).innerText = contagem[i];
         }
     }
 
@@ -240,6 +212,7 @@
                 if(contagem[i] < memoriaRetirada[i]) houvePerda = true;
             }
             if(houvePerda) {
+                document.body.classList.remove('modo-lista');
                 document.getElementById('tela-app').style.display = 'none';
                 document.getElementById('tela-perda').style.display = 'block';
                 return;
@@ -250,24 +223,12 @@
 
     async function enviarTudo() {
         const j = document.getElementById('justificativa').value;
-        const dataFormatada = dataEvento.split('-').reverse().join('/');
-
         await db.collection("movimentacoes").add({
-            responsavel: usuario, 
-            evento: evento, 
-            dataEvento: dataEvento,
-            tipo: tipoAcao, 
-            itens: contagem, 
-            justificativa: j, 
-            dataRegistro: Date.now()
+            responsavel: usuario, evento: evento, dataEvento: dataEvento,
+            tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now()
         });
 
-        let msg = `*🚀 UP CONTROLE*\n`;
-        msg += `*Data:* ${dataFormatada}\n`;
-        msg += `*Resp:* ${usuario}\n`;
-        msg += `*Evento:* ${evento}\n`;
-        msg += `*Ação:* ${tipoAcao}\n\n`;
-        msg += `*ITENS:*\n`;
+        let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
         for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
         if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
 
