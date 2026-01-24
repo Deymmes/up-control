@@ -6,8 +6,8 @@
     <title>Up Controle - Oficial</title>
     
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png?v=1">
+    <link rel="icon" type="image/png" href="icon.png?v=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -243,19 +243,30 @@
     }
 
     async function enviarTudo() {
+        // CORREÇÃO: Desativa proteção antes de abrir o WhatsApp
         emAndamento = false; 
+        window.onbeforeunload = null;
+
         const j = document.getElementById('justificativa').value;
-        await db.collection("movimentacoes").add({
-            responsavel: usuario, evento: evento, dataEvento: dataEvento,
-            tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now()
-        });
+        
+        try {
+            await db.collection("movimentacoes").add({
+                responsavel: usuario, evento: evento, dataEvento: dataEvento,
+                tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now()
+            });
 
-        let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
-        for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
-        if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
+            let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
+            for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
+            if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
 
-        window.open(`https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`, '_blank');
-        location.reload();
+            const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
+            
+            // CORREÇÃO: Usa location.href para iPad não bloquear o WhatsApp
+            window.location.href = urlWa;
+        } catch(e) {
+            alert("Erro ao salvar! Verifique a internet.");
+            emAndamento = true; // Reativa proteção em caso de erro
+        }
     }
 </script>
 </body>
