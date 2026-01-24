@@ -25,7 +25,6 @@
             background-attachment: fixed;
         }
 
-        /* Estilo Geral do Card (Login e Perda) */
         .app-container { 
             width: 90%; 
             max-width: 450px; 
@@ -39,7 +38,6 @@
             overflow: hidden; 
         }
 
-        /* MODO LISTA: Remove o card flutuante e o vidro apenas na lista */
         body.modo-lista { background: white; align-items: flex-start; }
         body.modo-lista .app-container { 
             width: 100%; 
@@ -56,10 +54,9 @@
         .tela { padding: 25px; display: none; }
         .ativa { display: block; }
 
-        /* Categorias da Lista */
         .categoria-header {
             background: #f1f3f4;
-            padding: 12px 20px;
+            padding: 12px 25px;
             font-size: 0.85em;
             font-weight: bold;
             color: #5f6368;
@@ -68,8 +65,17 @@
             margin-top: 10px;
         }
 
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 18px 10px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-        .item-nome { font-weight: bold; color: #333; }
+        #lista-itens { padding: 10px 25px; }
+
+        .item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 18px 0; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        }
+
+        .item-nome { font-weight: bold; color: #333; font-size: 1em; }
         .controles { display: flex; align-items: center; gap: 12px; }
         .btn-status { border: none; width: 44px; height: 44px; border-radius: 12px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
         .btn-mais { background: var(--primary); }
@@ -98,9 +104,9 @@
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:15px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
+        <div id="info-header" style="padding:20px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
         <div id="lista-itens"></div>
-        <div style="padding:30px 20px">
+        <div style="padding:30px 25px">
             <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
@@ -131,6 +137,14 @@
     let usuario, evento, dataEvento, tipoAcao;
     let memoriaRetirada = {};
     let contagem = {};
+    let emAndamento = false;
+
+    // ALERTA DE ATUALIZAÇÃO ACIDENTAL
+    window.onbeforeunload = function() {
+        if (emAndamento) {
+            return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
+        }
+    };
 
     const itensPrincipais = [
         "Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", 
@@ -152,6 +166,8 @@
         if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
         
         tipoAcao = acao;
+        emAndamento = true; // Ativa o alerta de proteção
+
         const dataFormatada = dataEvento.split('-').reverse().join('/');
         document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
 
@@ -182,7 +198,7 @@
         div.innerHTML = `<div class="categoria-header">Itens Principais</div>`;
         itensPrincipais.forEach(item => div.innerHTML += templateItem(item));
         
-        div.innerHTML += `<div class="categoria-header">Materiais Opcionais</div>`;
+        div.innerHTML += `<div class="categoria-header" style="margin-left:-25px; margin-right:-25px;">Materiais Opcionais</div>`;
         itensOpcionais.forEach(item => div.innerHTML += templateItem(item));
     }
 
@@ -222,6 +238,7 @@
     }
 
     async function enviarTudo() {
+        emAndamento = false; // Desativa o alerta para permitir o envio final
         const j = document.getElementById('justificativa').value;
         await db.collection("movimentacoes").add({
             responsavel: usuario, evento: evento, dataEvento: dataEvento,
