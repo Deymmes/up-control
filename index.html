@@ -9,8 +9,34 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f4f7f6; --success: #25D366; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .app-container { width: 100%; max-width: 500px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin: auto; overflow: hidden; }
+        
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            /* Centralização Mágica */
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            /* Configuração do Background */
+            background-image: url('fundo.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .app-container { 
+            width: 90%; 
+            max-width: 450px; 
+            background: rgba(255, 255, 255, 0.96); /* Branco levemente transparente */
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            margin: auto; 
+            overflow: hidden; 
+        }
+
         header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 15px; text-align: center; }
         .tela { padding: 20px; display: none; }
         .ativa { display: block; }
@@ -21,9 +47,9 @@
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #ccc; color: #333; }
         .contador { font-weight: bold; font-size: 1.2em; min-width: 30px; text-align: center; }
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; background: white; }
         .btn-grande { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
-        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #555; }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #444; }
     </style>
 </head>
 <body>
@@ -74,7 +100,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Define a data de hoje como padrão no campo
     document.getElementById('data-evento').valueAsDate = new Date();
 
     let usuario, evento, dataEvento, tipoAcao;
@@ -101,7 +126,6 @@
         itensPDF.forEach(i => contagem[i] = 0);
 
         if(acao === 'Devolução') {
-            // Busca a retirada baseada no evento E na data
             const q = await db.collection("movimentacoes")
                 .where("evento", "==", evento)
                 .where("dataEvento", "==", dataEvento)
@@ -184,7 +208,6 @@
         for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
         if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
 
-        // COLOQUE SEU NUMERO NO LUGAR DO X ABAIXO
         window.open(`https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`, '_blank');
         location.reload();
     }
