@@ -8,36 +8,79 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .admin-container { max-width: 1000px; margin: auto; }
-        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        h2 { color: var(--primary); margin-top: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        
+        .admin-container { max-width: 1100px; margin: auto; }
+
+        /* CABEÇALHO MELHORADO */
+        header { 
+            background: linear-gradient(135deg, #1e3c72, #2a5298); /* Azul mais profundo e profissional */
+            color: white; 
+            padding: 30px 20px; 
+            border-radius: 20px; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+        }
+        header h1 { margin: 0; font-size: 1.8em; letter-spacing: 1px; text-transform: uppercase; }
+        header p { margin: 10px 0 0; opacity: 0.8; font-weight: 300; }
+
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        /* TÍTULO MOVIMENTAÇÕES AJUSTADO */
+        h2 { 
+            color: #333; 
+            margin-top: 0; 
+            font-size: 1.2em; /* Tamanho reduzido conforme solicitado */
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; color: #555; text-transform: uppercase; font-size: 0.8em; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid #f0f0f0; }
+        th { background: #f8f9fa; color: #777; text-transform: uppercase; font-size: 0.75em; letter-spacing: 1px; }
         
-        .status-saida { background: #fff0f6; color: #ff0080; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .status-devolucao { background: #e6ffed; color: #28a745; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .justificativa-box { background: #fff8e1; border-left: 4px solid #ffc107; padding: 8px; margin-top: 5px; color: #856404; font-style: italic; }
+        .status-saida { background: #fff0f6; color: #ff0080; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.85em; }
+        .status-devolucao { background: #e6ffed; color: #28a745; padding: 5px 10px; border-radius: 6px; font-weight: bold; font-size: 0.85em; }
+        .justificativa-box { background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin-top: 8px; color: #856404; font-style: italic; border-radius: 4px; }
         
-        .btn-refresh { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; float: right; }
-        @media (max-width: 600px) { table, thead, tbody, th, td, tr { display: block; } th { display: none; } tr { margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; padding: 10px; background: #fff; } td { border: none; padding: 5px; } td:before { content: attr(data-label); font-weight: bold; display: block; color: var(--primary); } }
+        .btn-refresh { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 0.85em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.2);
+        }
+        .btn-refresh:hover { background: #1557b0; transform: translateY(-2px); }
+
+        @media (max-width: 600px) { 
+            table, thead, tbody, th, td, tr { display: block; } 
+            th { display: none; } 
+            tr { margin-bottom: 20px; border: 1px solid #eee; border-radius: 15px; padding: 15px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); } 
+            td { border: none; padding: 8px 0; border-bottom: 1px dashed #f0f0f0; } 
+            td:last-child { border-bottom: none; }
+            td:before { content: attr(data-label); font-weight: bold; font-size: 0.75em; text-transform: uppercase; color: #999; margin-bottom: 4px; display: block; } 
+        }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
     <header>
-        <h1>Painel Admin - Up Controle</h1>
-        <p>Relatório de Entradas e Saídas de Materiais</p>
+        <h1>Painel Admin</h1>
+        <p>Controle de Fluxo - Up Controle</p>
     </header>
 
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2>Movimentações</h2>
-            <button class="btn-refresh" onclick="location.reload()">Atualizar Dados</button>
+            <button class="btn-refresh" onclick="location.reload()">🔄 Atualizar Painel</button>
         </div>
 
         <table>
@@ -51,7 +94,7 @@
                 </tr>
             </thead>
             <tbody id="corpo-tabela">
-                <tr><td colspan="5" style="text-align:center">Carregando relatórios...</td></tr>
+                <tr><td colspan="5" style="text-align:center; padding: 40px;">Carregando relatórios...</td></tr>
             </tbody>
         </table>
     </div>
@@ -70,13 +113,12 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Lendo os dados do Firebase
     db.collection("movimentacoes").orderBy("dataRegistro", "desc").onSnapshot(snap => {
         const tabela = document.getElementById('corpo-tabela');
         tabela.innerHTML = "";
 
         if (snap.empty) {
-            tabela.innerHTML = "<tr><td colspan='5' style='text-align:center'>Nenhum registro encontrado.</td></tr>";
+            tabela.innerHTML = "<tr><td colspan='5' style='text-align:center; padding: 40px;'>Nenhum registro encontrado.</td></tr>";
             return;
         }
 
@@ -85,24 +127,21 @@
             const dataReg = m.dataRegistro ? new Date(m.dataRegistro).toLocaleString("pt-BR") : "--";
             const dataEvento = m.dataEvento ? m.dataEvento.split('-').reverse().join('/') : "--";
 
-            // Montar texto dos itens
             let listaItens = "";
             for (let item in m.itens) {
                 if(m.itens[item] > 0) {
-                    listaItens += `<b>${m.itens[item]}</b> ${item}, `;
+                    listaItens += `<span style="display:inline-block; background:#f0f2f5; padding:2px 6px; border-radius:4px; margin:2px;"><b>${m.itens[item]}</b> ${item}</span> `;
                 }
             }
-            // Remove a última vírgula
-            listaItens = listaItens.replace(/, $/ , "");
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td data-label="Data/Hora">${dataReg}</td>
-                <td data-label="Evento"><b>${m.evento.toUpperCase()}</b><br><small>Festa em: ${dataEvento}</small></td>
-                <td data-label="Responsável">${m.responsavel.toUpperCase()}</td>
-                <td data-label="Ação"><span class="${m.tipo === 'Saída' ? 'status-saida' : 'status-devolucao'}">${m.tipo}</span></td>
-                <td data-label="Detalhes">
-                    <div>${listaItens || 'Nenhum item marcado'}</div>
+                <td data-label="Data/Hora" style="color:#666; font-size:0.85em;">${dataReg}</td>
+                <td data-label="Evento"><b>${m.evento.toUpperCase()}</b><br><small style="color:#888">Data: ${dataEvento}</small></td>
+                <td data-label="Responsável" style="font-weight:600; color:#444;">${m.responsavel.toUpperCase()}</td>
+                <td data-label="Ação"><span class="${m.tipo === 'Saída' ? 'status-saida' : 'status-devolucao'}">${m.tipo.toUpperCase()}</span></td>
+                <td data-label="Resumo">
+                    <div style="line-height:1.6;">${listaItens || 'Nenhum item'}</div>
                     ${m.justificativa ? `<div class="justificativa-box"><b>Ocorrência:</b> ${m.justificativa}</div>` : ''}
                 </td>
             `;
