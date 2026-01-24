@@ -8,7 +8,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f4f7f6; --success: #25D366; }
+        :root { 
+            --primary: #1a73e8; 
+            --secondary: #ff0080; 
+            --success: #25D366; 
+        }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
@@ -18,62 +22,83 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
-            /* Fundo com imagem */
-            background-image: url('fundo.jpg'); 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundo.jpg'); 
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
+        /* Container Geral */
         .app-container { 
-            width: 90%; 
+            width: 92%; 
             max-width: 450px; 
-            /* EFEITO VIDRO (Glassmorphism) */
-            background: rgba(255, 255, 255, 0.75); /* Branco bem transparente */
-            backdrop-filter: blur(15px); /* Desfoca o fundo atrás do card */
-            -webkit-backdrop-filter: blur(15px); /* Suporte para Safari/iPhone */
-            border: 1px solid rgba(255, 255, 255, 0.4); /* Bordinha branca que brilha como vidro */
-            
-            border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            margin: auto; 
+            background: rgba(255, 255, 255, 0.78); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border-radius: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            margin: 20px auto; 
             overflow: hidden; 
         }
 
+        /* AJUSTE ESPECÍFICO PARA A TELA DE ITENS (REMOÇÃO DO EFEITO VIDRO) */
+        #tela-app { 
+            background: white !important; /* Branco sólido para melhor leitura */
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important;
+            margin: 15px; /* Cria o respiro interno em relação à borda do app-container */
+            border-radius: 20px;
+        }
+
         header { 
-            background: linear-gradient(135deg, rgba(26, 115, 232, 0.8), rgba(255, 0, 128, 0.8)); 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
             color: white; 
-            padding: 20px; 
+            padding: 25px 15px; 
             text-align: center; 
         }
 
-        .tela { padding: 20px; display: none; }
+        .tela { padding: 30px 20px; display: none; }
         .ativa { display: block; }
 
-        /* Estilo dos itens no checklist */
+        /* Respiro na lista de itens */
+        #lista-itens {
+            padding: 0 15px; /* Dá mais espaço nas laterais da lista */
+        }
+
         .item { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 12px; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+            padding: 15px 0; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06); 
         }
 
-        .item-nome { font-weight: bold; color: #333; }
+        .item-nome { font-weight: 600; color: #333; font-size: 0.95em; }
         .controles { display: flex; align-items: center; gap: 10px; }
-        .btn-status { border: none; width: 40px; height: 40px; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
-        .btn-mais { background: var(--primary); }
-        .btn-menos { background: #bbb; color: white; }
-        .contador { font-weight: bold; font-size: 1.2em; min-width: 30px; text-align: center; }
 
-        /* Inputs e Botões */
+        .btn-status { 
+            border: none; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 10px; 
+            font-size: 1.2em; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+        }
+
+        .btn-mais { background: var(--primary); }
+        .btn-menos { background: #d1d1d1; color: #555; }
+        .contador { font-weight: 700; font-size: 1.2em; min-width: 30px; text-align: center; }
+
         input, textarea { 
             width: 100%; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border: 1px solid rgba(0,0,0,0.1); 
-            border-radius: 12px; 
+            padding: 18px; 
+            margin-bottom: 22px; 
+            border: 1.5px solid rgba(0,0,0,0.1); 
+            border-radius: 15px; 
             box-sizing: border-box; 
             font-size: 16px; 
             background: rgba(255, 255, 255, 0.6); 
@@ -81,43 +106,40 @@
 
         .btn-grande { 
             width: 100%; 
-            padding: 18px; 
+            padding: 20px; 
             border: none; 
-            border-radius: 15px; 
+            border-radius: 18px; 
             font-size: 1.1em; 
-            font-weight: bold; 
+            font-weight: 800; 
+            text-transform: uppercase;
             cursor: pointer; 
             color: white; 
-            margin-top: 10px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 15px; 
         }
 
-        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
+        .label-bold { font-weight: 700; display: block; margin-bottom: 10px; color: #444; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <header><h2 style="margin:0">Up Controle</h2></header>
+    <header><h2 style="margin:0; letter-spacing: 2px;">UP CONTROLE</h2></header>
 
     <div id="tela-login" class="tela ativa">
         <label class="label-bold">Data do Evento</label>
         <input type="date" id="data-evento">
-        
         <label class="label-bold">Responsável</label>
         <input type="text" id="nome-resp" placeholder="Seu nome">
-        
         <label class="label-bold">Evento</label>
-        <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
-        
+        <input type="text" id="nome-evento" placeholder="Nome da festa">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:15px; background:rgba(0,0,0,0.05); font-size:0.85em; font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); line-height: 1.4;"></div>
+        <div id="info-header" style="padding:20px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #eee; line-height: 1.4;"></div>
         <div id="lista-itens"></div>
-        <div style="padding:20px">
+        <div style="padding:25px">
             <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
@@ -125,13 +147,13 @@
     <div id="tela-perda" class="tela">
         <h3>⚠️ Itens Faltantes</h3>
         <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
-        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
-        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
+        <textarea id="justificativa" rows="4"></textarea>
+        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO</button>
     </div>
 </div>
 
 <script>
-    // Seus dados do Firebase (Mantenha os mesmos)
+    // Configurações do Firebase (Mantenha as mesmas)
     const firebaseConfig = {
         apiKey: "AIzaSyBYe0mjBHOY9C-X2u3PzLkJZkmnWCcv8gc",
         authDomain: "up-controle-bd307.firebaseapp.com",
@@ -180,9 +202,6 @@
                 const docs = q.docs;
                 memoriaRetirada = docs[docs.length - 1].data().itens;
                 contagem = {...memoriaRetirada};
-                alert("Retirada encontrada! Itens carregados.");
-            } else {
-                alert("Aviso: Nenhuma retirada registrada para este evento nesta data.");
             }
         }
 
