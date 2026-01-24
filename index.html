@@ -145,8 +145,11 @@
     let contagem = {};
     let emAndamento = false;
 
-    window.onbeforeunload = function() {
+    // --- NOVA FUNÇÃO DE BLOQUEIO INTELIGENTE ---
+    window.onbeforeunload = function(e) {
         if (emAndamento) {
+            // No iPad/Safari, o texto personalizado pode não aparecer, mas o alerta é acionado
+            e.preventDefault();
             return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
         }
     };
@@ -171,7 +174,7 @@
         if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
         
         tipoAcao = acao;
-        emAndamento = true; 
+        emAndamento = true; // Ativa a proteção aqui
 
         const dataFormatada = dataEvento.split('-').reverse().join('/');
         document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
@@ -243,7 +246,7 @@
     }
 
     async function enviarTudo() {
-        // CORREÇÃO: Desativa proteção antes de abrir o WhatsApp
+        // --- LIBERAÇÃO DA TRAVA ---
         emAndamento = false; 
         window.onbeforeunload = null;
 
@@ -261,11 +264,11 @@
 
             const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             
-            // CORREÇÃO: Usa location.href para iPad não bloquear o WhatsApp
+            // Redirecionamento direto para garantir que o iPad não bloqueie o WhatsApp
             window.location.href = urlWa;
         } catch(e) {
             alert("Erro ao salvar! Verifique a internet.");
-            emAndamento = true; // Reativa proteção em caso de erro
+            emAndamento = true; // Reativa proteção em caso de erro no salvamento
         }
     }
 </script>
