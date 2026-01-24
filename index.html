@@ -14,12 +14,11 @@
             font-family: 'Segoe UI', sans-serif; 
             margin: 0; 
             padding: 0; 
-            /* Centralização Mágica */
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
-            /* Configuração do Background */
+            /* Fundo com imagem */
             background-image: url('fundo.jpg'); 
             background-size: cover; 
             background-position: center; 
@@ -30,26 +29,70 @@
         .app-container { 
             width: 90%; 
             max-width: 450px; 
-            background: rgba(255, 255, 255, 0.96); /* Branco levemente transparente */
-            border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            /* EFEITO VIDRO (Glassmorphism) */
+            background: rgba(255, 255, 255, 0.75); /* Branco bem transparente */
+            backdrop-filter: blur(15px); /* Desfoca o fundo atrás do card */
+            -webkit-backdrop-filter: blur(15px); /* Suporte para Safari/iPhone */
+            border: 1px solid rgba(255, 255, 255, 0.4); /* Bordinha branca que brilha como vidro */
+            
+            border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
             margin: auto; 
             overflow: hidden; 
         }
 
-        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 15px; text-align: center; }
+        header { 
+            background: linear-gradient(135deg, rgba(26, 115, 232, 0.8), rgba(255, 0, 128, 0.8)); 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+        }
+
         .tela { padding: 20px; display: none; }
         .ativa { display: block; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
+
+        /* Estilo dos itens no checklist */
+        .item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        }
+
         .item-nome { font-weight: bold; color: #333; }
         .controles { display: flex; align-items: center; gap: 10px; }
         .btn-status { border: none; width: 40px; height: 40px; border-radius: 10px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
         .btn-mais { background: var(--primary); }
-        .btn-menos { background: #ccc; color: #333; }
+        .btn-menos { background: #bbb; color: white; }
         .contador { font-weight: bold; font-size: 1.2em; min-width: 30px; text-align: center; }
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; background: white; }
-        .btn-grande { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
-        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #444; }
+
+        /* Inputs e Botões */
+        input, textarea { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border: 1px solid rgba(0,0,0,0.1); 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            background: rgba(255, 255, 255, 0.6); 
+        }
+
+        .btn-grande { 
+            width: 100%; 
+            padding: 18px; 
+            border: none; 
+            border-radius: 15px; 
+            font-size: 1.1em; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+            margin-top: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
     </style>
 </head>
 <body>
@@ -72,7 +115,7 @@
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:15px; background:#f0f0f0; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4;"></div>
+        <div id="info-header" style="padding:15px; background:rgba(0,0,0,0.05); font-size:0.85em; font-weight:bold; border-bottom:1px solid rgba(0,0,0,0.1); line-height: 1.4;"></div>
         <div id="lista-itens"></div>
         <div style="padding:20px">
             <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
@@ -82,12 +125,13 @@
     <div id="tela-perda" class="tela">
         <h3>⚠️ Itens Faltantes</h3>
         <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
-        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou durante a recreação."></textarea>
+        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
     </div>
 </div>
 
 <script>
+    // Seus dados do Firebase (Mantenha os mesmos)
     const firebaseConfig = {
         apiKey: "AIzaSyBYe0mjBHOY9C-X2u3PzLkJZkmnWCcv8gc",
         authDomain: "up-controle-bd307.firebaseapp.com",
