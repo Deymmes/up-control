@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Up Controle - OFICIAL (LAB)</title>
+    <title>Up Controle - OFICIAL (TESTE)</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png?v=1">
@@ -60,6 +60,9 @@
         .tela { padding: 25px; display: none; }
         .ativa { display: block; }
 
+        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
+        #banner-edicao { display: none; background: #2563eb; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 0.7em; }
+
         .categoria-header {
             background: #f1f3f4;
             padding: 12px 25px;
@@ -91,16 +94,13 @@
         input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .btn-grande { width: 100%; padding: 20px; border: none; border-radius: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
         .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
-
-        /* Banner de Edição exclusivo para o espelho de teste */
-        #banner-edicao { display: none; background: #ffc107; color: black; text-align: center; padding: 10px; font-weight: bold; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <header><h2 style="margin:0">Up Controle (TESTE)</h2></header>
-    
+    <div id="banner-sandbox">🧪 AMBIENTE DE TESTE (NÃO AFETA O OFICIAL)</div>
+    <header><h2 style="margin:0">Up Controle</h2></header>
     <div id="banner-edicao">✏️ MODO DE CORREÇÃO ATIVO</div>
 
     <div id="tela-login" class="tela ativa">
@@ -117,18 +117,17 @@
     <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header" style="padding:20px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
         <div id="lista-itens"></div>
-        <div style="padding:30px 25px">
-            <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
-            
-            <button id="btn-corrigir" class="btn-grande" style="display:none; background:#6c757d; margin-top: 15px;" onclick="habilitarEdicao()">✏️ CORRIGIR ÚLTIMO ITEM</button>
+        <div style="padding:20px 25px">
+            <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR SIMULAÇÃO</button>
+            <button id="btn-corrigir" class="btn-grande" style="display:none; background:#64748b; margin-top: 15px;" onclick="habilitarEdicao()">✏️ CORRIGIR ERRO (TESTE)</button>
         </div>
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3>⚠️ Itens Faltantes</h3>
+        <h3>⚠️ Simulação de Perda</h3>
         <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
         <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
-        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
+        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR PARA MEU WHATSAPP</button>
     </div>
 </div>
 
@@ -151,12 +150,12 @@
     let memoriaRetirada = {};
     let contagem = {};
     let emAndamento = false;
-    let idUltimoDoc = null; // Variável para controlar a edição
+    let idUltimoDoc = null;
 
     window.onbeforeunload = function(e) {
         if (emAndamento) {
             e.preventDefault();
-            return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
+            return "Você tem um registro em andamento.";
         }
     };
 
@@ -251,12 +250,11 @@
         enviarTudo();
     }
 
-    // Função para habilitar o modo de correção
     function habilitarEdicao() {
         document.getElementById('banner-edicao').style.display = 'block';
         document.getElementById('btn-corrigir').style.display = 'none';
         window.scrollTo(0,0);
-        alert("Modo de correção: Ajuste os itens e clique em Finalizar novamente.");
+        alert("SIMULAÇÃO: Altere os dados e finalize novamente.");
     }
 
     async function enviarTudo() {
@@ -270,31 +268,31 @@
         };
         
         try {
-            // USANDO A COLEÇÃO DE TESTE PARA O ESPELHO
+            // SALVANDO NA COLEÇÃO DE TESTE
             const col = db.collection("testes_do_deymmes");
 
             if (idUltimoDoc) {
                 await col.doc(idUltimoDoc).update(dados);
-                alert("Registro atualizado nos testes!");
             } else {
                 const docRef = await col.add(dados);
                 idUltimoDoc = docRef.id;
-                alert("Novo registro salvo nos testes!");
             }
 
             document.getElementById('btn-corrigir').style.display = 'block';
             document.getElementById('banner-edicao').style.display = 'none';
 
-            let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
+            let msg = `*🧪 UP TESTE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
             if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
 
-            // Link do WhatsApp (pode ser usado para testar se a mensagem gera certo)
-            const urlWa = `https://wa.me/5585997747964?text=${encodeURIComponent(msg)}`;
-            console.log("Link WhatsApp:", urlWa);
-
+            // SEU NÚMERO ATUALIZADO
+            const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
+            
+            if(confirm("DADO SALVO NOS TESTES! Deseja enviar para o seu WhatsApp?")) {
+                window.location.href = urlWa;
+            }
         } catch(e) {
-            alert("Erro ao salvar! Verifique a internet.");
+            alert("Erro ao salvar!");
             emAndamento = true;
         }
     }
