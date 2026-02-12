@@ -55,11 +55,10 @@
             border: none; 
         }
 
-        /* AJUSTE NA ALTURA: Padding reduzido de 20px para 15px */
+        /* AJUSTE NA ALTURA: Padding reduzido para compactar */
         header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
         header h2 { font-size: 1.2em; margin: 0; }
 
-        /* TELA: Padding vertical reduzido de 25px para 12px */
         .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
@@ -90,18 +89,26 @@
         .item-nome { font-weight: bold; color: #333; font-size: 0.95em; }
         .controles { display: flex; align-items: center; gap: 10px; }
         
-        /* BOTÕES DE CONTROLE: Reduzidos de 44px para 38px */
         .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #bbb; color: white; }
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
 
-        /* INPUTS: Padding e Margem reduzidos para compactar o box */
         input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
-        
-        /* BOTÃO GRANDE: Padding reduzido de 20px para 15px */
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
         .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
+
+        /* Estilo da Caixa de Resumo de Faltas */
+        #resumo-perdas { 
+            background: #fff5f5; 
+            border: 1px solid #feb2b2; 
+            border-radius: 10px; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            color: #c53030; 
+            font-size: 0.85em; 
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -120,7 +127,6 @@
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
-        
         <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
     </div>
 
@@ -138,8 +144,9 @@
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0">⚠️ Simulação de Perda</h3>
-        <p style="font-size: 0.9em; margin-bottom: 10px;">A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
+        <h3 style="margin-top:0">⚠️ Itens Faltantes</h3>
+        <div id="resumo-perdas"></div>
+        <p style="font-size: 0.9em; margin-bottom: 10px;">Explique o que houve:</p>
         <textarea id="justificativa" rows="3" placeholder="Ex: 1 bola estourou..."></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
     </div>
@@ -194,7 +201,6 @@
         
         tipoAcao = acao;
         emAndamento = true;
-
         [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
 
         if(acao === 'Correção' || acao === 'Devolução') {
@@ -207,10 +213,12 @@
             if(!q.empty) {
                 const docAlvo = q.docs[q.docs.length - 1];
                 idDocCorrecao = docAlvo.id;
+                // Importante: Guardamos o que saiu para comparar na Devolução
+                if(acao === 'Devolução') memoriaRetirada = {...docAlvo.data().itens};
                 contagem = {...docAlvo.data().itens};
                 if(acao === 'Correção') document.getElementById('banner-edicao').style.display = 'block';
             } else if(acao === 'Correção') {
-                alert("Nenhum registro encontrado para esse Responsável/Evento nesta data.");
+                alert("Nenhum registro encontrado.");
                 emAndamento = false;
                 return;
             }
@@ -229,7 +237,6 @@
         const div = document.getElementById('lista-itens');
         div.innerHTML = `<div class="categoria-header">Itens Principais</div>`;
         itensPrincipais.forEach(item => div.innerHTML += templateItem(item));
-        
         div.innerHTML += `<div class="categoria-header" style="margin-left:-25px; margin-right:-25px;">Materiais Opcionais</div>`;
         itensOpcionais.forEach(item => div.innerHTML += templateItem(item));
     }
@@ -254,12 +261,21 @@
     }
 
     function verificarFinalizacao() {
+        // LÓGICA DE DETECÇÃO DE PERDA
         if(tipoAcao === 'Devolução' && Object.keys(memoriaRetirada).length > 0) {
-            let houvePerda = false;
+            let resumoHTML = "";
+            let houveFalta = false;
+
             for(let i in memoriaRetirada) {
-                if(contagem[i] < memoriaRetirada[i]) houvePerda = true;
+                let diff = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
+                if(diff > 0) {
+                    resumoHTML += `• <b>${i}</b>: ${diff} unidade(s) a menos.<br>`;
+                    houveFalta = true;
+                }
             }
-            if(houvePerda) {
+
+            if(houveFalta) {
+                document.getElementById('resumo-perdas').innerHTML = resumoHTML;
                 document.body.classList.remove('modo-lista');
                 document.getElementById('tela-app').style.display = 'none';
                 document.getElementById('tela-perda').style.display = 'block';
@@ -288,7 +304,6 @@
         
         try {
             const col = db.collection("testes_do_deymmes");
-            
             if (idDocCorrecao && tipoAcao === 'Correção') {
                 await col.doc(idDocCorrecao).update(dados);
             } else {
@@ -300,11 +315,9 @@
             if(j) msg += `\n*⚠️ OBS:* ${j}`;
 
             const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
-            
             if(confirm("SALVO NO FIREBASE! Abrir o WhatsApp agora?")) {
                 window.location.href = urlWa;
             }
-
             setTimeout(() => { location.reload(); }, 1000);
 
         } catch(e) {
