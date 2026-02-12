@@ -55,52 +55,60 @@
             border: none; 
         }
 
-        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 20px; text-align: center; }
+        /* AJUSTE NA ALTURA: Padding reduzido de 20px para 15px */
+        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
+        header h2 { font-size: 1.2em; margin: 0; }
 
-        .tela { padding: 25px; display: none; }
+        /* TELA: Padding vertical reduzido de 25px para 12px */
+        .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
-        #banner-edicao { display: none; background: #2563eb; color: white; text-align: center; padding: 8px; font-weight: bold; font-size: 0.7em; }
+        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
+        #banner-edicao { display: none; background: #2563eb; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; }
 
         .categoria-header {
             background: #f1f3f4;
-            padding: 12px 25px;
+            padding: 8px 25px;
             font-size: 0.85em;
             font-weight: bold;
             color: #5f6368;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
-        #lista-itens { padding: 10px 25px; }
+        #lista-itens { padding: 5px 25px; }
 
         .item { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 18px 0; 
+            padding: 10px 0; 
             border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
         }
 
-        .item-nome { font-weight: bold; color: #333; font-size: 1em; }
-        .controles { display: flex; align-items: center; gap: 12px; }
-        .btn-status { border: none; width: 44px; height: 44px; border-radius: 12px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
+        .item-nome { font-weight: bold; color: #333; font-size: 0.95em; }
+        .controles { display: flex; align-items: center; gap: 10px; }
+        
+        /* BOTÕES DE CONTROLE: Reduzidos de 44px para 38px */
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #bbb; color: white; }
-        .contador { font-weight: bold; font-size: 1.2em; min-width: 35px; text-align: center; }
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
 
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
-        .btn-grande { width: 100%; padding: 20px; border: none; border-radius: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
-        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
+        /* INPUTS: Padding e Margem reduzidos para compactar o box */
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
+        
+        /* BOTÃO GRANDE: Padding reduzido de 20px para 15px */
+        .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div id="banner-sandbox">🧪 AMBIENTE DE TESTE (ENVIO: DEYMMES)</div>
-    <header><h2 style="margin:0">Up Controle</h2></header>
+    <header><h2>Up Controle</h2></header>
     <div id="banner-edicao">✏️ MODO DE CORREÇÃO ATIVO</div>
 
     <div id="tela-login" class="tela ativa">
@@ -113,13 +121,13 @@
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
         
-        <button class="btn-grande" style="background: #64748b; margin-top: 25px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
+        <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:20px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
+        <div id="info-header" style="padding:15px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
         <div id="lista-itens"></div>
-        <div style="padding:20px 25px">
+        <div style="padding:15px 25px">
             <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
             
             <div id="area-correcao" style="display:none;">
@@ -130,9 +138,9 @@
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3>⚠️ Simulação de Perda</h3>
-        <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
-        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
+        <h3 style="margin-top:0">⚠️ Simulação de Perda</h3>
+        <p style="font-size: 0.9em; margin-bottom: 10px;">A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
+        <textarea id="justificativa" rows="3" placeholder="Ex: 1 bola estourou..."></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
     </div>
 </div>
@@ -158,7 +166,6 @@
     let emAndamento = false;
     let idDocCorrecao = null; 
 
-    // --- NOVA FUNÇÃO DE BLOQUEIO INTELIGENTE ---
     window.onbeforeunload = function(e) {
         if (emAndamento) {
             e.preventDefault();
@@ -190,7 +197,6 @@
 
         [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
 
-        // Lógica de Busca para Correção ou Devolução
         if(acao === 'Correção' || acao === 'Devolução') {
             const q = await db.collection("testes_do_deymmes")
                 .where("evento", "==", evento)
@@ -299,7 +305,6 @@
                 window.location.href = urlWa;
             }
 
-            // Recarrega para limpar o estado após o envio
             setTimeout(() => { location.reload(); }, 1000);
 
         } catch(e) {
