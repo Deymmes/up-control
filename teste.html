@@ -55,7 +55,6 @@
             border: none; 
         }
 
-        /* AJUSTE NA ALTURA: Padding reduzido para compactar */
         header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
         header h2 { font-size: 1.2em; margin: 0; }
 
@@ -89,16 +88,18 @@
         .item-nome { font-weight: bold; color: #333; font-size: 0.95em; }
         .controles { display: flex; align-items: center; gap: 10px; }
         
-        .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; }
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #bbb; color: white; }
+        .btn-check { background: #ddd; color: white; }
+        .btn-check.conferido { background: var(--success); }
+        
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
 
         input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
         .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
 
-        /* Estilo da Caixa de Resumo de Faltas */
         #resumo-perdas { 
             background: #fff5f5; 
             border: 1px solid #feb2b2; 
@@ -127,7 +128,6 @@
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
-        
         <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
     </div>
 
@@ -136,7 +136,6 @@
         <div id="lista-itens"></div>
         <div style="padding:15px 25px">
             <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
-            
             <div id="area-correcao" style="display:none;">
                 <button class="btn-grande" style="background:#64748b;" onclick="habilitarEdicao()">✏️ CORRIGIR NOVAMENTE</button>
                 <button class="btn-grande" style="background:var(--success);" onclick="verificarFinalizacao()">✅ TUDO OK, ENVIAR!</button>
@@ -172,6 +171,7 @@
     let usuario, evento, dataEvento, tipoAcao;
     let memoriaRetirada = {};
     let contagem = {};
+    let conferidos = {}; // Guarda estado dos Checks ✅
     let emAndamento = false;
     let idDocCorrecao = null; 
 
@@ -182,40 +182,27 @@
         }
     };
 
-    const itensPrincipais = [
-        "Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", 
-        "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", 
-        "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", 
-        "Balões", "Som", "Microfone"
-    ];
-
-    const itensOpcionais = [
-        "Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", 
-        "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"
-    ];
+    const itensPrincipais = ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone"];
+    const itensOpcionais = ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"];
 
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        
         if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
         
         tipoAcao = acao;
         emAndamento = true;
-        [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
+        [...itensPrincipais, ...itensOpcionais].forEach(i => {
+            contagem[i] = 0;
+            conferidos[i] = false;
+        });
 
         if(acao === 'Correção' || acao === 'Devolução') {
-            const q = await db.collection("testes_do_deymmes")
-                .where("evento", "==", evento)
-                .where("dataEvento", "==", dataEvento)
-                .where("responsavel", "==", usuario)
-                .get();
-            
+            const q = await db.collection("testes_do_deymmes").where("evento", "==", evento).where("dataEvento", "==", dataEvento).where("responsavel", "==", usuario).get();
             if(!q.empty) {
                 const docAlvo = q.docs[q.docs.length - 1];
                 idDocCorrecao = docAlvo.id;
-                // Importante: Guardamos o que saiu para comparar na Devolução
                 if(acao === 'Devolução') memoriaRetirada = {...docAlvo.data().itens};
                 contagem = {...docAlvo.data().itens};
                 if(acao === 'Correção') document.getElementById('banner-edicao').style.display = 'block';
@@ -227,7 +214,7 @@
         }
 
         const dataFormatada = dataEvento.split('-').reverse().join('/');
-        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao === 'Correção' ? 'Editando' : acao})`;
+        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
 
         irParaLista();
     }
@@ -240,7 +227,6 @@
         desenhar();
     }
 
-    // FUNÇÃO VOLTAR
     function voltarParaLista() {
         document.body.classList.add('modo-lista');
         document.getElementById('tela-perda').style.display = 'none';
@@ -256,13 +242,18 @@
     }
 
     function templateItem(item) {
+        // Se for Devolução, substitui o botão MAIS pelo CHECK ✅
+        const btnDireito = tipoAcao === 'Devolução' 
+            ? `<button class="btn-status btn-check ${conferidos[item] ? 'conferido' : ''}" id="check-${item}" onclick="checkItem('${item}')">✅</button>`
+            : `<button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>`;
+
         return `
             <div class="item">
                 <span class="item-nome">${item}</span>
                 <div class="controles">
                     <button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button>
                     <span class="contador" id="c-${item}">${contagem[item] || 0}</span>
-                    <button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>
+                    ${btnDireito}
                 </div>
             </div>`;
     }
@@ -271,15 +262,33 @@
         if((contagem[i] || 0) + v >= 0) {
             contagem[i] += v;
             document.getElementById('c-' + i).innerText = contagem[i];
+            // Se mudar quantidade na devolução, reseta o check para garantir nova conferência
+            if(tipoAcao === 'Devolução') {
+                conferidos[i] = false;
+                const btn = document.getElementById('check-' + i);
+                if(btn) btn.classList.remove('conferido');
+            }
         }
     }
 
+    function checkItem(i) {
+        conferidos[i] = !conferidos[i];
+        const btn = document.getElementById('check-' + i);
+        if(conferidos[i]) btn.classList.add('conferido');
+        else btn.classList.remove('conferido');
+    }
+
     function verificarFinalizacao() {
-        // LÓGICA DE DETECÇÃO DE PERDA - SOMENTE NA DEVOLUÇÃO
-        if(tipoAcao === 'Devolução' && Object.keys(memoriaRetirada).length > 0) {
+        if(tipoAcao === 'Devolução') {
+            // Verifica se todos os itens que saíram (quantidade > 0) foram "checkados"
+            let pendentes = false;
+            for(let i in memoriaRetirada) {
+                if(memoriaRetirada[i] > 0 && !conferidos[i]) pendentes = true;
+            }
+            if(pendentes) return alert("Por favor, marque o ✅ em todos os itens retirados para confirmar!");
+
             let resumoHTML = "";
             let houveFalta = false;
-
             for(let i in memoriaRetirada) {
                 let diff = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
                 if(diff > 0) {
@@ -287,7 +296,6 @@
                     houveFalta = true;
                 }
             }
-
             if(houveFalta) {
                 document.getElementById('resumo-perdas').innerHTML = resumoHTML;
                 document.body.classList.remove('modo-lista');
@@ -299,45 +307,24 @@
         enviarTudo();
     }
 
-    function habilitarEdicao() {
-        document.getElementById('banner-edicao').style.display = 'block';
-        document.getElementById('area-correcao').style.display = 'none';
-        window.scrollTo(0,0);
-    }
-
     async function enviarTudo() {
-        emAndamento = false; 
-        window.onbeforeunload = null;
-
+        emAndamento = false; window.onbeforeunload = null;
         const j = document.getElementById('justificativa').value;
         const dados = {
             responsavel: usuario, evento: evento, dataEvento: dataEvento,
             tipo: tipoAcao === 'Correção' ? 'Saída' : tipoAcao, 
             itens: contagem, justificativa: j, dataRegistro: Date.now()
         };
-        
         try {
             const col = db.collection("testes_do_deymmes");
-            if (idDocCorrecao && tipoAcao === 'Correção') {
-                await col.doc(idDocCorrecao).update(dados);
-            } else {
-                await col.add(dados);
-            }
-
+            if (idDocCorrecao && tipoAcao === 'Correção') { await col.doc(idDocCorrecao).update(dados); } 
+            else { await col.add(dados); }
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
             if(j) msg += `\n*⚠️ OBS:* ${j}`;
-
-            const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
-            if(confirm("SALVO NO FIREBASE! Abrir o WhatsApp agora?")) {
-                window.location.href = urlWa;
-            }
+            window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-
-        } catch(e) {
-            alert("Erro ao salvar!");
-            emAndamento = true;
-        }
+        } catch(e) { alert("Erro ao salvar!"); emAndamento = true; }
     }
 </script>
 </body>
