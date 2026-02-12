@@ -112,6 +112,8 @@
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
+        
+        <button class="btn-grande" style="background: #64748b; margin-top: 25px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
@@ -154,12 +156,13 @@
     let memoriaRetirada = {};
     let contagem = {};
     let emAndamento = false;
-    let idUltimoDoc = null; 
+    let idDocCorrecao = null; 
 
+    // --- NOVA FUNÇÃO DE BLOQUEIO INTELIGENTE ---
     window.onbeforeunload = function(e) {
         if (emAndamento) {
             e.preventDefault();
-            return "Você tem um registro em andamento.";
+            return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
         }
     };
 
@@ -185,24 +188,30 @@
         tipoAcao = acao;
         emAndamento = true;
 
-        const dataFormatada = dataEvento.split('-').reverse().join('/');
-        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
-
         [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
 
-        if(acao === 'Devolução') {
-            const q = await db.collection("movimentacoes")
+        // Lógica de Busca para Correção ou Devolução
+        if(acao === 'Correção' || acao === 'Devolução') {
+            const q = await db.collection("testes_do_deymmes")
                 .where("evento", "==", evento)
                 .where("dataEvento", "==", dataEvento)
-                .where("tipo", "==", "Saída")
+                .where("responsavel", "==", usuario)
                 .get();
             
             if(!q.empty) {
-                const docs = q.docs;
-                memoriaRetirada = docs[docs.length - 1].data().itens;
-                contagem = {...memoriaRetirada};
+                const docAlvo = q.docs[q.docs.length - 1];
+                idDocCorrecao = docAlvo.id;
+                contagem = {...docAlvo.data().itens};
+                if(acao === 'Correção') document.getElementById('banner-edicao').style.display = 'block';
+            } else if(acao === 'Correção') {
+                alert("Nenhum registro encontrado para esse Responsável/Evento nesta data.");
+                emAndamento = false;
+                return;
             }
         }
+
+        const dataFormatada = dataEvento.split('-').reverse().join('/');
+        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao === 'Correção' ? 'Editando' : acao})`;
 
         document.body.classList.add('modo-lista');
         document.getElementById('tela-login').style.display = 'none';
@@ -267,33 +276,32 @@
         const j = document.getElementById('justificativa').value;
         const dados = {
             responsavel: usuario, evento: evento, dataEvento: dataEvento,
-            tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now()
+            tipo: tipoAcao === 'Correção' ? 'Saída' : tipoAcao, 
+            itens: contagem, justificativa: j, dataRegistro: Date.now()
         };
         
         try {
-            // SALVANDO NA COLEÇÃO DE TESTE
             const col = db.collection("testes_do_deymmes");
-
-            if (idUltimoDoc) {
-                await col.doc(idUltimoDoc).update(dados);
+            
+            if (idDocCorrecao && tipoAcao === 'Correção') {
+                await col.doc(idDocCorrecao).update(dados);
             } else {
-                const docRef = await col.add(dados);
-                idUltimoDoc = docRef.id;
+                await col.add(dados);
             }
-
-            document.getElementById('btn-finalizar').style.display = 'none';
-            document.getElementById('area-correcao').style.display = 'block';
-            document.getElementById('banner-edicao').style.display = 'none';
 
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
-            if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
+            if(j) msg += `\n*⚠️ OBS:* ${j}`;
 
             const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             
-            if(confirm("SALVO NO FIREBASE! Deseja enviar para o seu WhatsApp agora?")) {
+            if(confirm("SALVO NO FIREBASE! Abrir o WhatsApp agora?")) {
                 window.location.href = urlWa;
             }
+
+            // Recarrega para limpar o estado após o envio
+            setTimeout(() => { location.reload(); }, 1000);
+
         } catch(e) {
             alert("Erro ao salvar!");
             emAndamento = true;
