@@ -3,59 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UP TESTE - AMBIENTE SEGURO</title>
+    <title>Up Controle - OFICIAL (LAB)</title>
     
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png?v=1">
     <link rel="icon" type="image/png" href="icon.png?v=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f4f7f6; --success: #25D366; --warning: #ffc107; }
+        :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f4f7f6; --success: #25D366; }
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            margin: 0; padding: 0; 
-            display: flex; justify-content: center; align-items: center; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
             min-height: 100vh;
             background-image: url('fundo.jpg'); 
-            background-size: cover; background-position: center; 
-            background-repeat: no-repeat; background-attachment: fixed;
-        }
-
-        #banner-sandbox {
-            position: fixed; top: 0; width: 100%; background: var(--warning);
-            color: black; text-align: center; font-size: 10px; font-weight: bold;
-            padding: 5px; z-index: 9999; text-transform: uppercase;
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .app-container { 
-            width: 90%; max-width: 450px; 
+            width: 90%; 
+            max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4); 
-            border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            margin: auto; overflow: hidden; 
+            border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            margin: auto; 
+            overflow: hidden; 
         }
 
         body.modo-lista { background: white; align-items: flex-start; }
-        body.modo-lista .app-container { width: 100%; max-width: 100%; border-radius: 0; box-shadow: none; background: white; backdrop-filter: none; border: none; }
+        body.modo-lista .app-container { 
+            width: 100%; 
+            max-width: 100%; 
+            border-radius: 0; 
+            box-shadow: none; 
+            background: white; 
+            backdrop-filter: none; 
+            border: none; 
+        }
 
         header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 20px; text-align: center; }
 
         .tela { padding: 25px; display: none; }
         .ativa { display: block; }
 
-        #banner-aviso-edit { display: none; background: #ffc107; color: #000; text-align: center; padding: 10px; font-weight: bold; font-size: 0.8em; }
-
         .categoria-header {
-            background: #f1f3f4; padding: 12px 25px; font-size: 0.85em; font-weight: bold;
-            color: #5f6368; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px;
+            background: #f1f3f4;
+            padding: 12px 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #5f6368;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
         }
 
         #lista-itens { padding: 10px 25px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+
+        .item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 18px 0; 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        }
+
         .item-nome { font-weight: bold; color: #333; font-size: 1em; }
         .controles { display: flex; align-items: center; gap: 12px; }
         .btn-status { border: none; width: 44px; height: 44px; border-radius: 12px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
@@ -66,23 +91,25 @@
         input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .btn-grande { width: 100%; padding: 20px; border: none; border-radius: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
         .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
+
+        /* Banner de Edição exclusivo para o espelho de teste */
+        #banner-edicao { display: none; background: #ffc107; color: black; text-align: center; padding: 10px; font-weight: bold; font-size: 0.8em; }
     </style>
 </head>
 <body>
 
-<div id="banner-sandbox">🧪 AMBIENTE DE TESTE: Os dados não vão para o Admin oficial</div>
-
 <div class="app-container">
-    <header><h2 style="margin:0">Up Teste</h2></header>
-    <div id="banner-aviso-edit">MODO DE EDIÇÃO ATIVO ✏️</div>
+    <header><h2 style="margin:0">Up Controle (TESTE)</h2></header>
+    
+    <div id="banner-edicao">✏️ MODO DE CORREÇÃO ATIVO</div>
 
     <div id="tela-login" class="tela ativa">
         <label class="label-bold">Data do Evento</label>
         <input type="date" id="data-evento">
         <label class="label-bold">Responsável</label>
-        <input type="text" id="nome-resp" placeholder="Seu nome (TESTE)">
+        <input type="text" id="nome-resp" placeholder="Seu nome">
         <label class="label-bold">Evento</label>
-        <input type="text" id="nome-evento" placeholder="Evento de Teste">
+        <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
     </div>
@@ -90,15 +117,17 @@
     <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header" style="padding:20px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
         <div id="lista-itens"></div>
-        <div style="padding:20px 25px">
+        <div style="padding:30px 25px">
             <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
-            <button id="btn-corrigir" class="btn-grande" style="display:none; background:#6c757d; margin-top: 15px;" onclick="ativarEdicao()">✏️ CORRIGIR ÚLTIMO ITEM</button>
+            
+            <button id="btn-corrigir" class="btn-grande" style="display:none; background:#6c757d; margin-top: 15px;" onclick="habilitarEdicao()">✏️ CORRIGIR ÚLTIMO ITEM</button>
         </div>
     </div>
 
     <div id="tela-perda" class="tela">
         <h3>⚠️ Itens Faltantes</h3>
-        <textarea id="justificativa" rows="4" placeholder="Motivo do teste..."></textarea>
+        <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
+        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
     </div>
 </div>
@@ -122,20 +151,56 @@
     let memoriaRetirada = {};
     let contagem = {};
     let emAndamento = false;
-    let idUltimoDoc = null; 
+    let idUltimoDoc = null; // Variável para controlar a edição
 
-    const itensPrincipais = ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone"];
-    const itensOpcionais = ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"];
+    window.onbeforeunload = function(e) {
+        if (emAndamento) {
+            e.preventDefault();
+            return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
+        }
+    };
+
+    const itensPrincipais = [
+        "Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", 
+        "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", 
+        "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", 
+        "Balões", "Som", "Microfone"
+    ];
+
+    const itensOpcionais = [
+        "Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", 
+        "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"
+    ];
 
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        if(!usuario || !evento || !dataEvento) return alert("Preencha tudo!");
+        
+        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
+        
         tipoAcao = acao;
         emAndamento = true;
-        document.getElementById('info-header').innerHTML = `👤 ${usuario.toUpperCase()} | 🎈 ${evento.toUpperCase()} (${acao})`;
+
+        const dataFormatada = dataEvento.split('-').reverse().join('/');
+        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
+
         [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
+
+        if(acao === 'Devolução') {
+            const q = await db.collection("movimentacoes")
+                .where("evento", "==", evento)
+                .where("dataEvento", "==", dataEvento)
+                .where("tipo", "==", "Saída")
+                .get();
+            
+            if(!q.empty) {
+                const docs = q.docs;
+                memoriaRetirada = docs[docs.length - 1].data().itens;
+                contagem = {...memoriaRetirada};
+            }
+        }
+
         document.body.classList.add('modo-lista');
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
@@ -146,43 +211,92 @@
         const div = document.getElementById('lista-itens');
         div.innerHTML = `<div class="categoria-header">Itens Principais</div>`;
         itensPrincipais.forEach(item => div.innerHTML += templateItem(item));
+        
         div.innerHTML += `<div class="categoria-header" style="margin-left:-25px; margin-right:-25px;">Materiais Opcionais</div>`;
         itensOpcionais.forEach(item => div.innerHTML += templateItem(item));
     }
 
     function templateItem(item) {
-        return `<div class="item"><span class="item-nome">${item}</span><div class="controles"><button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button><span class="contador" id="c-${item}">${contagem[item] || 0}</span><button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button></div></div>`;
+        return `
+            <div class="item">
+                <span class="item-nome">${item}</span>
+                <div class="controles">
+                    <button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button>
+                    <span class="contador" id="c-${item}">${contagem[item] || 0}</span>
+                    <button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>
+                </div>
+            </div>`;
     }
 
-    function mudar(i, v) { if((contagem[i] || 0) + v >= 0) { contagem[i] += v; document.getElementById('c-' + i).innerText = contagem[i]; } }
+    function mudar(i, v) {
+        if((contagem[i] || 0) + v >= 0) {
+            contagem[i] += v;
+            document.getElementById('c-' + i).innerText = contagem[i];
+        }
+    }
 
-    function verificarFinalizacao() { enviarTudo(); }
+    function verificarFinalizacao() {
+        if(tipoAcao === 'Devolução' && Object.keys(memoriaRetirada).length > 0) {
+            let houvePerda = false;
+            for(let i in memoriaRetirada) {
+                if(contagem[i] < memoriaRetirada[i]) houvePerda = true;
+            }
+            if(houvePerda) {
+                document.body.classList.remove('modo-lista');
+                document.getElementById('tela-app').style.display = 'none';
+                document.getElementById('tela-perda').style.display = 'block';
+                return;
+            }
+        }
+        enviarTudo();
+    }
 
-    function ativarEdicao() {
-        document.getElementById('banner-aviso-edit').style.display = 'block';
+    // Função para habilitar o modo de correção
+    function habilitarEdicao() {
+        document.getElementById('banner-edicao').style.display = 'block';
         document.getElementById('btn-corrigir').style.display = 'none';
         window.scrollTo(0,0);
+        alert("Modo de correção: Ajuste os itens e clique em Finalizar novamente.");
     }
 
     async function enviarTudo() {
+        emAndamento = false; 
+        window.onbeforeunload = null;
+
         const j = document.getElementById('justificativa').value;
-        const payload = { responsavel: usuario, evento: evento, dataEvento: dataEvento, tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now() };
+        const dados = {
+            responsavel: usuario, evento: evento, dataEvento: dataEvento,
+            tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now()
+        };
         
         try {
-            // AQUI ESTÁ O SEGREDO: SALVA EM "testes_do_deymmes"
-            const colecaoTeste = db.collection("testes_do_deymmes");
+            // USANDO A COLEÇÃO DE TESTE PARA O ESPELHO
+            const col = db.collection("testes_do_deymmes");
 
             if (idUltimoDoc) {
-                await colecaoTeste.doc(idUltimoDoc).update(payload);
+                await col.doc(idUltimoDoc).update(dados);
+                alert("Registro atualizado nos testes!");
             } else {
-                const docRef = await colecaoTeste.add(payload);
+                const docRef = await col.add(dados);
                 idUltimoDoc = docRef.id;
+                alert("Novo registro salvo nos testes!");
             }
 
             document.getElementById('btn-corrigir').style.display = 'block';
-            document.getElementById('banner-aviso-edit').style.display = 'none';
-            alert("TESTE SALVO COM SUCESSO! Veja no Firebase na coleção 'testes_do_deymmes'.");
-        } catch(e) { alert("Erro ao salvar teste!"); }
+            document.getElementById('banner-edicao').style.display = 'none';
+
+            let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
+            for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
+            if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
+
+            // Link do WhatsApp (pode ser usado para testar se a mensagem gera certo)
+            const urlWa = `https://wa.me/5585997747964?text=${encodeURIComponent(msg)}`;
+            console.log("Link WhatsApp:", urlWa);
+
+        } catch(e) {
+            alert("Erro ao salvar! Verifique a internet.");
+            emAndamento = true;
+        }
     }
 </script>
 </body>
