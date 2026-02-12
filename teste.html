@@ -127,6 +127,7 @@
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
+        
         <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
     </div>
 
@@ -146,9 +147,10 @@
     <div id="tela-perda" class="tela">
         <h3 style="margin-top:0">⚠️ Itens Faltantes</h3>
         <div id="resumo-perdas"></div>
-        <p style="font-size: 0.9em; margin-bottom: 10px;">Explique o que houve:</p>
+        <p style="font-size: 0.9em; margin-bottom: 10px;">Explique o que houve ou volte para ajustar:</p>
         <textarea id="justificativa" rows="3" placeholder="Ex: 1 bola estourou..."></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
+        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 VOLTAR E REVISAR ITENS</button>
     </div>
 </div>
 
@@ -227,10 +229,22 @@
         const dataFormatada = dataEvento.split('-').reverse().join('/');
         document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao === 'Correção' ? 'Editando' : acao})`;
 
+        irParaLista();
+    }
+
+    function irParaLista() {
         document.body.classList.add('modo-lista');
         document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('tela-perda').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
+    }
+
+    // FUNÇÃO VOLTAR
+    function voltarParaLista() {
+        document.body.classList.add('modo-lista');
+        document.getElementById('tela-perda').style.display = 'none';
+        document.getElementById('tela-app').style.display = 'block';
     }
 
     function desenhar() {
@@ -261,7 +275,7 @@
     }
 
     function verificarFinalizacao() {
-        // LÓGICA DE DETECÇÃO DE PERDA
+        // LÓGICA DE DETECÇÃO DE PERDA - SOMENTE NA DEVOLUÇÃO
         if(tipoAcao === 'Devolução' && Object.keys(memoriaRetirada).length > 0) {
             let resumoHTML = "";
             let houveFalta = false;
