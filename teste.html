@@ -99,7 +99,7 @@
 <body>
 
 <div class="app-container">
-    <div id="banner-sandbox">🧪 AMBIENTE DE TESTE (NÃO AFETA O OFICIAL)</div>
+    <div id="banner-sandbox">🧪 AMBIENTE DE TESTE (ENVIO: DEYMMES)</div>
     <header><h2 style="margin:0">Up Controle</h2></header>
     <div id="banner-edicao">✏️ MODO DE CORREÇÃO ATIVO</div>
 
@@ -118,8 +118,12 @@
         <div id="info-header" style="padding:20px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
         <div id="lista-itens"></div>
         <div style="padding:20px 25px">
-            <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR SIMULAÇÃO</button>
-            <button id="btn-corrigir" class="btn-grande" style="display:none; background:#64748b; margin-top: 15px;" onclick="habilitarEdicao()">✏️ CORRIGIR ERRO (TESTE)</button>
+            <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+            
+            <div id="area-correcao" style="display:none;">
+                <button class="btn-grande" style="background:#64748b;" onclick="habilitarEdicao()">✏️ CORRIGIR NOVAMENTE</button>
+                <button class="btn-grande" style="background:var(--success);" onclick="verificarFinalizacao()">✅ TUDO OK, ENVIAR!</button>
+            </div>
         </div>
     </div>
 
@@ -127,7 +131,7 @@
         <h3>⚠️ Simulação de Perda</h3>
         <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
         <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
-        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR PARA MEU WHATSAPP</button>
+        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
     </div>
 </div>
 
@@ -150,7 +154,7 @@
     let memoriaRetirada = {};
     let contagem = {};
     let emAndamento = false;
-    let idUltimoDoc = null;
+    let idUltimoDoc = null; 
 
     window.onbeforeunload = function(e) {
         if (emAndamento) {
@@ -252,9 +256,8 @@
 
     function habilitarEdicao() {
         document.getElementById('banner-edicao').style.display = 'block';
-        document.getElementById('btn-corrigir').style.display = 'none';
+        document.getElementById('area-correcao').style.display = 'none';
         window.scrollTo(0,0);
-        alert("SIMULAÇÃO: Altere os dados e finalize novamente.");
     }
 
     async function enviarTudo() {
@@ -278,17 +281,17 @@
                 idUltimoDoc = docRef.id;
             }
 
-            document.getElementById('btn-corrigir').style.display = 'block';
+            document.getElementById('btn-finalizar').style.display = 'none';
+            document.getElementById('area-correcao').style.display = 'block';
             document.getElementById('banner-edicao').style.display = 'none';
 
-            let msg = `*🧪 UP TESTE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
+            let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
             if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
 
-            // SEU NÚMERO ATUALIZADO
             const urlWa = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             
-            if(confirm("DADO SALVO NOS TESTES! Deseja enviar para o seu WhatsApp?")) {
+            if(confirm("SALVO NO FIREBASE! Deseja enviar para o seu WhatsApp agora?")) {
                 window.location.href = urlWa;
             }
         } catch(e) {
