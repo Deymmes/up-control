@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL (GLASSMORPHISM) - PRESERVADA */
+        /* TELA INICIAL (Setup View) - PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -36,44 +36,31 @@
             margin: auto; overflow: hidden; 
         }
 
-        body.modo-lista { background: #f0f2f5; align-items: flex-start; scroll-behavior: smooth; }
+        body.modo-lista { background: #f0f2f5; align-items: flex-start; overflow-y: auto; }
         body.modo-lista .app-container { 
             width: 100%; max-width: 100%; 
             border-radius: 0; box-shadow: none; 
             background: transparent; border: none; 
         }
 
-        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
+        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
         header h2 { font-size: 1.2em; margin: 0; }
 
         .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
-
-        /* PAINEL DE PROGRESSO */
         #painel-progresso {
-            background: white;
-            margin: 10px 15px;
-            padding: 15px;
-            border-radius: 18px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
-            display: none;
+            background: white; margin: 10px 15px; padding: 15px; border-radius: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; display: none;
         }
         .barra-bg { background: #eee; height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden; }
         .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
         .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        /* CARDS DA LISTA OPERACIONAL */
+        /* CARDS OPERACIONAIS */
         .card-categoria {
-            background: white;
-            margin: 10px 15px;
-            border-radius: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.03);
-            scroll-margin-top: 20px; /* Margem para o scroll não colar no topo */
+            background: white; margin: 10px 15px; border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.03);
         }
         .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         
@@ -96,7 +83,6 @@
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        /* CORES DE CONTRASTE */
         .btn-corrigir-estilo { background: #94a3b8 !important; color: white !important; } 
         .btn-finalizar-estilo { background: #16a34a !important; color: white !important; font-weight: 800 !important; }
 
@@ -213,7 +199,8 @@
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
         
-        setTimeout(() => { toggleCat('Itens Principais', true); }, 100);
+        // FOCO INICIAL: Abrir "Itens Principais"
+        setTimeout(() => { toggleCat('Itens Principais', true); }, 300);
     }
 
     function desenhar() {
@@ -223,19 +210,19 @@
             const cat = estoque[nomeCat];
             const card = document.createElement('div');
             card.className = "card-categoria";
-            card.id = `card-${nomeCat.replace(/\s+/g, '')}`; // ID para o scroll
+            card.id = "card-" + nomeCat.replace(/\s+/g, '-');
             card.innerHTML = `<div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">${nomeCat} <span id="seta-${nomeCat}">▼</span></div><div id="conteudo-${nomeCat}" class="lista-conteudo">${cat.itens.map(item => templateItem(item)).join('')}</div>`;
             container.appendChild(card);
         }
     }
 
-    function toggleCat(nome, forcarAbrir = false) {
+    function toggleCat(nome, forcar = false) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
-        const card = document.getElementById(`card-${nome.replace(/\s+/g, '')}`);
+        const card = document.getElementById("card-" + nome.replace(/\s+/g, '-'));
         const estaAberto = div.style.display === "block";
 
-        if (estaAberto && !forcarAbrir) return;
+        if (estaAberto && !forcar) return;
 
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
@@ -243,8 +230,12 @@
         div.style.display = "block";
         seta.innerText = "▲";
 
-        // FUNÇÃO DE PUXAR PARA CIMA (Auto-scroll)
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // CÁLCULO DE ROLAGEM FORÇADA (offsetTop)
+        const headerHeight = document.querySelector('header').offsetHeight + 20;
+        window.scrollTo({
+            top: card.offsetTop - headerHeight,
+            behavior: 'smooth'
+        });
     }
 
     function templateItem(item) {
