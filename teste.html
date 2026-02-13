@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL (GLASSMORPHISM) - TOTALMENTE PRESERVADA */
+        /* TELA INICIAL (GLASSMORPHISM) - PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -92,12 +92,12 @@
         .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
         .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
-        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        /* CORES ESPECÍFICAS SOLICITADAS */
+        /* AJUSTE DE CONTRASTE NO OPERACIONAL */
         .btn-corrigir-estilo { background: #94a3b8 !important; color: white !important; } 
-        .btn-finalizar-estilo { background: #86efac !important; color: white !important; } 
+        .btn-finalizar-estilo { background: #16a34a !important; color: white !important; font-weight: 800 !important; } /* Verde mais escuro para contraste */
 
         #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
         textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; }
@@ -212,7 +212,8 @@
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
-        // FOCO INICIAL: Abrir "Itens Principais"
+        
+        // Abre automaticamente a primeira categoria
         setTimeout(() => { toggleCat('Itens Principais', true); }, 100);
     }
 
@@ -228,15 +229,20 @@
         }
     }
 
-    function toggleCat(nome, forcar = false) {
+    function toggleCat(nome, forcarAbrir = false) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
-        const aberto = div.style.display === "block";
-        if(forcar) { div.style.display = "block"; seta.innerText = "▲"; return; }
+        const estaAberto = div.style.display === "block";
 
+        // Se o usuário clicar no card que já está aberto, ele não fecha (evita vazio no layout)
+        if (estaAberto && !forcarAbrir) return;
+
+        // Fecha as outras e abre a selecionada
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
-        if(!aberto) { div.style.display = "block"; seta.innerText = "▲"; }
+
+        div.style.display = "block";
+        seta.innerText = "▲";
     }
 
     function templateItem(item) {
@@ -310,7 +316,7 @@
             if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-        } catch(e) { alert("Erro!"); }
+        } catch(e) { alert("Erro ao salvar!"); }
     }
 
     function voltarParaLista() {
