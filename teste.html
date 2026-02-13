@@ -21,76 +21,81 @@
             margin: 0; padding: 0; 
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh;
+            background-color: #f0f2f5;
             background-image: url('fundo.jpg'); 
             background-size: cover; background-position: center; 
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
         .app-container { 
-            width: 90%; max-width: 450px; 
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4); 
-            border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            margin: auto; overflow: hidden; 
+            width: 92%; max-width: 480px; 
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+            margin: 20px auto; overflow: hidden; 
         }
 
-        body.modo-lista { background: white; align-items: flex-start; }
-        body.modo-lista .app-container { width: 100%; max-width: 100%; border-radius: 0; box-shadow: none; background: white; backdrop-filter: none; border: none; }
+        body.modo-lista { background: #f8f9fa; align-items: flex-start; }
+        body.modo-lista .app-container { width: 100%; max-width: 100%; border-radius: 0; background: transparent; box-shadow: none; border: none; }
 
-        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
-        header h2 { font-size: 1.2em; margin: 0; }
+        header { background: linear-gradient(135deg, #1a73e8, #ff0080); color: white; padding: 18px; text-align: center; }
+        header h2 { font-size: 1.3em; margin: 0; letter-spacing: 1px; }
 
-        .tela { padding: 12px 25px; display: none; }
+        .tela { padding: 15px; display: none; }
         .ativa { display: block; }
 
-        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
-        #banner-edicao { display: none; background: #2563eb; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; }
+        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 6px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
 
-        /* ESTILO DOS ACORDEÕES COLORIDOS */
+        /* DESIGN PROFISSIONAL DOS CARDS */
+        .card-categoria {
+            background: white;
+            margin-bottom: 12px;
+            border-radius: 18px; /* Cantos levemente arredondados */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+
         .categoria-header { 
-            padding: 12px 25px; 
+            padding: 14px 20px; 
             font-size: 0.85em; 
-            font-weight: bold; 
+            font-weight: 700; 
             color: white; 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
-            margin-top: 5px;
+            letter-spacing: 0.5px; 
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        /* Classes de Cores para as Categorias */
-        .cat-principais { background: #5f6368; } /* Cinza Chumbo */
-        .cat-opcionais { background: #9c27b0; }  /* Roxo */
-        .cat-camarim { background: #e91e63; }    /* Rosa */
-        .cat-espuma { background: #2196f3; }     /* Azul */
-        .cat-inflavel { background: #ff9800; }   /* Laranja */
+        /* Cores Refinadas */
+        .cat-principais { background: #4a4e54; } 
+        .cat-opcionais { background: #8e44ad; }  
+        .cat-camarim { background: #d81b60; }    
+        .cat-espuma { background: #2980b9; }     
+        .cat-inflavel { background: #e67e22; }   
 
-        .lista-conteudo { padding: 0 25px; display: none; } /* Escondido por padrão */
-        .aberto { display: block; }
+        .lista-conteudo { padding: 5px 15px; display: none; background: white; }
 
-        #lista-itens { padding: 5px 25px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-        .item-nome { font-weight: bold; color: #333; font-size: 0.95em; }
-        .controles { display: flex; align-items: center; gap: 10px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f1f1f1; }
+        .item:last-child { border-bottom: none; }
+        .item-nome { font-weight: 600; color: #444; font-size: 0.9em; }
         
-        .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
-        .btn-mais { background: var(--primary); }
-        .btn-menos { background: #bbb; color: white; }
+        .controles { display: flex; align-items: center; gap: 12px; }
+        .btn-status { border: none; width: 36px; height: 36px; border-radius: 12px; font-size: 1.1em; cursor: pointer; color: white; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn-mais { background: #1a73e8; }
+        .btn-menos { background: #e0e0e0; color: #888; }
         
-        /* ESTILO DA CAIXINHA CINZA */
-        .btn-check { background: #e0e0e0; color: transparent; border: 2px solid #ccc; }
-        .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
+        .btn-check { background: #f0f0f0; color: transparent; border: 1.5px solid #ddd; }
+        .btn-check.conferido { background: #2ecc71; color: white; border-color: #2ecc71; }
         
-        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
-        .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
-        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
-
-        #resumo-perdas { background: #fff5f5; border: 1px solid #feb2b2; border-radius: 10px; padding: 10px; margin-bottom: 15px; color: #c53030; font-size: 0.85em; line-height: 1.4; }
+        .contador { font-weight: 700; font-size: 1.1em; min-width: 25px; text-align: center; color: #333; }
+        .btn-grande { width: 100%; padding: 16px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        #info-header { margin-bottom: 15px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; color: #666; }
     </style>
 </head>
 <body>
@@ -98,42 +103,28 @@
 <div class="app-container">
     <div id="banner-sandbox">🧪 AMBIENTE DE TESTE (ENVIO: DEYMMES)</div>
     <header><h2>Up Controle</h2></header>
-    <div id="banner-edicao">✏️ MODO DE CORREÇÃO ATIVO</div>
 
     <div id="tela-login" class="tela ativa">
-        <label class="label-bold">Data do Evento</label>
+        <label style="font-weight:bold; display:block; margin-bottom:5px; font-size:0.9em;">Data do Evento</label>
         <input type="date" id="data-evento">
-        <label class="label-bold">Responsável</label>
-        <input type="text" id="nome-resp" placeholder="Seu nome">
-        <label class="label-bold">Evento</label>
-        <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
-        <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
-        <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
-        <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
+        <input type="text" id="nome-resp" placeholder="Nome do Responsável">
+        <input type="text" id="nome-evento" placeholder="Nome do Evento">
+        <button class="btn-grande" style="background: #1a73e8" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
+        <button class="btn-grande" style="background: #25D366" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
     </div>
 
-    <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:15px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
-        
-        <div id="categorias-container">
-            </div>
-
-        <div style="padding:15px 25px">
-            <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
-            <div id="area-correcao" style="display:none;">
-                <button class="btn-grande" style="background:#64748b;" onclick="habilitarEdicao()">✏️ CORRIGIR NOVAMENTE</button>
-                <button class="btn-grande" style="background:var(--success);" onclick="verificarFinalizacao()">✅ TUDO OK, ENVIAR!</button>
-            </div>
-        </div>
+    <div id="tela-app" class="tela" style="padding: 15px 10px">
+        <div id="info-header"></div>
+        <div id="categorias-container"></div>
+        <button id="btn-finalizar" class="btn-grande" style="background:#ff0080" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0">⚠️ Itens Faltantes</h3>
-        <div id="resumo-perdas"></div>
-        <p style="font-size: 0.9em; margin-bottom: 10px;">Explique o que houve ou volte para ajustar:</p>
-        <textarea id="justificativa" rows="3" placeholder="Ex: 1 bola estourou..."></textarea>
-        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
-        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 VOLTAR E REVISAR ITENS</button>
+        <h3 style="margin-top:0; color:#d81b60">⚠️ Ajuste de Inventário</h3>
+        <div id="resumo-perdas" style="background:#fff; border: 1px solid #ffccd5; padding:15px; border-radius:15px; margin-bottom:15px;"></div>
+        <textarea id="justificativa" rows="3" placeholder="Descreva o motivo da divergência..."></textarea>
+        <button class="btn-grande" style="background:#2ecc71" onclick="enviarTudo()">ENVIAR RELATÓRIO</button>
+        <button class="btn-grande" style="background:#95a5a6; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR ITENS</button>
     </div>
 </div>
 
@@ -156,11 +147,9 @@
     let memoriaRetirada = {};
     let contagem = {};
     let conferidos = {};
-    let emAndamento = false;
-    let idDocCorrecao = null; 
 
-    // ESTRUTURA COMPLETA DE ESTOQUE
-    const estoque = {
+    // ESTRUTURA COM ORDEM ALFABÉTICA AUTOMÁTICA
+    const estoqueRaw = {
         "Itens Principais": {
             cor: "cat-principais",
             itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"]
@@ -183,34 +172,36 @@
         }
     };
 
+    // Função para ordenar itens alfabeticamente
+    const estoque = {};
+    Object.keys(estoqueRaw).forEach(cat => {
+        estoque[cat] = {
+            cor: estoqueRaw[cat].cor,
+            itens: estoqueRaw[cat].itens.sort((a, b) => a.localeCompare(b))
+        };
+    });
+
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
+        if(!usuario || !evento || !dataEvento) return alert("Preencha os dados do evento!");
         
         tipoAcao = acao;
-        emAndamento = true;
-
-        // Inicializa todas as contagens baseadas no estoque
         for(let cat in estoque) {
             estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
         }
 
-        if(acao === 'Correção' || acao === 'Devolução') {
+        if(acao === 'Devolução') {
             const q = await db.collection("testes_do_deymmes").where("evento", "==", evento).where("dataEvento", "==", dataEvento).where("responsavel", "==", usuario).get();
             if(!q.empty) {
-                const docAlvo = q.docs[q.docs.length - 1];
-                idDocCorrecao = docAlvo.id;
-                if(acao === 'Devolução') memoriaRetirada = {...docAlvo.data().itens};
-                contagem = {...docAlvo.data().itens};
-                if(acao === 'Correção') document.getElementById('banner-edicao').style.display = 'block';
+                const doc = q.docs[q.docs.length - 1].data();
+                memoriaRetirada = {...doc.itens};
+                contagem = {...doc.itens};
             }
         }
 
-        const dataFormatada = dataEvento.split('-').reverse().join('/');
-        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada} | 👤 ${usuario.toUpperCase()} | 🎈 ${evento.toUpperCase()} (${acao})`;
-
+        document.getElementById('info-header').innerHTML = `<b>${usuario.toUpperCase()}</b> • ${evento.toUpperCase()} (${acao})`;
         irParaLista();
     }
 
@@ -227,26 +218,31 @@
 
         for(let nomeCat in estoque) {
             const cat = estoque[nomeCat];
-            const section = document.createElement('div');
-            section.innerHTML = `
+            const card = document.createElement('div');
+            card.className = "card-categoria";
+            
+            card.innerHTML = `
                 <div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">
-                    ${nomeCat} <span id="seta-${nomeCat}">▼</span>
+                    ${nomeCat} <span id="seta-${nomeCat}" style="font-size:0.8em">▼</span>
                 </div>
                 <div id="conteudo-${nomeCat}" class="lista-conteudo">
                     ${cat.itens.map(item => templateItem(item)).join('')}
                 </div>
             `;
-            container.appendChild(section);
+            container.appendChild(card);
         }
     }
 
     function toggleCat(nome) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
-        if(div.style.display === "block") {
-            div.style.display = "none";
-            seta.innerText = "▼";
-        } else {
+        const estaAberto = div.style.display === "block";
+        
+        // Opcional: fecha outros cards ao abrir um (limpa o espaço)
+        document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
+        document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
+
+        if(!estaAberto) {
             div.style.display = "block";
             seta.innerText = "▲";
         }
@@ -270,8 +266,7 @@
 
     function mudar(i, v) {
         if((contagem[i] || 0) + v >= 0) {
-            contagem[i] += v;
-            // Atualiza todos os contadores desse item (caso ele apareça em mais de uma categoria)
+            contagem[i] = (contagem[i] || 0) + v;
             document.querySelectorAll(`[id="c-${i}"]`).forEach(el => el.innerText = contagem[i]);
             if(tipoAcao === 'Devolução') {
                 conferidos[i] = false;
@@ -292,7 +287,7 @@
         if(tipoAcao === 'Devolução') {
             let pendentes = false;
             for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) pendentes = true;
-            if(pendentes) return alert("Por favor, marque o ✅ em todos os itens conferidos!");
+            if(pendentes) return alert("Por favor, confira todos os itens retirados com o ✅ antes de finalizar.");
 
             let resumo = "";
             let houveFalta = false;
@@ -311,13 +306,13 @@
     }
 
     async function enviarTudo() {
-        emAndamento = false; 
         const j = document.getElementById('justificativa').value;
-        const dados = { responsavel: usuario, evento: evento, dataEvento: dataEvento, tipo: tipoAcao === 'Correção' ? 'Saída' : tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now() };
+        const dados = { responsavel: usuario, evento: evento, dataEvento: dataEvento, tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now() };
         try {
             await db.collection("testes_do_deymmes").add(dados);
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
+            if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
         } catch(e) { alert("Erro ao salvar!"); }
