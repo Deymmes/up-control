@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL (Setup View) - PRESERVADA */
+        /* SETUP VIEW - PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -49,6 +49,9 @@
         .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
+        /* FAIXA AMARELA DE TESTE - RESTAURADA */
+        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; position: sticky; top: 0; z-index: 101; }
+
         #painel-progresso {
             background: white; margin: 10px 15px; padding: 15px; border-radius: 18px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; display: none;
@@ -57,7 +60,6 @@
         .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
         .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        /* CARDS OPERACIONAIS */
         .card-categoria {
             background: white; margin: 10px 15px; border-radius: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.03);
@@ -198,8 +200,6 @@
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
-        
-        // FOCO INICIAL: Abrir "Itens Principais"
         setTimeout(() => { toggleCat('Itens Principais', true); }, 300);
     }
 
@@ -230,8 +230,7 @@
         div.style.display = "block";
         seta.innerText = "▲";
 
-        // CÁLCULO DE ROLAGEM FORÇADA (offsetTop)
-        const headerHeight = document.querySelector('header').offsetHeight + 20;
+        const headerHeight = document.querySelector('header').offsetHeight + 40;
         window.scrollTo({
             top: card.offsetTop - headerHeight,
             behavior: 'smooth'
@@ -309,7 +308,7 @@
             if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-        } catch(e) { alert("Erro ao salvar!"); }
+        } catch(e) { alert("Erro!"); }
     }
 
     function voltarParaLista() {
