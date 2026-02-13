@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL (GLASSMORPHISM) - PRESERVADA */
+        /* MANTER TELA INICIAL EXATAMENTE COMO VOCÊ QUER */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -36,7 +36,7 @@
             margin: auto; overflow: hidden; 
         }
 
-        /* MODO LISTA - OTIMIZADO APENAS PARA O LADO DE DENTRO */
+        /* ESTILO PROFISSIONAL PARA A LISTA INTERNA */
         body.modo-lista { background: #f0f2f5; align-items: flex-start; }
         body.modo-lista .app-container { 
             width: 100%; max-width: 100%; 
@@ -50,53 +50,58 @@
         .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        /* ESTILO DO PAINEL DE PROGRESSO - HUD */
-        #painel-progresso {
-            background: white;
-            margin: 10px 15px;
-            padding: 15px;
-            border-radius: 18px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
-            display: none;
-        }
-        .barra-bg { background: #eee; height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden; }
-        .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
-        .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
+        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
 
-        /* CARDS DA LISTA INTERNA - DESIGN PROFISSIONAL */
+        /* CARDS MODERNOS INTERNOS */
         .card-categoria {
             background: white;
             margin: 10px 15px;
-            border-radius: 18px;
+            border-radius: 18px; /* Cantos levemente arredondados */
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
         }
-        .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+
+        .categoria-header { 
+            padding: 14px 20px; 
+            font-size: 0.85em; 
+            font-weight: bold; 
+            color: white; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         
         .cat-principais { background: #454d55; } 
-        .cat-opcionais { background: #9c27b0; }  
+        .cat-opcionais { background: #8e44ad; }  
         .cat-camarim { background: #d81b60; }    
         .cat-espuma { background: #2980b9; }     
         .cat-inflavel { background: #e67e22; }   
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
+
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
+        .item:last-child { border-bottom: none; }
         .item-nome { font-weight: 600; color: #444; font-size: 0.92em; }
+        
         .controles { display: flex; align-items: center; gap: 12px; }
-        .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #e0e0e0; color: #888; }
+        
         .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
         .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
-        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
+        
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
 
-        #info-header { margin: 10px 15px; padding: 10px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
-        #resumo-perdas { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #ffccd5; }
-        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
+        #info-header { margin: 10px 15px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
     </style>
 </head>
 <body>
@@ -106,9 +111,11 @@
     <header><h2>Up Controle</h2></header>
 
     <div id="tela-login" class="tela ativa">
-        <label style="font-weight:bold; font-size:0.9em;">Data do Evento</label>
+        <label class="label-bold">Data do Evento</label>
         <input type="date" id="data-evento">
+        <label class="label-bold">Responsável</label>
         <input type="text" id="nome-resp" placeholder="Seu nome">
+        <label class="label-bold">Evento</label>
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
@@ -117,12 +124,6 @@
 
     <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header"></div>
-        
-        <div id="painel-progresso">
-            <div class="texto-progresso" id="txt-progresso">Faltam conferir: 0 itens</div>
-            <div class="barra-bg"><div class="barra-fill" id="barra-fill"></div></div>
-        </div>
-
         <div id="categorias-container"></div>
         <div style="padding:15px">
             <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
@@ -130,11 +131,11 @@
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0">⚠️ Divergência Encontrada</h3>
-        <div id="resumo-perdas"></div>
-        <textarea id="justificativa" rows="3" placeholder="O que aconteceu com esses itens?"></textarea>
+        <h3 style="margin-top:0">⚠️ Itens Faltantes</h3>
+        <div id="resumo-perdas" style="background:white; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #ffccd5;"></div>
+        <textarea id="justificativa" rows="3" placeholder="Explique o que houve..."></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
-        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR</button>
+        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 VOLTAR</button>
     </div>
 </div>
 
@@ -157,27 +158,50 @@
     let memoriaRetirada = {};
     let contagem = {};
     let conferidos = {};
+    let emAndamento = false;
 
+    // ESTRUTURA COM ALFABETIZAÇÃO AUTOMÁTICA (A-Z)
     const estoqueRaw = {
-        "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
-        "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
-        "Camarim": { cor: "cat-camarim", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
-        "Espuma": { cor: "cat-espuma", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
-        "Inflável": { cor: "cat-inflavel", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
+        "Itens Principais": {
+            cor: "cat-principais",
+            itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"]
+        },
+        "Materiais Opcionais": {
+            cor: "cat-opcionais",
+            itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"]
+        },
+        "Camarim": {
+            cor: "cat-camarim",
+            itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"]
+        },
+        "Espuma": {
+            cor: "cat-espuma",
+            itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"]
+        },
+        "Inflável": {
+            cor: "cat-inflavel",
+            itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"]
+        }
     };
 
+    // Função que organiza de A a Z automaticamente
     const estoque = {};
     Object.keys(estoqueRaw).forEach(cat => {
-        estoque[cat] = { cor: estoqueRaw[cat].cor, itens: estoqueRaw[cat].itens.sort((a,b) => a.localeCompare(b)) };
+        estoque[cat] = {
+            cor: estoqueRaw[cat].cor,
+            itens: estoqueRaw[cat].itens.sort((a, b) => a.localeCompare(b))
+        };
     });
 
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        if(!usuario || !evento || !dataEvento) return alert("Preencha tudo!");
+        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
         
         tipoAcao = acao;
+        emAndamento = true;
+
         for(let cat in estoque) {
             estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
         }
@@ -191,13 +215,8 @@
             }
         }
 
-        document.getElementById('info-header').innerHTML = `👤 ${usuario.toUpperCase()} • 🎈 ${evento.toUpperCase()}`;
-        if(acao === 'Devolução') {
-            document.getElementById('painel-progresso').style.display = 'block';
-            atualizarHUD();
-        } else {
-            document.getElementById('painel-progresso').style.display = 'none';
-        }
+        const dataFormatada = dataEvento.split('-').reverse().join('/');
+        document.getElementById('info-header').innerHTML = `👤 <b>${usuario.toUpperCase()}</b><br>🎈 ${evento.toUpperCase()} (${acao})`;
 
         irParaLista();
     }
@@ -216,7 +235,14 @@
             const cat = estoque[nomeCat];
             const card = document.createElement('div');
             card.className = "card-categoria";
-            card.innerHTML = `<div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">${nomeCat} <span id="seta-${nomeCat}">▼</span></div><div id="conteudo-${nomeCat}" class="lista-conteudo">${cat.itens.map(item => templateItem(item)).join('')}</div>`;
+            card.innerHTML = `
+                <div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">
+                    ${nomeCat} <span id="seta-${nomeCat}">▼</span>
+                </div>
+                <div id="conteudo-${nomeCat}" class="lista-conteudo">
+                    ${cat.itens.map(item => templateItem(item)).join('')}
+                </div>
+            `;
             container.appendChild(card);
         }
     }
@@ -224,16 +250,23 @@
     function toggleCat(nome) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
-        const aberto = div.style.display === "block";
+        const estaAberto = div.style.display === "block";
+        
+        // Fecha outros para manter limpo
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
-        if(!aberto) { div.style.display = "block"; seta.innerText = "▲"; }
+
+        if(!estaAberto) {
+            div.style.display = "block";
+            seta.innerText = "▲";
+        }
     }
 
     function templateItem(item) {
         const btnDireito = tipoAcao === 'Devolução' 
             ? `<button class="btn-status btn-check ${conferidos[item] ? 'conferido' : ''}" id="check-${item}" onclick="checkItem('${item}')">✅</button>`
             : `<button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>`;
+
         return `<div class="item"><span class="item-nome">${item}</span><div class="controles"><button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button><span class="contador" id="c-${item}">${contagem[item] || 0}</span>${btnDireito}</div></div>`;
     }
 
@@ -244,7 +277,6 @@
             if(tipoAcao === 'Devolução') {
                 conferidos[i] = false;
                 document.querySelectorAll(`[id="check-${i}"]`).forEach(el => el.classList.remove('conferido'));
-                atualizarHUD();
             }
         }
     }
@@ -255,39 +287,14 @@
             if(conferidos[i]) el.classList.add('conferido');
             else el.classList.remove('conferido');
         });
-        atualizarHUD();
-    }
-
-    function atualizarHUD() {
-        if(tipoAcao !== 'Devolução') return;
-        let total = 0; let check = 0;
-        for(let i in memoriaRetirada) {
-            if(memoriaRetirada[i] > 0) {
-                total++;
-                if(conferidos[i]) check++;
-            }
-        }
-        const faltam = total - check;
-        const perc = total > 0 ? (check / total) * 100 : 0;
-        
-        const txt = document.getElementById('txt-progresso');
-        const fill = document.getElementById('barra-fill');
-        
-        fill.style.width = perc + "%";
-        if(faltam === 0) {
-            txt.innerHTML = "✅ Tudo conferido!";
-            fill.style.background = "#2ecc71";
-        } else {
-            txt.innerHTML = `Faltam conferir: <b>${faltam}</b> itens`;
-            fill.style.background = "var(--secondary)";
-        }
     }
 
     function verificarFinalizacao() {
         if(tipoAcao === 'Devolução') {
             let p = false;
             for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) p = true;
-            if(p) return alert("Ainda existem itens pendentes de conferência!");
+            if(p) return alert("Por favor, confira todos os itens retirados com o ✅!");
+
             let r = ""; let h = false;
             for(let i in memoriaRetirada) {
                 let d = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
@@ -310,10 +317,9 @@
             await db.collection("testes_do_deymmes").add(dados);
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
-            if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-        } catch(e) { alert("Erro!"); }
+        } catch(e) { alert("Erro ao salvar!"); }
     }
 
     function voltarParaLista() {
