@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL - DESIGN QUE VOCÊ APROVOU */
+        /* TELA INICIAL (GLASSMORPHISM) - PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -36,7 +36,7 @@
             margin: auto; overflow: hidden; 
         }
 
-        /* MODO LISTA INTERNO - MELHORIA DE ESPAÇOS */
+        /* MODO LISTA - OTIMIZADO APENAS PARA O LADO DE DENTRO */
         body.modo-lista { background: #f0f2f5; align-items: flex-start; }
         body.modo-lista .app-container { 
             width: 100%; max-width: 100%; 
@@ -50,13 +50,13 @@
         .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        /* PAINEL DE PROGRESSO MODERNO */
+        /* ESTILO DO PAINEL DE PROGRESSO - HUD */
         #painel-progresso {
             background: white;
             margin: 10px 15px;
             padding: 15px;
             border-radius: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             text-align: center;
             display: none;
         }
@@ -64,7 +64,7 @@
         .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
         .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        /* CARDS DAS CATEGORIAS - DESIGN PROFISSIONAL */
+        /* CARDS DA LISTA INTERNA - DESIGN PROFISSIONAL */
         .card-categoria {
             background: white;
             margin: 10px 15px;
@@ -73,21 +73,10 @@
             overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
         }
-        .categoria-header { 
-            padding: 14px 20px; 
-            font-size: 0.85em; 
-            font-weight: bold; 
-            color: white; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
+        .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         
         .cat-principais { background: #454d55; } 
-        .cat-opcionais { background: #8e44ad; }  
+        .cat-opcionais { background: #9c27b0; }  
         .cat-camarim { background: #d81b60; }    
         .cat-espuma { background: #2980b9; }     
         .cat-inflavel { background: #e67e22; }   
@@ -95,22 +84,19 @@
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
         .item-nome { font-weight: 600; color: #444; font-size: 0.92em; }
-        
         .controles { display: flex; align-items: center; gap: 12px; }
         .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #e0e0e0; color: #888; }
-        
-        /* CAIXINHA CINZA QUE ACENDE O CHECK */
         .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
         .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
-        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
+        #info-header { margin: 10px 15px; padding: 10px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
         #resumo-perdas { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #ffccd5; }
-        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; margin-top: 10px; }
+        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -144,12 +130,11 @@
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0; color: #ff0080;">⚠️ Divergência Encontrada</h3>
+        <h3 style="margin-top:0">⚠️ Divergência Encontrada</h3>
         <div id="resumo-perdas"></div>
-        <p style="font-size: 0.9em; color: #666;">Por favor, descreva o que houve:</p>
-        <textarea id="justificativa" rows="3" placeholder="Ex: 1 bola estourou durante o evento..."></textarea>
+        <textarea id="justificativa" rows="3" placeholder="O que aconteceu com esses itens?"></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
-        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR ITENS</button>
+        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR</button>
     </div>
 </div>
 
@@ -181,7 +166,6 @@
         "Inflável": { cor: "cat-inflavel", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
     };
 
-    // Organização de A a Z automática
     const estoque = {};
     Object.keys(estoqueRaw).forEach(cat => {
         estoque[cat] = { cor: estoqueRaw[cat].cor, itens: estoqueRaw[cat].itens.sort((a,b) => a.localeCompare(b)) };
@@ -191,7 +175,7 @@
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
+        if(!usuario || !evento || !dataEvento) return alert("Preencha tudo!");
         
         tipoAcao = acao;
         for(let cat in estoque) {
@@ -285,8 +269,10 @@
         }
         const faltam = total - check;
         const perc = total > 0 ? (check / total) * 100 : 0;
+        
         const txt = document.getElementById('txt-progresso');
         const fill = document.getElementById('barra-fill');
+        
         fill.style.width = perc + "%";
         if(faltam === 0) {
             txt.innerHTML = "✅ Tudo conferido!";
@@ -327,7 +313,7 @@
             if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-        } catch(e) { alert("Erro ao salvar!"); }
+        } catch(e) { alert("Erro!"); }
     }
 
     function voltarParaLista() {
