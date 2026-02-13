@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* MANTER TELA INICIAL EXATAMENTE COMO VOCÊ QUER */
+        /* TELA INICIAL (GLASSMORPHISM) - EXATAMENTE COMO VOCÊ QUER */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -52,11 +52,25 @@
 
         #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
 
+        /* PAINEL DE PROGRESSO (HUD) */
+        #painel-progresso {
+            background: white;
+            margin: 10px 15px;
+            padding: 15px;
+            border-radius: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            display: none;
+        }
+        .barra-bg { background: #eee; height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
+        .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
+
         /* CARDS MODERNOS INTERNOS */
         .card-categoria {
             background: white;
             margin: 10px 15px;
-            border-radius: 18px; /* Cantos levemente arredondados */
+            border-radius: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
@@ -101,7 +115,7 @@
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
         .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
 
-        #info-header { margin: 10px 15px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
+        #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
     </style>
 </head>
 <body>
@@ -124,6 +138,12 @@
 
     <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header"></div>
+        
+        <div id="painel-progresso">
+            <div class="texto-progresso" id="txt-progresso">Faltam conferir: 0 itens</div>
+            <div class="barra-bg"><div class="barra-fill" id="barra-fill"></div></div>
+        </div>
+
         <div id="categorias-container"></div>
         <div style="padding:15px">
             <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
@@ -158,50 +178,27 @@
     let memoriaRetirada = {};
     let contagem = {};
     let conferidos = {};
-    let emAndamento = false;
 
-    // ESTRUTURA COM ALFABETIZAÇÃO AUTOMÁTICA (A-Z)
     const estoqueRaw = {
-        "Itens Principais": {
-            cor: "cat-principais",
-            itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"]
-        },
-        "Materiais Opcionais": {
-            cor: "cat-opcionais",
-            itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"]
-        },
-        "Camarim": {
-            cor: "cat-camarim",
-            itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"]
-        },
-        "Espuma": {
-            cor: "cat-espuma",
-            itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"]
-        },
-        "Inflável": {
-            cor: "cat-inflavel",
-            itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"]
-        }
+        "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
+        "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
+        "Camarim": { cor: "cat-camarim", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
+        "Espuma": { cor: "cat-espuma", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
+        "Inflável": { cor: "cat-inflavel", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
     };
 
-    // Função que organiza de A a Z automaticamente
     const estoque = {};
     Object.keys(estoqueRaw).forEach(cat => {
-        estoque[cat] = {
-            cor: estoqueRaw[cat].cor,
-            itens: estoqueRaw[cat].itens.sort((a, b) => a.localeCompare(b))
-        };
+        estoque[cat] = { cor: estoqueRaw[cat].cor, itens: estoqueRaw[cat].itens.sort((a,b) => a.localeCompare(b)) };
     });
 
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
+        if(!usuario || !evento || !dataEvento) return alert("Preencha tudo!");
         
         tipoAcao = acao;
-        emAndamento = true;
-
         for(let cat in estoque) {
             estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
         }
@@ -215,9 +212,13 @@
             }
         }
 
-        const dataFormatada = dataEvento.split('-').reverse().join('/');
-        document.getElementById('info-header').innerHTML = `👤 <b>${usuario.toUpperCase()}</b><br>🎈 ${evento.toUpperCase()} (${acao})`;
-
+        document.getElementById('info-header').innerHTML = `👤 ${usuario.toUpperCase()} • 🎈 ${evento.toUpperCase()}`;
+        if(acao === 'Devolução') {
+            document.getElementById('painel-progresso').style.display = 'block';
+            atualizarHUD();
+        } else {
+            document.getElementById('painel-progresso').style.display = 'none';
+        }
         irParaLista();
     }
 
@@ -235,14 +236,7 @@
             const cat = estoque[nomeCat];
             const card = document.createElement('div');
             card.className = "card-categoria";
-            card.innerHTML = `
-                <div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">
-                    ${nomeCat} <span id="seta-${nomeCat}">▼</span>
-                </div>
-                <div id="conteudo-${nomeCat}" class="lista-conteudo">
-                    ${cat.itens.map(item => templateItem(item)).join('')}
-                </div>
-            `;
+            card.innerHTML = `<div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">${nomeCat} <span id="seta-${nomeCat}">▼</span></div><div id="conteudo-${nomeCat}" class="lista-conteudo">${cat.itens.map(item => templateItem(item)).join('')}</div>`;
             container.appendChild(card);
         }
     }
@@ -250,23 +244,16 @@
     function toggleCat(nome) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
-        const estaAberto = div.style.display === "block";
-        
-        // Fecha outros para manter limpo
+        const aberto = div.style.display === "block";
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
-
-        if(!estaAberto) {
-            div.style.display = "block";
-            seta.innerText = "▲";
-        }
+        if(!aberto) { div.style.display = "block"; seta.innerText = "▲"; }
     }
 
     function templateItem(item) {
         const btnDireito = tipoAcao === 'Devolução' 
             ? `<button class="btn-status btn-check ${conferidos[item] ? 'conferido' : ''}" id="check-${item}" onclick="checkItem('${item}')">✅</button>`
             : `<button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>`;
-
         return `<div class="item"><span class="item-nome">${item}</span><div class="controles"><button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button><span class="contador" id="c-${item}">${contagem[item] || 0}</span>${btnDireito}</div></div>`;
     }
 
@@ -277,6 +264,7 @@
             if(tipoAcao === 'Devolução') {
                 conferidos[i] = false;
                 document.querySelectorAll(`[id="check-${i}"]`).forEach(el => el.classList.remove('conferido'));
+                atualizarHUD();
             }
         }
     }
@@ -287,6 +275,27 @@
             if(conferidos[i]) el.classList.add('conferido');
             else el.classList.remove('conferido');
         });
+        atualizarHUD();
+    }
+
+    function atualizarHUD() {
+        if(tipoAcao !== 'Devolução') return;
+        let total = 0; let check = 0;
+        for(let i in memoriaRetirada) {
+            if(memoriaRetirada[i] > 0) { total++; if(conferidos[i]) check++; }
+        }
+        const faltam = total - check;
+        const perc = total > 0 ? (check / total) * 100 : 0;
+        const txt = document.getElementById('txt-progresso');
+        const fill = document.getElementById('barra-fill');
+        fill.style.width = perc + "%";
+        if(faltam === 0) {
+            txt.innerHTML = "✅ Tudo conferido!";
+            fill.style.background = "#2ecc71";
+        } else {
+            txt.innerHTML = `Faltam conferir: <b>${faltam}</b> itens`;
+            fill.style.background = "var(--secondary)";
+        }
     }
 
     function verificarFinalizacao() {
@@ -317,6 +326,7 @@
             await db.collection("testes_do_deymmes").add(dados);
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
+            if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
         } catch(e) { alert("Erro ao salvar!"); }
