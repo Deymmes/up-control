@@ -18,42 +18,25 @@
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            margin: 0; padding: 0; 
+            display: flex; justify-content: center; align-items: center; 
             min-height: 100vh;
             background-image: url('fundo.jpg'); 
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-size: cover; background-position: center; 
+            background-repeat: no-repeat; background-attachment: fixed;
         }
 
         .app-container { 
-            width: 90%; 
-            max-width: 450px; 
+            width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4); 
-            border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            margin: auto; 
-            overflow: hidden; 
+            border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            margin: auto; overflow: hidden; 
         }
 
         body.modo-lista { background: white; align-items: flex-start; }
-        body.modo-lista .app-container { 
-            width: 100%; 
-            max-width: 100%; 
-            border-radius: 0; 
-            box-shadow: none; 
-            background: white; 
-            backdrop-filter: none; 
-            border: none; 
-        }
+        body.modo-lista .app-container { width: 100%; max-width: 100%; border-radius: 0; box-shadow: none; background: white; backdrop-filter: none; border: none; }
 
         header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
         header h2 { font-size: 1.2em; margin: 0; }
@@ -64,52 +47,50 @@
         #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
         #banner-edicao { display: none; background: #2563eb; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; }
 
-        .categoria-header {
-            background: #f1f3f4;
-            padding: 8px 25px;
-            font-size: 0.85em;
-            font-weight: bold;
-            color: #5f6368;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* ESTILO DOS ACORDEÕES COLORIDOS */
+        .categoria-header { 
+            padding: 12px 25px; 
+            font-size: 0.85em; 
+            font-weight: bold; 
+            color: white; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
             margin-top: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+        
+        /* Classes de Cores para as Categorias */
+        .cat-principais { background: #5f6368; } /* Cinza Chumbo */
+        .cat-opcionais { background: #9c27b0; }  /* Roxo */
+        .cat-camarim { background: #e91e63; }    /* Rosa */
+        .cat-espuma { background: #2196f3; }     /* Azul */
+        .cat-inflavel { background: #ff9800; }   /* Laranja */
+
+        .lista-conteudo { padding: 0 25px; display: none; } /* Escondido por padrão */
+        .aberto { display: block; }
 
         #lista-itens { padding: 5px 25px; }
-
-        .item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px 0; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
-        }
-
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
         .item-nome { font-weight: bold; color: #333; font-size: 0.95em; }
         .controles { display: flex; align-items: center; gap: 10px; }
         
-        .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #bbb; color: white; }
-        .btn-check { background: #ddd; color: white; }
-        .btn-check.conferido { background: var(--success); }
+        
+        /* ESTILO DA CAIXINHA CINZA */
+        .btn-check { background: #e0e0e0; color: transparent; border: 2px solid #ccc; }
+        .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
-
         input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
         .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
 
-        #resumo-perdas { 
-            background: #fff5f5; 
-            border: 1px solid #feb2b2; 
-            border-radius: 10px; 
-            padding: 10px; 
-            margin-bottom: 15px; 
-            color: #c53030; 
-            font-size: 0.85em; 
-            line-height: 1.4;
-        }
+        #resumo-perdas { background: #fff5f5; border: 1px solid #feb2b2; border-radius: 10px; padding: 10px; margin-bottom: 15px; color: #c53030; font-size: 0.85em; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -133,7 +114,10 @@
 
     <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header" style="padding:15px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
-        <div id="lista-itens"></div>
+        
+        <div id="categorias-container">
+            </div>
+
         <div style="padding:15px 25px">
             <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
             <div id="area-correcao" style="display:none;">
@@ -171,19 +155,33 @@
     let usuario, evento, dataEvento, tipoAcao;
     let memoriaRetirada = {};
     let contagem = {};
-    let conferidos = {}; // Guarda estado dos Checks ✅
+    let conferidos = {};
     let emAndamento = false;
     let idDocCorrecao = null; 
 
-    window.onbeforeunload = function(e) {
-        if (emAndamento) {
-            e.preventDefault();
-            return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
+    // ESTRUTURA COMPLETA DE ESTOQUE
+    const estoque = {
+        "Itens Principais": {
+            cor: "cat-principais",
+            itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"]
+        },
+        "Materiais Opcionais": {
+            cor: "cat-opcionais",
+            itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"]
+        },
+        "Camarim": {
+            cor: "cat-camarim",
+            itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"]
+        },
+        "Espuma": {
+            cor: "cat-espuma",
+            itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"]
+        },
+        "Inflável": {
+            cor: "cat-inflavel",
+            itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"]
         }
     };
-
-    const itensPrincipais = ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone"];
-    const itensOpcionais = ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"];
 
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
@@ -193,10 +191,11 @@
         
         tipoAcao = acao;
         emAndamento = true;
-        [...itensPrincipais, ...itensOpcionais].forEach(i => {
-            contagem[i] = 0;
-            conferidos[i] = false;
-        });
+
+        // Inicializa todas as contagens baseadas no estoque
+        for(let cat in estoque) {
+            estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
+        }
 
         if(acao === 'Correção' || acao === 'Devolução') {
             const q = await db.collection("testes_do_deymmes").where("evento", "==", evento).where("dataEvento", "==", dataEvento).where("responsavel", "==", usuario).get();
@@ -206,15 +205,11 @@
                 if(acao === 'Devolução') memoriaRetirada = {...docAlvo.data().itens};
                 contagem = {...docAlvo.data().itens};
                 if(acao === 'Correção') document.getElementById('banner-edicao').style.display = 'block';
-            } else if(acao === 'Correção') {
-                alert("Nenhum registro encontrado.");
-                emAndamento = false;
-                return;
             }
         }
 
         const dataFormatada = dataEvento.split('-').reverse().join('/');
-        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
+        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada} | 👤 ${usuario.toUpperCase()} | 🎈 ${evento.toUpperCase()} (${acao})`;
 
         irParaLista();
     }
@@ -222,27 +217,42 @@
     function irParaLista() {
         document.body.classList.add('modo-lista');
         document.getElementById('tela-login').style.display = 'none';
-        document.getElementById('tela-perda').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
     }
 
-    function voltarParaLista() {
-        document.body.classList.add('modo-lista');
-        document.getElementById('tela-perda').style.display = 'none';
-        document.getElementById('tela-app').style.display = 'block';
+    function desenhar() {
+        const container = document.getElementById('categorias-container');
+        container.innerHTML = "";
+
+        for(let nomeCat in estoque) {
+            const cat = estoque[nomeCat];
+            const section = document.createElement('div');
+            section.innerHTML = `
+                <div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">
+                    ${nomeCat} <span id="seta-${nomeCat}">▼</span>
+                </div>
+                <div id="conteudo-${nomeCat}" class="lista-conteudo">
+                    ${cat.itens.map(item => templateItem(item)).join('')}
+                </div>
+            `;
+            container.appendChild(section);
+        }
     }
 
-    function desenhar() {
-        const div = document.getElementById('lista-itens');
-        div.innerHTML = `<div class="categoria-header">Itens Principais</div>`;
-        itensPrincipais.forEach(item => div.innerHTML += templateItem(item));
-        div.innerHTML += `<div class="categoria-header" style="margin-left:-25px; margin-right:-25px;">Materiais Opcionais</div>`;
-        itensOpcionais.forEach(item => div.innerHTML += templateItem(item));
+    function toggleCat(nome) {
+        const div = document.getElementById(`conteudo-${nome}`);
+        const seta = document.getElementById(`seta-${nome}`);
+        if(div.style.display === "block") {
+            div.style.display = "none";
+            seta.innerText = "▼";
+        } else {
+            div.style.display = "block";
+            seta.innerText = "▲";
+        }
     }
 
     function templateItem(item) {
-        // Se for Devolução, substitui o botão MAIS pelo CHECK ✅
         const btnDireito = tipoAcao === 'Devolução' 
             ? `<button class="btn-status btn-check ${conferidos[item] ? 'conferido' : ''}" id="check-${item}" onclick="checkItem('${item}')">✅</button>`
             : `<button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>`;
@@ -261,44 +271,37 @@
     function mudar(i, v) {
         if((contagem[i] || 0) + v >= 0) {
             contagem[i] += v;
-            document.getElementById('c-' + i).innerText = contagem[i];
-            // Se mudar quantidade na devolução, reseta o check para garantir nova conferência
+            // Atualiza todos os contadores desse item (caso ele apareça em mais de uma categoria)
+            document.querySelectorAll(`[id="c-${i}"]`).forEach(el => el.innerText = contagem[i]);
             if(tipoAcao === 'Devolução') {
                 conferidos[i] = false;
-                const btn = document.getElementById('check-' + i);
-                if(btn) btn.classList.remove('conferido');
+                document.querySelectorAll(`[id="check-${i}"]`).forEach(el => el.classList.remove('conferido'));
             }
         }
     }
 
     function checkItem(i) {
         conferidos[i] = !conferidos[i];
-        const btn = document.getElementById('check-' + i);
-        if(conferidos[i]) btn.classList.add('conferido');
-        else btn.classList.remove('conferido');
+        document.querySelectorAll(`[id="check-${i}"]`).forEach(el => {
+            if(conferidos[i]) el.classList.add('conferido');
+            else el.classList.remove('conferido');
+        });
     }
 
     function verificarFinalizacao() {
         if(tipoAcao === 'Devolução') {
-            // Verifica se todos os itens que saíram (quantidade > 0) foram "checkados"
             let pendentes = false;
-            for(let i in memoriaRetirada) {
-                if(memoriaRetirada[i] > 0 && !conferidos[i]) pendentes = true;
-            }
-            if(pendentes) return alert("Por favor, marque o ✅ em todos os itens retirados para confirmar!");
+            for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) pendentes = true;
+            if(pendentes) return alert("Por favor, marque o ✅ em todos os itens conferidos!");
 
-            let resumoHTML = "";
+            let resumo = "";
             let houveFalta = false;
             for(let i in memoriaRetirada) {
                 let diff = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
-                if(diff > 0) {
-                    resumoHTML += `• <b>${i}</b>: ${diff} unidade(s) a menos.<br>`;
-                    houveFalta = true;
-                }
+                if(diff > 0) { resumo += `• <b>${i}</b>: ${diff} unidade(s) a menos.<br>`; houveFalta = true; }
             }
             if(houveFalta) {
-                document.getElementById('resumo-perdas').innerHTML = resumoHTML;
-                document.body.classList.remove('modo-lista');
+                document.getElementById('resumo-perdas').innerHTML = resumo;
                 document.getElementById('tela-app').style.display = 'none';
                 document.getElementById('tela-perda').style.display = 'block';
                 return;
@@ -308,23 +311,21 @@
     }
 
     async function enviarTudo() {
-        emAndamento = false; window.onbeforeunload = null;
+        emAndamento = false; 
         const j = document.getElementById('justificativa').value;
-        const dados = {
-            responsavel: usuario, evento: evento, dataEvento: dataEvento,
-            tipo: tipoAcao === 'Correção' ? 'Saída' : tipoAcao, 
-            itens: contagem, justificativa: j, dataRegistro: Date.now()
-        };
+        const dados = { responsavel: usuario, evento: evento, dataEvento: dataEvento, tipo: tipoAcao === 'Correção' ? 'Saída' : tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now() };
         try {
-            const col = db.collection("testes_do_deymmes");
-            if (idDocCorrecao && tipoAcao === 'Correção') { await col.doc(idDocCorrecao).update(dados); } 
-            else { await col.add(dados); }
+            await db.collection("testes_do_deymmes").add(dados);
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
-            if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-        } catch(e) { alert("Erro ao salvar!"); emAndamento = true; }
+        } catch(e) { alert("Erro ao salvar!"); }
+    }
+
+    function voltarParaLista() {
+        document.getElementById('tela-perda').style.display = 'none';
+        document.getElementById('tela-app').style.display = 'block';
     }
 </script>
 </body>
