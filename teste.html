@@ -21,58 +21,61 @@
             margin: 0; padding: 0; 
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh;
-            background-color: #f0f2f5;
             background-image: url('fundo.jpg'); 
             background-size: cover; background-position: center; 
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
+        /* MANTER TELA INICIAL EXATAMENTE COMO VOCÊ QUER */
         .app-container { 
-            width: 92%; max-width: 480px; 
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3); 
-            border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
-            margin: 20px auto; overflow: hidden; 
+            width: 90%; max-width: 450px; 
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            margin: auto; overflow: hidden; 
         }
 
-        body.modo-lista { background: #f8f9fa; align-items: flex-start; }
-        body.modo-lista .app-container { width: 100%; max-width: 100%; border-radius: 0; background: transparent; box-shadow: none; border: none; }
+        /* ESTILO PROFISSIONAL PARA A LISTA INTERNA */
+        body.modo-lista { background: #f0f2f5; align-items: flex-start; }
+        body.modo-lista .app-container { 
+            width: 100%; max-width: 100%; 
+            border-radius: 0; box-shadow: none; 
+            background: transparent; border: none; 
+        }
 
-        header { background: linear-gradient(135deg, #1a73e8, #ff0080); color: white; padding: 18px; text-align: center; }
-        header h2 { font-size: 1.3em; margin: 0; letter-spacing: 1px; }
+        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; }
+        header h2 { font-size: 1.2em; margin: 0; }
 
-        .tela { padding: 15px; display: none; }
+        .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 6px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
+        #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
 
-        /* DESIGN PROFISSIONAL DOS CARDS */
+        /* CARDS MODERNOS INTERNOS */
         .card-categoria {
             background: white;
-            margin-bottom: 12px;
+            margin: 10px 15px;
             border-radius: 18px; /* Cantos levemente arredondados */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
-            transition: transform 0.2s;
         }
 
         .categoria-header { 
             padding: 14px 20px; 
             font-size: 0.85em; 
-            font-weight: 700; 
+            font-weight: bold; 
             color: white; 
             text-transform: uppercase; 
-            letter-spacing: 0.5px; 
+            letter-spacing: 1px; 
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        /* Cores Refinadas */
-        .cat-principais { background: #4a4e54; } 
+        .cat-principais { background: #454d55; } 
         .cat-opcionais { background: #8e44ad; }  
         .cat-camarim { background: #d81b60; }    
         .cat-espuma { background: #2980b9; }     
@@ -80,22 +83,25 @@
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
 
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f1f1f1; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
         .item:last-child { border-bottom: none; }
-        .item-nome { font-weight: 600; color: #444; font-size: 0.9em; }
+        .item-nome { font-weight: 600; color: #444; font-size: 0.92em; }
         
         .controles { display: flex; align-items: center; gap: 12px; }
-        .btn-status { border: none; width: 36px; height: 36px; border-radius: 12px; font-size: 1.1em; cursor: pointer; color: white; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .btn-mais { background: #1a73e8; }
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
+        .btn-mais { background: var(--primary); }
         .btn-menos { background: #e0e0e0; color: #888; }
         
-        .btn-check { background: #f0f0f0; color: transparent; border: 1.5px solid #ddd; }
-        .btn-check.conferido { background: #2ecc71; color: white; border-color: #2ecc71; }
+        .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
+        .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
-        .contador { font-weight: 700; font-size: 1.1em; min-width: 25px; text-align: center; color: #333; }
-        .btn-grande { width: 100%; padding: 16px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
         
-        #info-header { margin-bottom: 15px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; color: #666; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
+        .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
+
+        #info-header { margin: 10px 15px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
     </style>
 </head>
 <body>
@@ -105,26 +111,31 @@
     <header><h2>Up Controle</h2></header>
 
     <div id="tela-login" class="tela ativa">
-        <label style="font-weight:bold; display:block; margin-bottom:5px; font-size:0.9em;">Data do Evento</label>
+        <label class="label-bold">Data do Evento</label>
         <input type="date" id="data-evento">
-        <input type="text" id="nome-resp" placeholder="Nome do Responsável">
-        <input type="text" id="nome-evento" placeholder="Nome do Evento">
-        <button class="btn-grande" style="background: #1a73e8" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
-        <button class="btn-grande" style="background: #25D366" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
+        <label class="label-bold">Responsável</label>
+        <input type="text" id="nome-resp" placeholder="Seu nome">
+        <label class="label-bold">Evento</label>
+        <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
+        <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
+        <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
+        <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
     </div>
 
-    <div id="tela-app" class="tela" style="padding: 15px 10px">
+    <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header"></div>
         <div id="categorias-container"></div>
-        <button id="btn-finalizar" class="btn-grande" style="background:#ff0080" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+        <div style="padding:15px">
+            <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+        </div>
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0; color:#d81b60">⚠️ Ajuste de Inventário</h3>
-        <div id="resumo-perdas" style="background:#fff; border: 1px solid #ffccd5; padding:15px; border-radius:15px; margin-bottom:15px;"></div>
-        <textarea id="justificativa" rows="3" placeholder="Descreva o motivo da divergência..."></textarea>
-        <button class="btn-grande" style="background:#2ecc71" onclick="enviarTudo()">ENVIAR RELATÓRIO</button>
-        <button class="btn-grande" style="background:#95a5a6; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR ITENS</button>
+        <h3 style="margin-top:0">⚠️ Itens Faltantes</h3>
+        <div id="resumo-perdas" style="background:white; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #ffccd5;"></div>
+        <textarea id="justificativa" rows="3" placeholder="Explique o que houve..."></textarea>
+        <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
+        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 VOLTAR</button>
     </div>
 </div>
 
@@ -147,8 +158,9 @@
     let memoriaRetirada = {};
     let contagem = {};
     let conferidos = {};
+    let emAndamento = false;
 
-    // ESTRUTURA COM ORDEM ALFABÉTICA AUTOMÁTICA
+    // ESTRUTURA COM ALFABETIZAÇÃO AUTOMÁTICA (A-Z)
     const estoqueRaw = {
         "Itens Principais": {
             cor: "cat-principais",
@@ -172,7 +184,7 @@
         }
     };
 
-    // Função para ordenar itens alfabeticamente
+    // Função que organiza de A a Z automaticamente
     const estoque = {};
     Object.keys(estoqueRaw).forEach(cat => {
         estoque[cat] = {
@@ -185,23 +197,27 @@
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        if(!usuario || !evento || !dataEvento) return alert("Preencha os dados do evento!");
+        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
         
         tipoAcao = acao;
+        emAndamento = true;
+
         for(let cat in estoque) {
             estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
         }
 
-        if(acao === 'Devolução') {
+        if(acao === 'Devolução' || acao === 'Correção') {
             const q = await db.collection("testes_do_deymmes").where("evento", "==", evento).where("dataEvento", "==", dataEvento).where("responsavel", "==", usuario).get();
             if(!q.empty) {
                 const doc = q.docs[q.docs.length - 1].data();
-                memoriaRetirada = {...doc.itens};
+                if(acao === 'Devolução') memoriaRetirada = {...doc.itens};
                 contagem = {...doc.itens};
             }
         }
 
-        document.getElementById('info-header').innerHTML = `<b>${usuario.toUpperCase()}</b> • ${evento.toUpperCase()} (${acao})`;
+        const dataFormatada = dataEvento.split('-').reverse().join('/');
+        document.getElementById('info-header').innerHTML = `👤 <b>${usuario.toUpperCase()}</b><br>🎈 ${evento.toUpperCase()} (${acao})`;
+
         irParaLista();
     }
 
@@ -215,15 +231,13 @@
     function desenhar() {
         const container = document.getElementById('categorias-container');
         container.innerHTML = "";
-
         for(let nomeCat in estoque) {
             const cat = estoque[nomeCat];
             const card = document.createElement('div');
             card.className = "card-categoria";
-            
             card.innerHTML = `
                 <div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">
-                    ${nomeCat} <span id="seta-${nomeCat}" style="font-size:0.8em">▼</span>
+                    ${nomeCat} <span id="seta-${nomeCat}">▼</span>
                 </div>
                 <div id="conteudo-${nomeCat}" class="lista-conteudo">
                     ${cat.itens.map(item => templateItem(item)).join('')}
@@ -238,7 +252,7 @@
         const seta = document.getElementById(`seta-${nome}`);
         const estaAberto = div.style.display === "block";
         
-        // Opcional: fecha outros cards ao abrir um (limpa o espaço)
+        // Fecha outros para manter limpo
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
 
@@ -253,20 +267,12 @@
             ? `<button class="btn-status btn-check ${conferidos[item] ? 'conferido' : ''}" id="check-${item}" onclick="checkItem('${item}')">✅</button>`
             : `<button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>`;
 
-        return `
-            <div class="item">
-                <span class="item-nome">${item}</span>
-                <div class="controles">
-                    <button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button>
-                    <span class="contador" id="c-${item}">${contagem[item] || 0}</span>
-                    ${btnDireito}
-                </div>
-            </div>`;
+        return `<div class="item"><span class="item-nome">${item}</span><div class="controles"><button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button><span class="contador" id="c-${item}">${contagem[item] || 0}</span>${btnDireito}</div></div>`;
     }
 
     function mudar(i, v) {
         if((contagem[i] || 0) + v >= 0) {
-            contagem[i] = (contagem[i] || 0) + v;
+            contagem[i] += v;
             document.querySelectorAll(`[id="c-${i}"]`).forEach(el => el.innerText = contagem[i]);
             if(tipoAcao === 'Devolução') {
                 conferidos[i] = false;
@@ -285,18 +291,17 @@
 
     function verificarFinalizacao() {
         if(tipoAcao === 'Devolução') {
-            let pendentes = false;
-            for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) pendentes = true;
-            if(pendentes) return alert("Por favor, confira todos os itens retirados com o ✅ antes de finalizar.");
+            let p = false;
+            for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) p = true;
+            if(p) return alert("Por favor, confira todos os itens retirados com o ✅!");
 
-            let resumo = "";
-            let houveFalta = false;
+            let r = ""; let h = false;
             for(let i in memoriaRetirada) {
-                let diff = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
-                if(diff > 0) { resumo += `• <b>${i}</b>: ${diff} unidade(s) a menos.<br>`; houveFalta = true; }
+                let d = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
+                if(d > 0) { r += `• <b>${i}</b>: ${d} unidades a menos.<br>`; h = true; }
             }
-            if(houveFalta) {
-                document.getElementById('resumo-perdas').innerHTML = resumo;
+            if(h) {
+                document.getElementById('resumo-perdas').innerHTML = r;
                 document.getElementById('tela-app').style.display = 'none';
                 document.getElementById('tela-perda').style.display = 'block';
                 return;
@@ -312,7 +317,6 @@
             await db.collection("testes_do_deymmes").add(dados);
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
-            if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
         } catch(e) { alert("Erro ao salvar!"); }
