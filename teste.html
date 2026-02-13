@@ -36,7 +36,7 @@
             margin: auto; overflow: hidden; 
         }
 
-        body.modo-lista { background: #f0f2f5; align-items: flex-start; }
+        body.modo-lista { background: #f0f2f5; align-items: flex-start; scroll-behavior: smooth; }
         body.modo-lista .app-container { 
             width: 100%; max-width: 100%; 
             border-radius: 0; box-shadow: none; 
@@ -73,6 +73,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
+            scroll-margin-top: 20px; /* Margem para o scroll não colar no topo */
         }
         .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         
@@ -95,13 +96,12 @@
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        /* AJUSTE DE CONTRASTE NO OPERACIONAL */
+        /* CORES DE CONTRASTE */
         .btn-corrigir-estilo { background: #94a3b8 !important; color: white !important; } 
-        .btn-finalizar-estilo { background: #16a34a !important; color: white !important; font-weight: 800 !important; } /* Verde mais escuro para contraste */
+        .btn-finalizar-estilo { background: #16a34a !important; color: white !important; font-weight: 800 !important; }
 
         #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
-        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; }
-        input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
     </style>
 </head>
@@ -213,7 +213,6 @@
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
         
-        // Abre automaticamente a primeira categoria
         setTimeout(() => { toggleCat('Itens Principais', true); }, 100);
     }
 
@@ -224,6 +223,7 @@
             const cat = estoque[nomeCat];
             const card = document.createElement('div');
             card.className = "card-categoria";
+            card.id = `card-${nomeCat.replace(/\s+/g, '')}`; // ID para o scroll
             card.innerHTML = `<div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">${nomeCat} <span id="seta-${nomeCat}">▼</span></div><div id="conteudo-${nomeCat}" class="lista-conteudo">${cat.itens.map(item => templateItem(item)).join('')}</div>`;
             container.appendChild(card);
         }
@@ -232,17 +232,19 @@
     function toggleCat(nome, forcarAbrir = false) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
+        const card = document.getElementById(`card-${nome.replace(/\s+/g, '')}`);
         const estaAberto = div.style.display === "block";
 
-        // Se o usuário clicar no card que já está aberto, ele não fecha (evita vazio no layout)
         if (estaAberto && !forcarAbrir) return;
 
-        // Fecha as outras e abre a selecionada
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
 
         div.style.display = "block";
         seta.innerText = "▲";
+
+        // FUNÇÃO DE PUXAR PARA CIMA (Auto-scroll)
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function templateItem(item) {
