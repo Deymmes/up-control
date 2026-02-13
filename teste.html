@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL (GLASSMORPHISM) - EXATAMENTE COMO VOCÊ QUER */
+        /* TELA INICIAL (GLASSMORPHISM) - PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -36,7 +36,6 @@
             margin: auto; overflow: hidden; 
         }
 
-        /* ESTILO PROFISSIONAL PARA A LISTA INTERNA */
         body.modo-lista { background: #f0f2f5; align-items: flex-start; }
         body.modo-lista .app-container { 
             width: 100%; max-width: 100%; 
@@ -52,7 +51,7 @@
 
         #banner-sandbox { background: #f59e0b; color: white; text-align: center; padding: 5px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; }
 
-        /* PAINEL DE PROGRESSO (HUD) */
+        /* PAINEL DE PROGRESSO */
         #painel-progresso {
             background: white;
             margin: 10px 15px;
@@ -66,7 +65,7 @@
         .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
         .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        /* CARDS MODERNOS INTERNOS */
+        /* CARDS DA LISTA */
         .card-categoria {
             background: white;
             margin: 10px 15px;
@@ -75,47 +74,34 @@
             overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
         }
-
-        .categoria-header { 
-            padding: 14px 20px; 
-            font-size: 0.85em; 
-            font-weight: bold; 
-            color: white; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         
         .cat-principais { background: #454d55; } 
-        .cat-opcionais { background: #8e44ad; }  
+        .cat-opcionais { background: #9c27b0; }  
         .cat-camarim { background: #d81b60; }    
         .cat-espuma { background: #2980b9; }     
         .cat-inflavel { background: #e67e22; }   
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
-
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
-        .item:last-child { border-bottom: none; }
         .item-nome { font-weight: 600; color: #444; font-size: 0.92em; }
-        
         .controles { display: flex; align-items: center; gap: 12px; }
-        .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
         .btn-mais { background: var(--primary); }
         .btn-menos { background: #e0e0e0; color: #888; }
-        
         .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
         .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
-        
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
-        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
+
+        /* NOVAS CORES SOFT SUGERIDAS */
+        .btn-corrigir { background: #94a3b8 !important; } /* Cinza Médio Soft */
+        .btn-finalizar { background: #86efac !important; } /* Verde Soft Legível */
 
         #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
+        #resumo-perdas { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #ffccd5; }
+        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -125,37 +111,33 @@
     <header><h2>Up Controle</h2></header>
 
     <div id="tela-login" class="tela ativa">
-        <label class="label-bold">Data do Evento</label>
+        <label style="font-weight:bold; font-size:0.9em;">Data do Evento</label>
         <input type="date" id="data-evento">
-        <label class="label-bold">Responsável</label>
         <input type="text" id="nome-resp" placeholder="Seu nome">
-        <label class="label-bold">Evento</label>
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
-        <button class="btn-grande" style="background: #64748b; margin-top: 15px;" onclick="fluxo('Correção')">✏️ CORRIGIR MATERIAL</button>
+        <button class="btn-grande btn-corrigir" onclick="fluxo('Correção')">CORRIGIR</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
         <div id="info-header"></div>
-        
         <div id="painel-progresso">
             <div class="texto-progresso" id="txt-progresso">Faltam conferir: 0 itens</div>
             <div class="barra-bg"><div class="barra-fill" id="barra-fill"></div></div>
         </div>
-
         <div id="categorias-container"></div>
         <div style="padding:15px">
-            <button id="btn-finalizar" class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+            <button id="btn-finalizar" class="btn-grande btn-finalizar" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0">⚠️ Itens Faltantes</h3>
-        <div id="resumo-perdas" style="background:white; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #ffccd5;"></div>
-        <textarea id="justificativa" rows="3" placeholder="Explique o que houve..."></textarea>
+        <h3 style="margin-top:0">⚠️ Divergência Encontrada</h3>
+        <div id="resumo-perdas"></div>
+        <textarea id="justificativa" rows="3" placeholder="O que houve com esses itens?"></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
-        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 VOLTAR</button>
+        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR</button>
     </div>
 </div>
 
@@ -227,6 +209,9 @@
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
+        
+        // FOCO INICIAL: Abrir "Itens Principais" automaticamente
+        setTimeout(() => { toggleCat('Itens Principais', true); }, 100);
     }
 
     function desenhar() {
@@ -241,13 +226,25 @@
         }
     }
 
-    function toggleCat(nome) {
+    function toggleCat(nome, forcarAbrir = false) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
         const aberto = div.style.display === "block";
+
+        if (forcarAbrir) {
+            div.style.display = "block";
+            seta.innerText = "▲";
+            return;
+        }
+
+        // Item 2: Fecha outros conforme for abrindo um novo
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
-        if(!aberto) { div.style.display = "block"; seta.innerText = "▲"; }
+
+        if(!aberto) {
+            div.style.display = "block";
+            seta.innerText = "▲";
+        }
     }
 
     function templateItem(item) {
@@ -289,21 +286,15 @@
         const txt = document.getElementById('txt-progresso');
         const fill = document.getElementById('barra-fill');
         fill.style.width = perc + "%";
-        if(faltam === 0) {
-            txt.innerHTML = "✅ Tudo conferido!";
-            fill.style.background = "#2ecc71";
-        } else {
-            txt.innerHTML = `Faltam conferir: <b>${faltam}</b> itens`;
-            fill.style.background = "var(--secondary)";
-        }
+        if(faltam === 0) { txt.innerHTML = "✅ Tudo conferido!"; fill.style.background = "#2ecc71"; }
+        else { txt.innerHTML = `Faltam conferir: <b>${faltam}</b> itens`; fill.style.background = "var(--secondary)"; }
     }
 
     function verificarFinalizacao() {
         if(tipoAcao === 'Devolução') {
             let p = false;
             for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) p = true;
-            if(p) return alert("Por favor, confira todos os itens retirados com o ✅!");
-
+            if(p) return alert("Ainda existem itens pendentes de conferência!");
             let r = ""; let h = false;
             for(let i in memoriaRetirada) {
                 let d = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
@@ -329,7 +320,7 @@
             if(j) msg += `\n*⚠️ OBS:* ${j}`;
             window.location.href = `https://wa.me/5585999620064?text=${encodeURIComponent(msg)}`;
             setTimeout(() => { location.reload(); }, 1000);
-        } catch(e) { alert("Erro ao salvar!"); }
+        } catch(e) { alert("Erro!"); }
     }
 
     function voltarParaLista() {
