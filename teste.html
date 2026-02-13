@@ -26,7 +26,7 @@
             background-repeat: no-repeat; background-attachment: fixed;
         }
 
-        /* TELA INICIAL (GLASSMORPHISM) - PRESERVADA */
+        /* TELA INICIAL (GLASSMORPHISM) - TOTALMENTE PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -65,7 +65,7 @@
         .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
         .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        /* CARDS DA LISTA */
+        /* CARDS DA LISTA OPERACIONAL */
         .card-categoria {
             background: white;
             margin: 10px 15px;
@@ -92,16 +92,17 @@
         .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
         .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
         
-        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        /* NOVAS CORES SOFT SUGERIDAS */
-        .btn-corrigir { background: #94a3b8 !important; } /* Cinza Médio Soft */
-        .btn-finalizar { background: #86efac !important; } /* Verde Soft Legível */
+        /* CORES ESPECÍFICAS SOLICITADAS */
+        .btn-corrigir-estilo { background: #94a3b8 !important; color: white !important; } 
+        .btn-finalizar-estilo { background: #86efac !important; color: white !important; } 
 
         #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
-        #resumo-perdas { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #ffccd5; }
-        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; }
+        textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; }
+        input { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -111,13 +112,15 @@
     <header><h2>Up Controle</h2></header>
 
     <div id="tela-login" class="tela ativa">
-        <label style="font-weight:bold; font-size:0.9em;">Data do Evento</label>
+        <label class="label-bold">Data do Evento</label>
         <input type="date" id="data-evento">
+        <label class="label-bold">Responsável</label>
         <input type="text" id="nome-resp" placeholder="Seu nome">
+        <label class="label-bold">Evento</label>
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
-        <button class="btn-grande btn-corrigir" onclick="fluxo('Correção')">CORRIGIR</button>
+        <button class="btn-grande btn-corrigir-estilo" onclick="fluxo('Correção')">CORRIGIR</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
@@ -128,14 +131,14 @@
         </div>
         <div id="categorias-container"></div>
         <div style="padding:15px">
-            <button id="btn-finalizar" class="btn-grande btn-finalizar" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+            <button id="btn-finalizar" class="btn-grande btn-finalizar-estilo" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3 style="margin-top:0">⚠️ Divergência Encontrada</h3>
-        <div id="resumo-perdas"></div>
-        <textarea id="justificativa" rows="3" placeholder="O que houve com esses itens?"></textarea>
+        <h3 style="margin-top:0">⚠️ Divergência</h3>
+        <div id="resumo-perdas" style="background:white; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #ffccd5;"></div>
+        <textarea id="justificativa" rows="3" placeholder="O que houve?"></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
         <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR</button>
     </div>
@@ -209,8 +212,7 @@
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
-        
-        // FOCO INICIAL: Abrir "Itens Principais" automaticamente
+        // FOCO INICIAL: Abrir "Itens Principais"
         setTimeout(() => { toggleCat('Itens Principais', true); }, 100);
     }
 
@@ -226,25 +228,15 @@
         }
     }
 
-    function toggleCat(nome, forcarAbrir = false) {
+    function toggleCat(nome, forcar = false) {
         const div = document.getElementById(`conteudo-${nome}`);
         const seta = document.getElementById(`seta-${nome}`);
         const aberto = div.style.display === "block";
+        if(forcar) { div.style.display = "block"; seta.innerText = "▲"; return; }
 
-        if (forcarAbrir) {
-            div.style.display = "block";
-            seta.innerText = "▲";
-            return;
-        }
-
-        // Item 2: Fecha outros conforme for abrindo um novo
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
-
-        if(!aberto) {
-            div.style.display = "block";
-            seta.innerText = "▲";
-        }
+        if(!aberto) { div.style.display = "block"; seta.innerText = "▲"; }
     }
 
     function templateItem(item) {
@@ -278,9 +270,7 @@
     function atualizarHUD() {
         if(tipoAcao !== 'Devolução') return;
         let total = 0; let check = 0;
-        for(let i in memoriaRetirada) {
-            if(memoriaRetirada[i] > 0) { total++; if(conferidos[i]) check++; }
-        }
+        for(let i in memoriaRetirada) { if(memoriaRetirada[i] > 0) { total++; if(conferidos[i]) check++; } }
         const faltam = total - check;
         const perc = total > 0 ? (check / total) * 100 : 0;
         const txt = document.getElementById('txt-progresso');
@@ -294,11 +284,11 @@
         if(tipoAcao === 'Devolução') {
             let p = false;
             for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) p = true;
-            if(p) return alert("Ainda existem itens pendentes de conferência!");
+            if(p) return alert("Ainda existem itens pendentes!");
             let r = ""; let h = false;
             for(let i in memoriaRetirada) {
                 let d = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
-                if(d > 0) { r += `• <b>${i}</b>: ${d} unidades a menos.<br>`; h = true; }
+                if(d > 0) { r += `• <b>${i}</b>: ${d} a menos.<br>`; h = true; }
             }
             if(h) {
                 document.getElementById('resumo-perdas').innerHTML = r;
