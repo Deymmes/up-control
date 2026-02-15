@@ -18,85 +18,84 @@
         
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            margin: 0; padding: 0; 
+            display: flex; justify-content: center; align-items: center; 
             min-height: 100vh;
             background-image: url('fundo.jpg'); 
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background-size: cover; background-position: center; 
+            background-repeat: no-repeat; background-attachment: fixed;
         }
 
+        /* SETUP VIEW - PRESERVADA */
         .app-container { 
-            width: 90%; 
-            max-width: 450px; 
+            width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.4); 
-            border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            margin: auto; 
-            overflow: hidden; 
+            border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            margin: auto; overflow: hidden; 
         }
 
-        body.modo-lista { background: white; align-items: flex-start; }
+        body.modo-lista { background: #f0f2f5; align-items: flex-start; overflow-y: auto; }
         body.modo-lista .app-container { 
-            width: 100%; 
-            max-width: 100%; 
-            border-radius: 0; 
-            box-shadow: none; 
-            background: white; 
-            backdrop-filter: none; 
-            border: none; 
+            width: 100%; max-width: 100%; 
+            border-radius: 0; box-shadow: none; 
+            background: transparent; border: none; 
         }
 
-        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 20px; text-align: center; }
+        header { background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9)); color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
+        header h2 { font-size: 1.2em; margin: 0; }
 
-        .tela { padding: 25px; display: none; }
+        .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        .categoria-header {
-            background: #f1f3f4;
-            padding: 12px 25px;
-            font-size: 0.85em;
-            font-weight: bold;
-            color: #5f6368;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
+        /* PAINEL DE PROGRESSO INTERNO */
+        #painel-progresso {
+            background: white; margin: 10px 15px; padding: 15px; border-radius: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; display: none;
         }
+        .barra-bg { background: #eee; height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
+        .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        #lista-itens { padding: 10px 25px; }
-
-        .item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 18px 0; 
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+        /* CARDS OPERACIONAIS */
+        .card-categoria {
+            background: white; margin: 10px 15px; border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.03);
         }
+        .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        
+        .cat-principais { background: #454d55; } 
+        .cat-opcionais { background: #9c27b0; }  
+        .cat-camarim { background: #d81b60; }    
+        .cat-espuma { background: #2980b9; }     
+        .cat-inflavel { background: #e67e22; }   
 
-        .item-nome { font-weight: bold; color: #333; font-size: 1em; }
+        .lista-conteudo { padding: 5px 15px; display: none; background: white; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
+        .item-nome { font-weight: 600; color: #444; font-size: 0.92em; }
         .controles { display: flex; align-items: center; gap: 12px; }
-        .btn-status { border: none; width: 44px; height: 44px; border-radius: 12px; font-size: 1.2em; font-weight: bold; cursor: pointer; color: white; }
+        .btn-status { border: none; width: 38px; height: 38px; border-radius: 12px; font-size: 1.1em; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; }
         .btn-mais { background: var(--primary); }
-        .btn-menos { background: #bbb; color: white; }
-        .contador { font-weight: bold; font-size: 1.2em; min-width: 35px; text-align: center; }
+        .btn-menos { background: #e0e0e0; color: #888; }
+        .btn-check { background: #f0f0f0; color: transparent; border: 2px solid #ddd; }
+        .btn-check.conferido { background: var(--success); color: white; border-color: var(--success); }
+        
+        .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
+        .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
-        .btn-grande { width: 100%; padding: 20px; border: none; border-radius: 15px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
-        .label-bold { font-weight: bold; display: block; margin-bottom: 5px; color: #222; }
+        .btn-corrigir-estilo { background: #94a3b8 !important; color: white !important; } 
+        .btn-finalizar-estilo { background: #16a34a !important; color: white !important; font-weight: 800 !important; }
+
+        #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
+        .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <header><h2 style="margin:0">Up Controle</h2></header>
+    <header><h2>Up Controle</h2></header>
 
     <div id="tela-login" class="tela ativa">
         <label class="label-bold">Data do Evento</label>
@@ -107,21 +106,27 @@
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
+        <button class="btn-grande btn-corrigir-estilo" onclick="fluxo('Correção')">CORRIGIR</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
-        <div id="info-header" style="padding:20px 25px; background:#f8f9fa; font-size:0.85em; font-weight:bold; border-bottom:1px solid #ddd; line-height: 1.4; color: #555;"></div>
-        <div id="lista-itens"></div>
-        <div style="padding:30px 25px">
-            <button class="btn-grande" style="background:var(--secondary)" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+        <div id="info-header"></div>
+        <div id="painel-progresso">
+            <div class="texto-progresso" id="txt-progresso">Faltam conferir: 0 itens</div>
+            <div class="barra-bg"><div class="barra-fill" id="barra-fill"></div></div>
+        </div>
+        <div id="categorias-container"></div>
+        <div style="padding:15px">
+            <button id="btn-finalizar" class="btn-grande btn-finalizar-estilo" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
 
     <div id="tela-perda" class="tela">
-        <h3>⚠️ Itens Faltantes</h3>
-        <p>A quantidade devolvida é menor que a retirada. Explique o que houve:</p>
-        <textarea id="justificativa" rows="4" placeholder="Ex: 1 bola estourou..."></textarea>
+        <h3 style="margin-top:0">⚠️ Divergência</h3>
+        <div id="resumo-perdas" style="background:white; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #ffccd5;"></div>
+        <textarea id="justificativa" rows="3" placeholder="O que houve?"></textarea>
         <button class="btn-grande" style="background:var(--success)" onclick="enviarTudo()">ENVIAR RELATÓRIO FINAL</button>
+        <button class="btn-grande" style="background:#6c757d; margin-top: 10px;" onclick="voltarParaLista()">🔙 REVISAR</button>
     </div>
 </div>
 
@@ -143,102 +148,163 @@
     let usuario, evento, dataEvento, tipoAcao;
     let memoriaRetirada = {};
     let contagem = {};
+    let conferidos = {};
     let emAndamento = false;
 
-    // --- NOVA FUNÇÃO DE BLOQUEIO INTELIGENTE ---
+    // PROTEÇÃO CONTRA FECHAMENTO ACIDENTAL
     window.onbeforeunload = function(e) {
         if (emAndamento) {
-            // No iPad/Safari, o texto personalizado pode não aparecer, mas o alerta é acionado
             e.preventDefault();
-            return "Você tem um registro em andamento. Se sair, os dados serão perdidos!";
+            return "Você tem um registro em andamento!";
         }
     };
 
-    const itensPrincipais = [
-        "Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", 
-        "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", 
-        "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", 
-        "Balões", "Som", "Microfone"
-    ];
+    const estoqueRaw = {
+        "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
+        "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
+        "Camarim": { cor: "cat-camarim", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
+        "Espuma": { cor: "cat-espuma", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
+        "Inflável": { cor: "cat-inflavel", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
+    };
 
-    const itensOpcionais = [
-        "Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", 
-        "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas"
-    ];
+    const estoque = {};
+    Object.keys(estoqueRaw).forEach(cat => {
+        estoque[cat] = { cor: estoqueRaw[cat].cor, itens: estoqueRaw[cat].itens.sort((a,b) => a.localeCompare(b)) };
+    });
 
     async function fluxo(acao) {
         usuario = document.getElementById('nome-resp').value.trim();
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
-        
-        if(!usuario || !evento || !dataEvento) return alert("Preencha todos os campos!");
+        if(!usuario || !evento || !dataEvento) return alert("Preencha tudo!");
         
         tipoAcao = acao;
-        emAndamento = true; // Ativa a proteção aqui
+        emAndamento = true;
 
-        const dataFormatada = dataEvento.split('-').reverse().join('/');
-        document.getElementById('info-header').innerHTML = `📅 ${dataFormatada}<br>👤 ${usuario.toUpperCase()}<br>🎈 ${evento.toUpperCase()} (${acao})`;
+        for(let cat in estoque) {
+            estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
+        }
 
-        [...itensPrincipais, ...itensOpcionais].forEach(i => contagem[i] = 0);
-
-        if(acao === 'Devolução') {
-            const q = await db.collection("movimentacoes")
-                .where("evento", "==", evento)
-                .where("dataEvento", "==", dataEvento)
-                .where("tipo", "==", "Saída")
-                .get();
-            
+        if(acao === 'Devolução' || acao === 'Correção') {
+            const q = await db.collection("movimentacoes").where("evento", "==", evento).where("dataEvento", "==", dataEvento).where("tipo", "==", "Saída").get();
             if(!q.empty) {
-                const docs = q.docs;
-                memoriaRetirada = docs[docs.length - 1].data().itens;
-                contagem = {...memoriaRetirada};
+                const doc = q.docs[q.docs.length - 1].data();
+                if(acao === 'Devolução') memoriaRetirada = {...doc.itens};
+                contagem = {...doc.itens};
             }
         }
 
+        const dataFormatada = dataEvento.split('-').reverse().join('/');
+        document.getElementById('info-header').innerHTML = `👤 ${usuario.toUpperCase()} • 🎈 ${evento.toUpperCase()}`;
+        
+        if(acao === 'Devolução') {
+            document.getElementById('painel-progresso').style.display = 'block';
+            atualizarHUD();
+        } else {
+            document.getElementById('painel-progresso').style.display = 'none';
+        }
+        irParaLista();
+    }
+
+    function irParaLista() {
         document.body.classList.add('modo-lista');
         document.getElementById('tela-login').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
         desenhar();
+        setTimeout(() => { toggleCat('Itens Principais', true); }, 300);
     }
 
     function desenhar() {
-        const div = document.getElementById('lista-itens');
-        div.innerHTML = `<div class="categoria-header">Itens Principais</div>`;
-        itensPrincipais.forEach(item => div.innerHTML += templateItem(item));
-        
-        div.innerHTML += `<div class="categoria-header" style="margin-left:-25px; margin-right:-25px;">Materiais Opcionais</div>`;
-        itensOpcionais.forEach(item => div.innerHTML += templateItem(item));
+        const container = document.getElementById('categorias-container');
+        if(!container) {
+           const listDiv = document.getElementById('lista-itens');
+           listDiv.innerHTML = '<div id="categorias-container"></div>';
+        }
+        const target = document.getElementById('categorias-container');
+        target.innerHTML = "";
+        for(let nomeCat in estoque) {
+            const cat = estoque[nomeCat];
+            const card = document.createElement('div');
+            card.className = "card-categoria";
+            card.id = "card-" + nomeCat.replace(/\s+/g, '-');
+            card.innerHTML = `<div class="categoria-header ${cat.cor}" onclick="toggleCat('${nomeCat}')">${nomeCat} <span id="seta-${nomeCat}">▼</span></div><div id="conteudo-${nomeCat}" class="lista-conteudo">${cat.itens.map(item => templateItem(item)).join('')}</div>`;
+            target.appendChild(card);
+        }
+    }
+
+    function toggleCat(nome, forcar = false) {
+        const div = document.getElementById(`conteudo-${nome}`);
+        const seta = document.getElementById(`seta-${nome}`);
+        const card = document.getElementById("card-" + nome.replace(/\s+/g, '-'));
+        const estaAberto = div.style.display === "block";
+
+        if (estaAberto && !forcar) return;
+
+        document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
+        document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
+
+        div.style.display = "block";
+        seta.innerText = "▲";
+
+        const headerHeight = document.querySelector('header').offsetHeight + 40;
+        window.scrollTo({ top: card.offsetTop - headerHeight, behavior: 'smooth' });
     }
 
     function templateItem(item) {
-        return `
-            <div class="item">
-                <span class="item-nome">${item}</span>
-                <div class="controles">
-                    <button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button>
-                    <span class="contador" id="c-${item}">${contagem[item] || 0}</span>
-                    <button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>
-                </div>
-            </div>`;
+        const btnDireito = tipoAcao === 'Devolução' 
+            ? `<button class="btn-status btn-check ${conferidos[item] ? 'conferido' : ''}" id="check-${item}" onclick="checkItem('${item}')">✅</button>`
+            : `<button class="btn-status btn-mais" onclick="mudar('${item}',1)">+</button>`;
+        return `<div class="item"><span class="item-nome">${item}</span><div class="controles"><button class="btn-status btn-menos" onclick="mudar('${item}',-1)">-</button><span class="contador" id="c-${item}">${contagem[item] || 0}</span>${btnDireito}</div></div>`;
     }
 
     function mudar(i, v) {
         if((contagem[i] || 0) + v >= 0) {
             contagem[i] += v;
-            document.getElementById('c-' + i).innerText = contagem[i];
+            document.querySelectorAll(`[id="c-${i}"]`).forEach(el => el.innerText = contagem[i]);
+            if(tipoAcao === 'Devolução') {
+                conferidos[i] = false;
+                document.querySelectorAll(`[id="check-${i}"]`).forEach(el => el.classList.remove('conferido'));
+                atualizarHUD();
+            }
         }
     }
 
+    function checkItem(i) {
+        conferidos[i] = !conferidos[i];
+        document.querySelectorAll(`[id="check-${i}"]`).forEach(el => {
+            if(conferidos[i]) el.classList.add('conferido');
+            else el.classList.remove('conferido');
+        });
+        atualizarHUD();
+    }
+
+    function atualizarHUD() {
+        if(tipoAcao !== 'Devolução') return;
+        let total = 0; let check = 0;
+        for(let i in memoriaRetirada) { if(memoriaRetirada[i] > 0) { total++; if(conferidos[i]) check++; } }
+        const faltam = total - check;
+        const perc = total > 0 ? (check / total) * 100 : 0;
+        const txt = document.getElementById('txt-progresso');
+        const fill = document.getElementById('barra-fill');
+        fill.style.width = perc + "%";
+        if(faltam === 0) { txt.innerHTML = "✅ Tudo conferido!"; fill.style.background = "#2ecc71"; }
+        else { txt.innerHTML = `Faltam conferir: <b>${faltam}</b> itens`; fill.style.background = "var(--secondary)"; }
+    }
+
     function verificarFinalizacao() {
-        if(tipoAcao === 'Devolução' && Object.keys(memoriaRetirada).length > 0) {
-            let houvePerda = false;
+        if(tipoAcao === 'Devolução') {
+            let p = false;
+            for(let i in memoriaRetirada) if(memoriaRetirada[i] > 0 && !conferidos[i]) p = true;
+            if(p) return alert("Ainda existem itens pendentes!");
+            let r = ""; let h = false;
             for(let i in memoriaRetirada) {
-                if(contagem[i] < memoriaRetirada[i]) houvePerda = true;
+                let d = (memoriaRetirada[i] || 0) - (contagem[i] || 0);
+                if(d > 0) { r += `• <b>${i}</b>: ${d} a menos.<br>`; h = true; }
             }
-            if(houvePerda) {
-                document.body.classList.remove('modo-lista');
+            if(h) {
                 document.getElementById('tela-app').style.display = 'none';
                 document.getElementById('tela-perda').style.display = 'block';
+                document.getElementById('resumo-perdas').innerHTML = r;
                 return;
             }
         }
@@ -246,32 +312,25 @@
     }
 
     async function enviarTudo() {
-        // --- LIBERAÇÃO DA TRAVA ---
         emAndamento = false; 
         window.onbeforeunload = null;
-
         const j = document.getElementById('justificativa').value;
-        
         try {
             await db.collection("movimentacoes").add({
                 responsavel: usuario, evento: evento, dataEvento: dataEvento,
                 tipo: tipoAcao, itens: contagem, justificativa: j, dataRegistro: Date.now()
             });
-
             let msg = `*🚀 UP CONTROLE*\n*Resp:* ${usuario}\n*Evento:* ${evento}\n*Ação:* ${tipoAcao}\n\n*ITENS:*\n`;
             for(let i in contagem) if(contagem[i] > 0) msg += `✅ ${i}: ${contagem[i]}\n`;
-            if(j) msg += `\n*⚠️ JUSTIFICATIVA:* ${j}`;
+            if(j) msg += `\n*⚠️ OBS:* ${j}`;
+            window.location.href = `https://wa.me/5585997747964?text=${encodeURIComponent(msg)}`;
+        } catch(e) { alert("Erro ao salvar!"); emAndamento = true; }
+    }
 
-            const urlWa = `https://wa.me/5585997747964?text=${encodeURIComponent(msg)}`;
-            
-            // Redirecionamento direto para garantir que o iPad não bloqueie o WhatsApp
-            window.location.href = urlWa;
-        } catch(e) {
-            alert("Erro ao salvar! Verifique a internet.");
-            emAndamento = true; // Reativa proteção em caso de erro no salvamento
-        }
+    function voltarParaLista() {
+        document.getElementById('tela-perda').style.display = 'none';
+        document.getElementById('tela-app').style.display = 'block';
     }
 </script>
 </body>
 </html>
-
