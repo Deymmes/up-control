@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up Controle - Admin</title>
+    
+    <link rel="manifest" href="manifest_admin.json">
+    <link rel="apple-touch-icon" href="icon_admin.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <style>
+        :root { 
+            --primary: #1a73e8; 
+            --secondary: #ff0080; 
+            --bg: #f0f2f5; 
+            --success: #25D366;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-image: url('fundo.jpg'); 
+            background-size: cover; 
+            background-attachment: fixed;
+            margin: 0; padding: 15px; 
+            min-height: 100vh;
+        }
+
+        .admin-container { max-width: 600px; margin: auto; }
+
+        /* HEADER ESTILO APP */
+        header { 
+            background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9));
+            color: white; padding: 30px 15px; border-radius: 20px; 
+            margin-bottom: 20px; text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        header h1 { margin: 0; font-size: 1.4em; text-transform: uppercase; letter-spacing: 2px; }
+        header p { margin: 5px 0 0; font-size: 0.8em; opacity: 0.8; }
+
+        /* CARDS DE RESUMO */
+        .resumo-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .resumo-card { 
+            background: var(--glass); 
+            padding: 20px; border-radius: 18px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05); text-align: center;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);
+        }
+        .resumo-card span { display: block; font-size: 0.65em; color: #666; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
+        .resumo-card b { font-size: 1.4em; color: var(--primary); }
+
+        /* RANKING ESTILO PREMIUM */
+        .ranking-card { 
+            background: var(--glass); padding: 15px; border-radius: 18px; 
+            margin-bottom: 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.05); 
+            border-left: 6px solid var(--secondary);
+            backdrop-filter: blur(10px);
+        }
+        .ranking-titulo { font-size: 0.75em; font-weight: 900; color: #444; text-transform: uppercase; margin-bottom: 12px; display: block; }
+        .ranking-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.9em; }
+
+        /* LISTA DE MOVIMENTAÇÕES (MOBILE CARDS) */
+        .card-main { background: var(--glass); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        
+        .btn { border: none; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; color: white; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-refresh { background: var(--primary); }
+        .btn-filter { background: #555; }
+
+        /* ESTILIZAÇÃO DOS ITENS DA LISTA */
+        .registro-card {
+            background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee;
+        }
+        .reg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .reg-nome { font-weight: bold; color: #222; font-size: 0.95em; }
+        .reg-data { font-size: 0.75em; color: #999; }
+        .status-badge { font-size: 0.65em; padding: 4px 8px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
+        .badge-saida { background: #fff0f6; color: #ff0080; }
+        .badge-devolucao { background: #e6ffed; color: #28a745; }
+        
+        .reg-resumo { font-size: 0.85em; color: #555; line-height: 1.4; background: #f9f9f9; padding: 10px; border-radius: 10px; }
+        .justificativa-box { 
+            background: #fff5f5; border: 1px solid #feb2b2; padding: 10px; 
+            margin-top: 10px; color: #c53030; border-radius: 10px; font-size: 0.85em;
+        }
+
+        .btn-limpar { background: none; border: none; color: #bbb; font-size: 0.7em; width: 100%; margin-top: 30px; text-decoration: underline; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <header>
+        <h1>Painel Admin</h1>
+        <p>UP ENTRETENIMENTO • GESTÃO REALTIME</p>
+    </header>
+
+    <div class="resumo-cards">
+        <div class="resumo-card">
+            <span>Movimentações</span>
+            <b id="total-mov">0</b>
+        </div>
+        <div class="resumo-card">
+            <span>Ocorrências</span>
+            <b id="total-perdas" style="color: var(--secondary)">0</b>
+        </div>
+    </div>
+
+    <div id="card-ranking" class="ranking-card" style="display:none;">
+        <span class="ranking-titulo">🏆 Ranking de Ocorrências</span>
+        <div id="lista-ranking"></div>
+    </div>
+
+    <div class="card-main">
+        <div class="controles">
+            <button class="btn btn-refresh" onclick="location.reload()">🔄 Atualizar</button>
+            <button class="btn btn-filter" id="btn-filtro" onclick="alternarFiltro()">⚠️ Ver Perdas</button>
+        </div>
+
+        <div id="lista-feed">
+            <div style="text-align:center; color:#999; padding:20px;">Carregando registros...</div>
+        </div>
+
+        <button class="btn-limpar" onclick="limparHistorico()">Limpar histórico do sistema</button>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBYe0mjBHOY9C-X2u3PzLkJZkmnWCcv8gc",
+        authDomain: "up-controle-bd307.firebaseapp.com",
+        projectId: "up-controle-bd307",
+        storageBucket: "up-controle-bd307.firebasestorage.app",
+        messagingSenderId: "56963795860",
+        appId: "1:56963795860:web:eb9ba04de1ac98e7299d81"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let mostrarSomentePerdas = false;
+    let dadosCompletos = [];
+
+    db.collection("movimentacoes").orderBy("dataRegistro", "desc").onSnapshot(snap => {
+        dadosCompletos = [];
+        let rankingMap = {};
+        let perdasTotais = 0;
+
+        snap.forEach(doc => {
+            let d = doc.data();
+            d.id = doc.id;
+            dadosCompletos.push(d);
+
+            if(d.justificativa) {
+                perdasTotais++;
+                let resp = d.responsavel.toUpperCase();
+                rankingMap[resp] = (rankingMap[resp] || 0) + 1;
+            }
+        });
+
+        document.getElementById('total-mov').innerText = dadosCompletos.length;
+        document.getElementById('total-perdas').innerText = perdasTotais;
+        
+        gerarRanking(rankingMap);
+        renderizarFeed();
+    });
+
+    function gerarRanking(map) {
+        const lista = document.getElementById('lista-ranking');
+        const card = document.getElementById('card-ranking');
+        lista.innerHTML = "";
+        const ordenado = Object.entries(map).sort((a, b) => b[1] - a[1]);
+
+        if (ordenado.length > 0) {
+            card.style.display = "block";
+            ordenado.forEach(([nome, qtd]) => {
+                lista.innerHTML += `
+                    <div class="ranking-item">
+                        <span>👤 ${nome}</span>
+                        <b>${qtd}</b>
+                    </div>`;
+            });
+        } else {
+            card.style.display = "none";
+        }
+    }
+
+    function renderizarFeed() {
+        const feed = document.getElementById('lista-feed');
+        feed.innerHTML = "";
+        const filtrados = mostrarSomentePerdas ? dadosCompletos.filter(d => d.justificativa) : dadosCompletos;
+
+        if (filtrados.length === 0) {
+            feed.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>Nenhum registro encontrado.</div>";
+            return;
+        }
+
+        filtrados.forEach(m => {
+            const dataReg = m.dataRegistro ? new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}) : "--";
+            let listaItens = "";
+            for (let item in m.itens) {
+                if(m.itens[item] > 0) listaItens += `<b>${m.itens[item]}</b> ${item}, `;
+            }
+            listaItens = listaItens.replace(/, $/ , "");
+
+            feed.innerHTML += `
+                <div class="registro-card">
+                    <div class="reg-header">
+                        <div>
+                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                            <div class="reg-data">${dataReg} • Por: ${m.responsavel.toUpperCase()}</div>
+                        </div>
+                        <span class="status-badge ${m.tipo === 'Saída' ? 'badge-saida' : 'badge-devolucao'}">${m.tipo}</span>
+                    </div>
+                    <div class="reg-resumo">${listaItens || 'Sem itens listados'}</div>
+                    ${m.justificativa ? `<div class="justificativa-box"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
+                </div>
+            `;
+        });
+    }
+
+    function alternarFiltro() {
+        mostrarSomentePerdas = !mostrarSomentePerdas;
+        const btn = document.getElementById('btn-filtro');
+        btn.innerText = mostrarSomentePerdas ? "✅ VER TUDO" : "⚠️ SÓ PERDAS";
+        renderizarFeed();
+    }
+
+    async function limparHistorico() {
+        const senha = prompt("Senha Master:");
+        if (senha === "admin123") {
+            if (confirm("Isso apagará todos os dados do servidor. Confirma?")) {
+                const registros = await db.collection("movimentacoes").get();
+                const batch = db.batch();
+                registros.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                alert("Sistema zerado com sucesso.");
+            }
+        }
+    }
+</script>
+</body>
+</html>
