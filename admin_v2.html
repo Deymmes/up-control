@@ -6,7 +6,8 @@
     <title>Up Controle - Admin</title>
     
     <link rel="manifest" href="manifest_admin.json">
-    <link rel="apple-touch-icon" href="icon_admin.png">
+    <link rel="apple-touch-icon" href="iconadmin.png">
+    <link rel="icon" type="image/png" href="iconadmin.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
@@ -24,8 +25,11 @@
 
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            background-image: url('fundo.jpg'); 
+            /* Fundo atualizado com camada de contraste para leitura */
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundoadmin.jpg'); 
             background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
             background-attachment: fixed;
             margin: 0; padding: 15px; 
             min-height: 100vh;
@@ -65,7 +69,7 @@
         .ranking-titulo { font-size: 0.75em; font-weight: 900; color: #444; text-transform: uppercase; margin-bottom: 12px; display: block; }
         .ranking-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.9em; }
 
-        /* LISTA DE MOVIMENTAÇÕES (MOBILE CARDS) */
+        /* FEED DE CARDS (MOBILE FIRST) */
         .card-main { background: var(--glass); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
         .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         
@@ -73,7 +77,6 @@
         .btn-refresh { background: var(--primary); }
         .btn-filter { background: #555; }
 
-        /* ESTILIZAÇÃO DOS ITENS DA LISTA */
         .registro-card {
             background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee;
