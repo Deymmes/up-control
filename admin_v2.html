@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="iconadmin.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -25,7 +26,7 @@
 
         body { 
             font-family: 'Segoe UI', sans-serif; 
-            /* Fundo com camada de contraste para garantir leitura no Admin */
+            /* Camada de contraste sobre o fundo oficial do Admin */
             background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundoadmin.jpg'); 
             background-size: cover; 
             background-attachment: fixed;
@@ -36,7 +37,6 @@
 
         .admin-container { max-width: 600px; margin: auto; }
 
-        /* HEADER ESTILO APP */
         header { 
             background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9));
             color: white; padding: 30px 15px; border-radius: 20px; 
@@ -47,7 +47,6 @@
         header h1 { margin: 0; font-size: 1.4em; text-transform: uppercase; letter-spacing: 2px; }
         header p { margin: 5px 0 0; font-size: 0.8em; opacity: 0.8; }
 
-        /* CARDS DE RESUMO */
         .resumo-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .resumo-card { 
             background: var(--glass); 
@@ -58,7 +57,6 @@
         .resumo-card span { display: block; font-size: 0.65em; color: #666; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
         .resumo-card b { font-size: 1.4em; color: var(--primary); }
 
-        /* RANKING ESTILO PREMIUM */
         .ranking-card { 
             background: var(--glass); padding: 15px; border-radius: 18px; 
             margin-bottom: 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.05); 
@@ -68,7 +66,6 @@
         .ranking-titulo { font-size: 0.75em; font-weight: 900; color: #444; text-transform: uppercase; margin-bottom: 12px; display: block; }
         .ranking-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.9em; }
 
-        /* LISTA DE MOVIMENTAÇÕES */
         .card-main { background: var(--glass); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
         .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         
