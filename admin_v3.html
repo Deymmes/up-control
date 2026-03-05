@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up Controle - Admin V3</title>
+    
+    <link rel="manifest" href="manifest_admin.json" crossorigin="use-credentials">
+    <link rel="apple-touch-icon" href="iconadmin.png">
+    <link rel="icon" type="image/png" href="iconadmin.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <style>
+        :root { 
+            --primary: #1a73e8; 
+            --secondary: #ff0080; 
+            --bg: #f0f2f5; 
+            --success: #25D366;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundoadmin.jpg'); 
+            background-size: cover; 
+            background-attachment: fixed;
+            background-position: center;
+            margin: 0; padding: 15px; 
+            min-height: 100vh;
+        }
+
+        .admin-container { max-width: 600px; margin: auto; }
+
+        header { 
+            background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9));
+            color: white; padding: 25px 15px; border-radius: 20px; 
+            margin-bottom: 15px; text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        header h1 { margin: 0; font-size: 1.3em; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* ANALYTICS GRID */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .card-mini { 
+            background: var(--glass); padding: 12px 5px; border-radius: 15px; 
+            text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);
+        }
+        .card-mini span { display: block; font-size: 0.6em; font-weight: bold; color: #666; text-transform: uppercase; }
+        .card-mini b { font-size: 1.1em; color: var(--primary); }
+
+        .card-main { background: var(--glass); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); }
+        
+        .controles { display: grid; grid-template-columns: 0.5fr 1fr 1fr 0.8fr; gap: 8px; margin-bottom: 15px; }
+        .btn { border: none; padding: 10px 5px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.7em; color: white; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.3s; }
+        .btn-refresh { background: var(--primary); }
+        .btn-filter { background: #555; }
+        .btn-success { background: var(--success); }
+        .btn-arquivo { background: #454d55; }
+        .btn-ativo { outline: 3px solid white; transform: scale(1.05); }
+
+        .registro-card { 
+            background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee; position: relative; overflow: hidden;
+        }
+        .reg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .reg-nome { font-weight: bold; color: #222; font-size: 0.9em; }
+        .status-badge { font-size: 0.6em; padding: 4px 8px; border-radius: 6px; font-weight: 900; }
+        .badge-saida { background: #fff0f6; color: #ff0080; }
+        .badge-devolucao { background: #e6ffed; color: #28a745; }
+        
+        .reg-resumo { font-size: 0.8em; color: #555; background: #f9f9f9; padding: 8px; border-radius: 10px; }
+        .justificativa-box { background: #fff5f5; border: 1px solid #feb2b2; padding: 8px; margin-top: 8px; color: #c53030; border-radius: 8px; font-size: 0.8em; }
+        
+        /* BADGE DE CORREÇÃO */
+        .badge-correcao { position: absolute; top: 0; right: 0; background: #ffc107; color: #333; font-size: 10px; font-weight: 800; padding: 3px 8px; border-bottom-left-radius: 12px; text-transform: uppercase; }
+
+        .modo-concluido { border-left: 5px solid #ccc; opacity: 0.6; }
+
+        .btn-limpar { background: none; border: none; color: #bbb; font-size: 0.7em; width: 100%; margin-top: 30px; text-decoration: underline; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <header>
+        <h1>Up Controle Admin</h1>
+        <p style="margin:0; font-size:0.7em; opacity:0.8;">GESTÃO ESTRATÉGICA V3</p>
+    </header>
+
+    <div class="analytics-grid">
+        <div class="card-mini"><span>Eventos/Mês</span><b id="an-mes">0</b></div>
+        <div class="card-mini"><span>Na Rua</span><b id="an-rua" style="color:var(--secondary)">0</b></div>
+        <div class="card-mini"><span>Concluídos</span><b id="an-ok" style="color:var(--success)">0</b></div>
+    </div>
+
+    <div class="card-main">
+        <div class="controles">
+            <button class="btn btn-refresh" onclick="location.reload()">🔄</button>
+            <button class="btn btn-filter" id="btn-perdas" onclick="alternarFiltro('perdas')">⚠️ Perdas</button>
+            <button class="btn btn-success" id="btn-devolvidos" onclick="alternarFiltro('devolvidos')">✅ OK</button>
+            <button class="btn btn-arquivo" id="btn-tudo" onclick="alternarFiltro('tudo')">📁 Tudo</button>
+        </div>
+        <div id="lista-feed"><div style="text-align:center; color:#999; padding:20px;">Carregando registros...</div></div>
+        <button class="btn-limpar" onclick="limparHistorico()">Limpar histórico do sistema</button>
+    </div>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBYe0mjBHOY9C-X2u3PzLkJZkmnWCcv8gc",
+        authDomain: "up-controle-bd307.firebaseapp.com",
+        projectId: "up-controle-bd307",
+        storageBucket: "up-controle-bd307.firebasestorage.app",
+        messagingSenderId: "56963795860",
+        appId: "1:56963795860:web:eb9ba04de1ac98e7299d81"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let filtroAtivo = 'ativos';
+    let dadosProcessados = [];
+
+    db.collection("movimentacoes").orderBy("dataRegistro", "desc").onSnapshot(snap => {
+        let eventosAgrupados = {};
+        let eventosDoMes = new Set();
+        let eventosConcluidos = new Set();
+        let totalNaRua = 0;
+        const mesAtual = new Date().getMonth();
+
+        // Primeira passada: Organiza Saídas e Correções
+        snap.forEach(doc => {
+            let d = doc.data();
+            const chaveUnica = d.evento.toUpperCase() + d.dataEvento;
+
+            if (d.tipo === 'Correção') {
+                if (eventosAgrupados[chaveUnica + 'Saída']) {
+                    eventosAgrupados[chaveUnica + 'Saída'].itens = d.itens;
+                    eventosAgrupados[chaveUnica + 'Saída'].correcoes = (eventosAgrupados[chaveUnica + 'Saída'].correcoes || 0) + 1;
+                }
+                return;
+            }
+
+            const chaveCard = chaveUnica + d.tipo;
+            if (!eventosAgrupados[chaveCard]) {
+                eventosAgrupados[chaveCard] = { ...d, id: doc.id, correcoes: 0 };
+            }
+        });
+
+        // Segunda passada: Cálculo de Balanço e Analytics
+        let listaFinal = Object.values(eventosAgrupados);
+        let eventosMap = {}; 
+
+        listaFinal.forEach(m => {
+            const chaveEv = m.evento.toUpperCase() + m.dataEvento;
+            if (!eventosMap[chaveEv]) eventosMap[chaveEv] = { saida: 0, volta: 0 };
+            
+            let somaItens = Object.values(m.itens).reduce((a, b) => a + b, 0);
+            if (m.tipo === 'Saída') eventosMap[chaveEv].saida += somaItens;
+            if (m.tipo === 'Devolução') eventosMap[chaveEv].volta += somaItens;
+
+            // Analytics Mensal
+            if (m.tipo !== 'Correção' && new Date(m.dataRegistro).getMonth() === mesAtual) {
+                eventosDoMes.add(chaveEv);
+            }
+        });
+
+        // Define quem some da tela (Balanço zero)
+        for (let ev in eventosMap) {
+            if (eventosMap[ev].saida > 0 && eventosMap[ev].saida === eventosMap[ev].volta) {
+                eventosConcluidos.add(ev);
+            }
+        }
+
+        dadosProcessados = listaFinal.sort((a,b) => b.dataRegistro - a.dataRegistro);
+        
+        // Update Dash
+        document.getElementById('an-mes').innerText = eventosDoMes.size;
+        document.getElementById('an-rua').innerText = eventosDoMes.size - eventosConcluidos.size;
+        document.getElementById('an-ok').innerText = eventosConcluidos.size;
+
+        renderizarFeed(eventosConcluidos);
+    });
+
+    function renderizarFeed(concluidos) {
+        const feed = document.getElementById('lista-feed');
+        feed.innerHTML = "";
+        
+        let filtrados = dadosProcessados;
+
+        if (filtroAtivo === 'ativos') {
+            // Regra: Só mostra Saídas que NÃO bateram o balanço
+            filtrados = dadosProcessados.filter(d => 
+                !concluidos.has(d.evento.toUpperCase() + d.dataEvento) && d.tipo === 'Saída'
+            );
+        } else if (filtroAtivo === 'perdas') {
+            filtrados = dadosProcessados.filter(d => d.justificativa);
+        } else if (filtroAtivo === 'devolvidos') {
+            filtrados = dadosProcessados.filter(d => d.tipo === 'Devolução');
+        }
+
+        if (filtrados.length === 0) {
+            feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">✨ Tudo conferido e guardado!</div>`;
+            return;
+        }
+
+        filtrados.forEach(m => {
+            const dataReg = new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+            let listaItens = "";
+            for (let item in m.itens) if(m.itens[item] > 0) listaItens += `<b>${m.itens[item]}</b> ${item}, `;
+            listaItens = listaItens.replace(/, $/ , "");
+
+            const isDone = concluidos.has(m.evento.toUpperCase() + m.dataEvento);
+            const badgeEdicao = m.correcoes > 0 ? `<div class="badge-correcao">✏️ ${m.correcoes} CORREÇÃO</div>` : "";
+
+            feed.innerHTML += `
+                <div class="registro-card ${isDone && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
+                    ${badgeEdicao}
+                    <div class="reg-header">
+                        <div>
+                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                            <div class="reg-data">${dataReg} • ${m.responsavel.toUpperCase()}</div>
+                        </div>
+                        <span class="status-badge ${m.tipo === 'Saída' ? 'badge-saida' : 'badge-devolucao'}">${m.tipo}</span>
+                    </div>
+                    <div class="reg-resumo">${listaItens || 'Sem itens'}</div>
+                    ${m.justificativa ? `<div class="justificativa-box"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
+                </div>`;
+        });
+    }
+
+    function alternarFiltro(tipo) {
+        filtroAtivo = (filtroAtivo === tipo) ? 'ativos' : tipo;
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('btn-ativo'));
+        if(filtroAtivo !== 'ativos') document.getElementById('btn-' + (tipo === 'tudo' ? 'tudo' : tipo === 'perdas' ? 'perdas' : 'devolvidos')).classList.add('btn-ativo');
+        
+        // Recalcula concluidos para render
+        const sets = recarregarConcluidos();
+        renderizarFeed(sets);
+    }
+
+    function recarregarConcluidos() {
+        let eventosMap = {};
+        let concluidos = new Set();
+        dadosProcessados.forEach(m => {
+            const chave = m.evento.toUpperCase() + m.dataEvento;
+            if (!eventosMap[chave]) eventosMap[chave] = { s:0, v:0 };
+            let soma = Object.values(m.itens).reduce((a, b) => a + b, 0);
+            if (m.tipo === 'Saída') eventosMap[chave].s += soma;
+            if (m.tipo === 'Devolução') eventosMap[chave].v += soma;
+        });
+        for (let ev in eventosMap) if (eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v) concluidos.add(ev);
+        return concluidos;
+    }
+
+    async function limparHistorico() {
+        const senha = prompt("Senha Master:");
+        if (senha === "admin123") {
+            if (confirm("Isso apagará todos os dados. Confirma?")) {
+                const registros = await db.collection("movimentacoes").get();
+                const batch = db.batch();
+                registros.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                alert("Sistema zerado.");
+            }
+        }
+    }
+</script>
+</body>
+</html>
