@@ -45,13 +45,12 @@
         }
         header h1 { margin: 0; font-size: 1.3em; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* ANALYTICS GRID */
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .card-mini { 
             background: var(--glass); padding: 12px 5px; border-radius: 15px; 
             text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);
         }
-        .card-mini span { display: block; font-size: 0.6em; font-weight: bold; color: #666; text-transform: uppercase; }
+        .card-mini span { display: block; font-size: 0.65em; font-weight: bold; color: #666; text-transform: uppercase; }
         .card-mini b { font-size: 1.1em; color: var(--primary); }
 
         .card-main { background: var(--glass); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); }
@@ -75,13 +74,11 @@
         .badge-devolucao { background: #e6ffed; color: #28a745; }
         
         .reg-resumo { font-size: 0.8em; color: #555; background: #f9f9f9; padding: 8px; border-radius: 10px; }
-        .justificativa-box { background: #fff5f5; border: 1px solid #feb2b2; padding: 8px; margin-top: 8px; color: #c53030; border-radius: 8px; font-size: 0.8em; }
         
         /* BADGE DE CORREÇÃO */
         .badge-correcao { position: absolute; top: 0; right: 0; background: #ffc107; color: #333; font-size: 10px; font-weight: 800; padding: 3px 8px; border-bottom-left-radius: 12px; text-transform: uppercase; }
 
         .modo-concluido { border-left: 5px solid #ccc; opacity: 0.6; }
-
         .btn-limpar { background: none; border: none; color: #bbb; font-size: 0.7em; width: 100%; margin-top: 30px; text-decoration: underline; cursor: pointer; }
     </style>
 </head>
@@ -106,7 +103,7 @@
             <button class="btn btn-success" id="btn-devolvidos" onclick="alternarFiltro('devolvidos')">✅ OK</button>
             <button class="btn btn-arquivo" id="btn-tudo" onclick="alternarFiltro('tudo')">📁 Tudo</button>
         </div>
-        <div id="lista-feed"><div style="text-align:center; color:#999; padding:20px;">Carregando registros...</div></div>
+        <div id="lista-feed"><div style="text-align:center; color:#999; padding:20px;">Processando dados...</div></div>
         <button class="btn-limpar" onclick="limparHistorico()">Limpar histórico do sistema</button>
     </div>
 </div>
@@ -131,58 +128,57 @@
         let eventosAgrupados = {};
         let eventosDoMes = new Set();
         let eventosConcluidos = new Set();
-        let totalNaRua = 0;
+        let eventosMap = {}; 
         const mesAtual = new Date().getMonth();
 
-        // Primeira passada: Organiza Saídas e Correções
+        // 1. Agrupar Saídas e aplicar Correções silenciosas
         snap.forEach(doc => {
             let d = doc.data();
-            const chaveUnica = d.evento.toUpperCase() + d.dataEvento;
+            const chaveEv = d.evento.toUpperCase().trim() + d.dataEvento;
 
             if (d.tipo === 'Correção') {
-                if (eventosAgrupados[chaveUnica + 'Saída']) {
-                    eventosAgrupados[chaveUnica + 'Saída'].itens = d.itens;
-                    eventosAgrupados[chaveUnica + 'Saída'].correcoes = (eventosAgrupados[chaveUnica + 'Saída'].correcoes || 0) + 1;
+                const chaveOriginal = chaveEv + 'Saída';
+                if (eventosAgrupados[chaveOriginal]) {
+                    eventosAgrupados[chaveOriginal].itens = d.itens;
+                    eventosAgrupados[chaveOriginal].correcoes = (eventosAgrupados[chaveOriginal].correcoes || 0) + 1;
                 }
                 return;
             }
 
-            const chaveCard = chaveUnica + d.tipo;
+            const chaveCard = chaveEv + d.tipo;
             if (!eventosAgrupados[chaveCard]) {
                 eventosAgrupados[chaveCard] = { ...d, id: doc.id, correcoes: 0 };
             }
         });
 
-        // Segunda passada: Cálculo de Balanço e Analytics
-        let listaFinal = Object.values(eventosAgrupados);
-        let eventosMap = {}; 
-
-        listaFinal.forEach(m => {
-            const chaveEv = m.evento.toUpperCase() + m.dataEvento;
+        // 2. Calcular Balanço de Itens (Regra de Ouro)
+        let listaTemp = Object.values(eventosAgrupados);
+        listaTemp.forEach(m => {
+            const chaveEv = m.evento.toUpperCase().trim() + m.dataEvento;
             if (!eventosMap[chaveEv]) eventosMap[chaveEv] = { saida: 0, volta: 0 };
             
-            let somaItens = Object.values(m.itens).reduce((a, b) => a + b, 0);
+            let somaItens = Object.values(m.itens).reduce((a, b) => a + (parseInt(b) || 0), 0);
             if (m.tipo === 'Saída') eventosMap[chaveEv].saida += somaItens;
             if (m.tipo === 'Devolução') eventosMap[chaveEv].volta += somaItens;
 
-            // Analytics Mensal
             if (m.tipo !== 'Correção' && new Date(m.dataRegistro).getMonth() === mesAtual) {
                 eventosDoMes.add(chaveEv);
             }
         });
 
-        // Define quem some da tela (Balanço zero)
+        // Identifica eventos concluídos (Balanço Zerado)
         for (let ev in eventosMap) {
             if (eventosMap[ev].saida > 0 && eventosMap[ev].saida === eventosMap[ev].volta) {
                 eventosConcluidos.add(ev);
             }
         }
 
-        dadosProcessados = listaFinal.sort((a,b) => b.dataRegistro - a.dataRegistro);
+        dadosProcessados = listaTemp.sort((a,b) => b.dataRegistro - a.dataRegistro);
         
-        // Update Dash
+        // Atualiza Analytics (Garante que não mostre negativo)
+        let naRua = Math.max(0, eventosDoMes.size - eventosConcluidos.size);
         document.getElementById('an-mes').innerText = eventosDoMes.size;
-        document.getElementById('an-rua').innerText = eventosDoMes.size - eventosConcluidos.size;
+        document.getElementById('an-rua').innerText = naRua;
         document.getElementById('an-ok').innerText = eventosConcluidos.size;
 
         renderizarFeed(eventosConcluidos);
@@ -195,9 +191,9 @@
         let filtrados = dadosProcessados;
 
         if (filtroAtivo === 'ativos') {
-            // Regra: Só mostra Saídas que NÃO bateram o balanço
+            // Regra: Só mostra Saídas pendentes (Balanço não zerado)
             filtrados = dadosProcessados.filter(d => 
-                !concluidos.has(d.evento.toUpperCase() + d.dataEvento) && d.tipo === 'Saída'
+                !concluidos.has(d.evento.toUpperCase().trim() + d.dataEvento) && d.tipo === 'Saída'
             );
         } else if (filtroAtivo === 'perdas') {
             filtrados = dadosProcessados.filter(d => d.justificativa);
@@ -206,7 +202,7 @@
         }
 
         if (filtrados.length === 0) {
-            feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">✨ Tudo conferido e guardado!</div>`;
+            feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">✨ Tudo em ordem por aqui!</div>`;
             return;
         }
 
@@ -216,7 +212,7 @@
             for (let item in m.itens) if(m.itens[item] > 0) listaItens += `<b>${m.itens[item]}</b> ${item}, `;
             listaItens = listaItens.replace(/, $/ , "");
 
-            const isDone = concluidos.has(m.evento.toUpperCase() + m.dataEvento);
+            const isDone = concluidos.has(m.evento.toUpperCase().trim() + m.dataEvento);
             const badgeEdicao = m.correcoes > 0 ? `<div class="badge-correcao">✏️ ${m.correcoes} CORREÇÃO</div>` : "";
 
             feed.innerHTML += `
@@ -230,7 +226,7 @@
                         <span class="status-badge ${m.tipo === 'Saída' ? 'badge-saida' : 'badge-devolucao'}">${m.tipo}</span>
                     </div>
                     <div class="reg-resumo">${listaItens || 'Sem itens'}</div>
-                    ${m.justificativa ? `<div class="justificativa-box"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
+                    ${m.justificativa ? `<div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 8px; margin-top: 8px; color: #c53030; border-radius: 8px; font-size: 0.8em;"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
                 </div>`;
         });
     }
@@ -238,25 +234,22 @@
     function alternarFiltro(tipo) {
         filtroAtivo = (filtroAtivo === tipo) ? 'ativos' : tipo;
         document.querySelectorAll('.btn').forEach(b => b.classList.remove('btn-ativo'));
-        if(filtroAtivo !== 'ativos') document.getElementById('btn-' + (tipo === 'tudo' ? 'tudo' : tipo === 'perdas' ? 'perdas' : 'devolvidos')).classList.add('btn-ativo');
+        if(filtroAtivo !== 'ativos') {
+            const btnId = tipo === 'tudo' ? 'btn-tudo' : (tipo === 'perdas' ? 'btn-perdas' : 'btn-devolvidos');
+            document.getElementById(btnId).classList.add('btn-ativo');
+        }
         
         // Recalcula concluidos para render
-        const sets = recarregarConcluidos();
-        renderizarFeed(sets);
-    }
-
-    function recarregarConcluidos() {
-        let eventosMap = {};
-        let concluidos = new Set();
+        let evMap = {}; let setOk = new Set();
         dadosProcessados.forEach(m => {
-            const chave = m.evento.toUpperCase() + m.dataEvento;
-            if (!eventosMap[chave]) eventosMap[chave] = { s:0, v:0 };
-            let soma = Object.values(m.itens).reduce((a, b) => a + b, 0);
-            if (m.tipo === 'Saída') eventosMap[chave].s += soma;
-            if (m.tipo === 'Devolução') eventosMap[chave].v += soma;
+            const chave = m.evento.toUpperCase().trim() + m.dataEvento;
+            if (!evMap[chave]) evMap[chave] = {s:0, v:0};
+            let soma = Object.values(m.itens).reduce((a,b)=>a+(parseInt(b)||0),0);
+            if(m.tipo==='Saída') evMap[chave].s += soma;
+            if(m.tipo==='Devolução') evMap[chave].v += soma;
         });
-        for (let ev in eventosMap) if (eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v) concluidos.add(ev);
-        return concluidos;
+        for(let e in evMap) if(evMap[e].s > 0 && evMap[e].s === evMap[e].v) setOk.add(e);
+        renderizarFeed(setOk);
     }
 
     async function limparHistorico() {
