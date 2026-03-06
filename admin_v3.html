@@ -17,151 +17,134 @@
     <style>
         :root { 
             --up-blue: #1a73e8; 
-            --bg-light: #f8f9fa;
-            --text-main: #202124;
-            --text-soft: #5f6368;
-            --card-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            --bg-light: #f3f4f6;
+            --text-main: #111827;
+            --text-soft: #6b7280;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            --pink-bg: #fdf2f8; --pink-icon: #db2777;
+            --green-bg: #f0fdf4; --green-icon: #16a34a;
+            --blue-bg: #eff6ff; --blue-icon: #2563eb;
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            margin: 0; padding: 20px 15px; 
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
+            font-family: -apple-system, system-ui, sans-serif; 
+            background-color: var(--bg-light); color: var(--text-main);
+            margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
         }
 
-        .admin-container { max-width: 600px; margin: auto; }
-
-        header { 
-            text-align: left;
-            margin-bottom: 25px;
-            padding-left: 5px;
+        /* BARRA DE TOPO FIXA */
+        .top-bar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 15px 20px; text-align: left;
         }
-        header h1 { 
-            margin: 0; font-size: 1.5em; font-weight: 800; color: var(--up-blue); 
-            letter-spacing: -0.5px;
-        }
-        header p { margin: 2px 0 0; font-size: 0.7em; color: var(--text-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .top-bar h1 { margin: 0; font-size: 1.1em; font-weight: 800; color: var(--up-blue); }
+        .top-bar p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; }
 
-        /* ANALYTICS CLEAN */
-        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .admin-container { max-width: 500px; margin: auto; padding: 15px; }
+
+        /* ANALYTICS */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .card-mini { 
-            background: white; padding: 15px 10px; border-radius: 16px; 
+            background: white; padding: 12px; border-radius: 18px; 
             text-align: center; box-shadow: var(--card-shadow);
         }
-        .card-mini span { display: block; font-size: 0.6em; font-weight: 700; color: var(--text-soft); text-transform: uppercase; margin-bottom: 4px; }
-        .card-mini b { font-size: 1.3em; color: var(--text-main); font-weight: 800; }
+        .card-mini span { display: block; font-size: 0.55em; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin-bottom: 4px; }
+        .card-mini b { font-size: 1.2em; font-weight: 900; }
 
-        /* PLANILHA DE CRESCIMENTO MINIMALISTA */
-        .crescimento-card { 
-            background: white; padding: 20px; border-radius: 20px; 
-            margin-bottom: 20px; box-shadow: var(--card-shadow);
-        }
-        .crescimento-titulo { font-size: 0.75em; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        /* CRESCIMENTO / ESTATÍSTICAS */
+        .crescimento-card { background: white; padding: 18px; border-radius: 22px; margin-bottom: 20px; box-shadow: var(--card-shadow); }
+        .crescimento-titulo { font-size: 0.75em; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-bottom: 12px; display: block; }
         .tabela-crescimento { width: 100%; border-collapse: collapse; font-size: 0.85em; }
-        .tabela-crescimento td { padding: 12px 0; border-top: 1px solid #f1f3f4; color: var(--text-soft); }
-        .tabela-crescimento td:first-child { color: var(--text-main); font-weight: 600; text-transform: capitalize; }
-        .tabela-crescimento b { color: var(--up-blue); font-weight: 700; }
-
-        /* CONTROLES / FILTROS */
-        .controles { 
-            display: flex; overflow-x: auto; gap: 10px; padding: 5px 0 20px;
-            scrollbar-width: none; -ms-overflow-style: none;
+        .tabela-crescimento td { padding: 10px 0; border-top: 1px solid #f9fafb; color: var(--text-soft); }
+        .tabela-crescimento td:first-child { color: var(--text-main); font-weight: 700; text-transform: capitalize; }
+        .tabela-crescimento b { color: var(--up-blue); }
+        
+        .btn-expande { 
+            background: none; border: none; color: var(--up-blue); font-size: 0.75em; 
+            font-weight: 700; padding: 10px 0 0; cursor: pointer; display: block;
         }
+
+        /* CONTROLES */
+        .controles { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 20px; scrollbar-width: none; }
         .controles::-webkit-scrollbar { display: none; }
-
         .btn { 
-            background: white; border: 1px solid #e8eaed; padding: 10px 18px; 
-            border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 0.7em; 
-            color: var(--text-soft); text-transform: uppercase; white-space: nowrap;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            background: white; border: 1px solid #e5e7eb; padding: 10px 16px; 
+            border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.65em; 
+            color: var(--text-soft); text-transform: uppercase; white-space: nowrap; transition: 0.2s;
         }
-        .btn-refresh { background: var(--up-blue); color: white; border: none; }
-        .btn-ativo { 
-            background: rgba(26, 115, 232, 0.08); 
-            color: var(--up-blue); 
-            border-color: var(--up-blue);
-            transform: scale(1.02);
-        }
+        .btn-refresh { background: var(--text-main); color: white; border: none; }
+        .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); }
 
-        /* FEED DE REGISTROS */
+        /* CARDS DE REGISTRO ESTILO MODELO */
         .registro-card { 
-            background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; 
-            box-shadow: var(--card-shadow); position: relative;
-            border: 1px solid rgba(0,0,0,0.02);
+            background: white; border-radius: 22px; padding: 15px; margin-bottom: 12px; 
+            box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 15px;
+            position: relative; overflow: hidden;
         }
-        .reg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.95em; letter-spacing: -0.3px; }
-        .reg-data { font-size: 0.7em; color: var(--text-soft); font-weight: 500; margin-top: 2px; }
+        .icon-box {
+            width: 45px; height: 45px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2em;
+            flex-shrink: 0;
+        }
+        .icon-saida { background: var(--pink-bg); color: var(--pink-icon); }
+        .icon-devolucao { background: var(--green-bg); color: var(--green-icon); }
+        .icon-pendente { background: var(--blue-bg); color: var(--blue-icon); }
+
+        .reg-info { flex-grow: 1; }
+        .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.9em; letter-spacing: -0.2px; }
+        .reg-data { font-size: 0.65em; color: var(--text-soft); font-weight: 600; }
         
-        .status-badge { 
-            font-size: 0.55em; padding: 5px 10px; border-radius: 8px; 
-            font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .badge-saida { background: #fce4ec; color: #d81b60; }
-        .badge-devolucao { background: #e8f5e9; color: #2e7d32; }
-        
-        .reg-resumo { 
-            font-size: 0.8em; color: var(--text-soft); background: #f8f9fa; 
-            padding: 12px; border-radius: 12px; line-height: 1.5;
-        }
-        .reg-resumo b { color: var(--up-blue); }
+        .reg-resumo { font-size: 0.75em; color: var(--text-soft); margin-top: 6px; line-height: 1.4; }
+        .reg-resumo b { color: var(--text-main); }
 
         .badge-correcao { 
             position: absolute; top: 12px; right: 12px; 
-            background: #fff8e1; color: #f57f17; font-size: 9px; 
-            font-weight: 800; padding: 4px 8px; border-radius: 6px; 
+            background: #fef3c7; color: #92400e; font-size: 8px; 
+            font-weight: 800; padding: 3px 6px; border-radius: 5px; 
         }
 
         .justificativa-box { 
-            background: #fff5f5; border-left: 4px solid #ff4d4d; padding: 10px; 
-            margin-top: 10px; color: #c53030; border-radius: 8px; font-size: 0.75em; font-weight: 500;
+            background: #fef2f2; padding: 8px; margin-top: 8px; 
+            color: #991b1b; border-radius: 10px; font-size: 0.7em; font-weight: 600;
         }
 
-        .modo-concluido { opacity: 0.45; filter: grayscale(1); }
-        .btn-limpar { 
-            background: none; border: none; color: #dadce0; font-size: 0.65em; 
-            width: 100%; margin-top: 30px; cursor: pointer; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
+        .modo-concluido { opacity: 0.4; filter: grayscale(1); }
+        .btn-limpar { background: none; border: none; color: #d1d5db; font-size: 0.6em; width: 100%; margin: 20px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <header>
-        <h1>Up Controle</h1>
-        <p>Administrativo • V1.2</p>
-    </header>
+<div class="top-bar">
+    <h1>Up Controle Administrativo</h1>
+    <p>Gestão de Movimentação • V1.2</p>
+</div>
 
+<div class="admin-container">
     <div class="analytics-grid">
-        <div class="card-mini"><span>Eventos/Mês</span><b id="an-mes">0</b></div>
+        <div class="card-mini"><span>No Mês</span><b id="an-mes">0</b></div>
         <div class="card-mini"><span>Na Rua</span><b id="an-rua" style="color:var(--up-blue)">0</b></div>
-        <div class="card-mini"><span>Concluídos</span><b id="an-ok">0</b></div>
+        <div class="card-mini"><span>Histórico</span><b id="an-ok">0</b></div>
     </div>
 
     <div class="crescimento-card">
-        <span class="crescimento-titulo">Movimentação</span>
+        <span class="crescimento-titulo">Movimentação Mensal</span>
         <table class="tabela-crescimento">
-            <tbody id="corpo-crescimento">
-                <tr><td colspan="3" style="text-align:center;">Processando dados...</td></tr>
-            </tbody>
+            <tbody id="corpo-crescimento"></tbody>
         </table>
+        <button class="btn-expande" id="btn-estatisticas" onclick="toggleEstatisticas()">Estatísticas</button>
     </div>
 
     <div class="controles">
-        <button class="btn btn-refresh" onclick="location.reload()">Sincronizar</button>
+        <button class="btn btn-refresh" onclick="location.reload()">Sync</button>
         <button class="btn" id="btn-perdas" onclick="setFiltro('perdas')">Ocorrências</button>
         <button class="btn" id="btn-devolvidos" onclick="setFiltro('devolvidos')">Devoluções</button>
-        <button class="btn" id="btn-tudo" onclick="setFiltro('tudo')">Histórico</button>
+        <button class="btn" id="btn-tudo" onclick="setFiltro('tudo')">Tudo</button>
     </div>
 
-    <div id="lista-feed">
-        <div style="text-align:center; color:#999; padding:40px; font-size: 0.8em; font-weight: 600;">Carregando registros...</div>
-    </div>
+    <div id="lista-feed"></div>
 
     <button class="btn-limpar" onclick="limparHistorico()">Zerar Sistema</button>
 </div>
@@ -181,6 +164,7 @@
 
     let filtroAtivo = 'ativos';
     let globalSnap = [];
+    let mostrarTudoStats = false;
 
     db.collection("movimentacoes").orderBy("dataRegistro", "desc").onSnapshot(snap => {
         globalSnap = [];
@@ -194,7 +178,7 @@
         let crescimentoMap = {};
         let eventosConcluidos = new Set();
         const agora = new Date();
-        const mesAtualLong = agora.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+        const mesAtualAbrev = agora.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
 
         globalSnap.forEach(d => {
             const chaveEv = (d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, '');
@@ -216,35 +200,32 @@
 
         listaFinal.forEach(m => {
             const dataReg = new Date(m.dataRegistro);
-            const mesAnoLabel = dataReg.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            const mesAbrev = dataReg.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
             const chaveEv = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
             
             if (!eventosMap[chaveEv]) eventosMap[chaveEv] = { s: 0, v: 0 };
-            let somaItens = Object.values(m.itens).reduce((a, b) => a + (parseInt(b) || 0), 0);
+            let soma = Object.values(m.itens).reduce((a, b) => a + (parseInt(b) || 0), 0);
             
             if (m.tipo === 'Saída') {
-                eventosMap[chaveEv].s += somaItens;
-                if (!crescimentoMap[mesAnoLabel]) crescimentoMap[mesAnoLabel] = { count: new Set(), totalItens: 0 };
-                crescimentoMap[mesAnoLabel].count.add(chaveEv);
-                crescimentoMap[mesAnoLabel].totalItens += somaItens;
+                eventosMap[chaveEv].s += soma;
+                if (!crescimentoMap[mesAbrev]) crescimentoMap[mesAbrev] = { count: new Set(), itens: 0, rawDate: dataReg };
+                crescimentoMap[mesAbrev].count.add(chaveEv);
+                crescimentoMap[mesAbrev].itens += soma;
             }
-            if (m.tipo === 'Devolução') {
-                eventosMap[chaveEv].v += somaItens;
-            }
+            if (m.tipo === 'Devolução') eventosMap[chaveEv].v += soma;
         });
 
-        let naRuaContagem = 0;
+        let naRuaTotal = 0;
         for (let ev in eventosMap) {
-            const isFullReturn = eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v;
-            if (isFullReturn) {
+            if (eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v) {
                 eventosConcluidos.add(ev);
             } else if (eventosMap[ev].s > 0) {
-                naRuaContagem++;
+                naRuaTotal++;
             }
         }
 
-        document.getElementById('an-mes').innerText = crescimentoMap[mesAtualLong] ? crescimentoMap[mesAtualLong].count.size : 0;
-        document.getElementById('an-rua').innerText = naRuaContagem;
+        document.getElementById('an-mes').innerText = crescimentoMap[mesAtualAbrev] ? crescimentoMap[mesAtualAbrev].count.size : 0;
+        document.getElementById('an-rua').innerText = naRuaTotal;
         document.getElementById('an-ok').innerText = eventosConcluidos.size;
 
         renderizarTabela(crescimentoMap);
@@ -254,10 +235,18 @@
     function renderizarTabela(map) {
         const corpo = document.getElementById('corpo-crescimento');
         corpo.innerHTML = "";
-        const meses = Object.keys(map).sort((a, b) => new Date(b) - new Date(a));
-        meses.forEach(m => {
-            corpo.innerHTML += `<tr><td>${m}</td><td><b>${map[m].count.size}</b> eventos</td><td style="text-align:right">${map[m].totalItens} itens</td></tr>`;
+        const ordenados = Object.keys(map).sort((a, b) => map[b].rawDate - map[a].rawDate);
+        
+        const limit = mostrarTudoStats ? ordenados.length : 2;
+        ordenados.slice(0, limit).forEach(mes => {
+            corpo.innerHTML += `<tr><td style="text-transform:capitalize">${mes}</td><td><b>${map[mes].count.size}</b> eventos</td><td style="text-align:right">${map[mes].itens} itens</td></tr>`;
         });
+    }
+
+    function toggleEstatisticas() {
+        mostrarTudoStats = !mostrarTudoStats;
+        document.getElementById('btn-estatisticas').innerText = mostrarTudoStats ? "Ver Menos" : "Estatísticas";
+        processarERenderizar();
     }
 
     function renderizarFeed(lista, concluidos) {
@@ -273,11 +262,6 @@
             filtrados = lista.filter(d => d.tipo === 'Devolução');
         }
 
-        if (filtrados.length === 0) {
-            feed.innerHTML = `<div style="text-align:center; padding:40px; color:#999; font-size:0.8em; font-weight:600;">Nenhum registro encontrado.</div>`;
-            return;
-        }
-
         filtrados.forEach(m => {
             const dt = new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
             let itTxt = "";
@@ -286,20 +270,22 @@
 
             const chave = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
             const ok = concluidos.has(chave);
-            const badge = m.correcoes > 0 ? `<div class="badge-correcao">✏️ ${m.correcoes}</div>` : "";
+            const corrigido = m.correcoes > 0;
+
+            let iconClass = "icon-pendente"; let iconSymbol = "📦";
+            if(m.tipo === 'Saída') { iconClass = "icon-saida"; iconSymbol = "📤"; }
+            if(m.tipo === 'Devolução') { iconClass = "icon-devolucao"; iconSymbol = "📥"; }
 
             feed.innerHTML += `
                 <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
-                    ${badge}
-                    <div class="reg-header">
-                        <div>
-                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
-                            <div class="reg-data">${dt} • ${m.responsavel.toUpperCase()}</div>
-                        </div>
-                        <span class="status-badge ${m.tipo === 'Saída' ? 'badge-saida' : 'badge-devolucao'}">${m.tipo}</span>
+                    ${corrigido ? `<div class="badge-correcao">✏️ EDITADO</div>` : ""}
+                    <div class="icon-box ${iconClass}">${iconSymbol}</div>
+                    <div class="reg-info">
+                        <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                        <div class="reg-data">${dt} • ${m.responsavel.toUpperCase()}</div>
+                        <div class="reg-resumo">${itTxt}</div>
+                        ${m.justificativa ? `<div class="justificativa-box">⚠️ ${m.justificativa}</div>` : ''}
                     </div>
-                    <div class="reg-resumo">${itTxt || 'Nenhum item'}</div>
-                    ${m.justificativa ? `<div class="justificativa-box"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
                 </div>`;
         });
     }
@@ -314,12 +300,11 @@
     async function limparHistorico() {
         const senha = prompt("Senha Master:");
         if (senha === "admin123") {
-            if (confirm("Isso apagará todos os dados do servidor. Confirma?")) {
-                const registros = await db.collection("movimentacoes").get();
+            if (confirm("Deseja zerar o sistema?")) {
+                const res = await db.collection("movimentacoes").get();
                 const batch = db.batch();
-                registros.forEach(doc => batch.delete(doc.ref));
+                res.forEach(doc => batch.delete(doc.ref));
                 await batch.commit();
-                alert("Sistema zerado com sucesso.");
                 location.reload();
             }
         }
