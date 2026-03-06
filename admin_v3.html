@@ -3,114 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Up Controle - Admin V3.2</title>
+    <title>Up Controle - Admin V4</title>
     
     <link rel="manifest" href="manifest_admin.json" crossorigin="use-credentials">
     <link rel="apple-touch-icon" href="iconadmin.png">
     <link rel="icon" type="image/png" href="iconadmin.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <style>
         :root { 
-            --primary: #1a73e8; 
-            --secondary: #ff0080; 
-            --bg: #f0f2f5; 
-            --success: #25D366;
-            --glass: rgba(255, 255, 255, 0.85);
+            --up-blue: #1a73e8; 
+            --bg-light: #f8f9fa;
+            --text-main: #202124;
+            --text-soft: #5f6368;
+            --card-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundoadmin.jpg'); 
-            background-size: cover; background-attachment: fixed; background-position: center;
-            margin: 0; padding: 15px; min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0; padding: 20px 15px; 
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         .admin-container { max-width: 600px; margin: auto; }
 
         header { 
-            background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9));
-            color: white; padding: 25px 15px; border-radius: 20px; margin-bottom: 15px; text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15); backdrop-filter: blur(10px);
+            text-align: left;
+            margin-bottom: 25px;
+            padding-left: 5px;
+        }
+        header h1 { 
+            margin: 0; font-size: 1.5em; font-weight: 800; color: var(--up-blue); 
+            letter-spacing: -0.5px;
+        }
+        header p { margin: 2px 0 0; font-size: 0.7em; color: var(--text-soft); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ANALYTICS CLEAN */
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .card-mini { 
+            background: white; padding: 15px 10px; border-radius: 16px; 
+            text-align: center; box-shadow: var(--card-shadow);
+        }
+        .card-mini span { display: block; font-size: 0.6em; font-weight: 700; color: var(--text-soft); text-transform: uppercase; margin-bottom: 4px; }
+        .card-mini b { font-size: 1.3em; color: var(--text-main); font-weight: 800; }
+
+        /* PLANILHA DE CRESCIMENTO MINIMALISTA */
+        .crescimento-card { 
+            background: white; padding: 20px; border-radius: 20px; 
+            margin-bottom: 20px; box-shadow: var(--card-shadow);
+        }
+        .crescimento-titulo { font-size: 0.75em; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .tabela-crescimento { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        .tabela-crescimento td { padding: 12px 0; border-top: 1px solid #f1f3f4; color: var(--text-soft); }
+        .tabela-crescimento td:first-child { color: var(--text-main); font-weight: 600; text-transform: capitalize; }
+        .tabela-crescimento b { color: var(--up-blue); font-weight: 700; }
+
+        /* CONTROLES / FILTROS */
+        .controles { 
+            display: flex; overflow-x: auto; gap: 10px; padding: 5px 0 20px;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .controles::-webkit-scrollbar { display: none; }
+
+        .btn { 
+            background: white; border: 1px solid #e8eaed; padding: 10px 18px; 
+            border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 0.7em; 
+            color: var(--text-soft); text-transform: uppercase; white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .btn-refresh { background: var(--up-blue); color: white; border: none; }
+        .btn-ativo { 
+            background: rgba(26, 115, 232, 0.08); 
+            color: var(--up-blue); 
+            border-color: var(--up-blue);
+            transform: scale(1.02);
         }
 
-        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card-mini { background: var(--glass); padding: 12px 5px; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
-        .card-mini span { display: block; font-size: 0.6em; font-weight: bold; color: #666; text-transform: uppercase; }
-        .card-mini b { font-size: 1.1em; color: var(--primary); }
+        /* FEED DE REGISTROS */
+        .registro-card { 
+            background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; 
+            box-shadow: var(--card-shadow); position: relative;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .reg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.95em; letter-spacing: -0.3px; }
+        .reg-data { font-size: 0.7em; color: var(--text-soft); font-weight: 500; margin-top: 2px; }
+        
+        .status-badge { 
+            font-size: 0.55em; padding: 5px 10px; border-radius: 8px; 
+            font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .badge-saida { background: #fce4ec; color: #d81b60; }
+        .badge-devolucao { background: #e8f5e9; color: #2e7d32; }
+        
+        .reg-resumo { 
+            font-size: 0.8em; color: var(--text-soft); background: #f8f9fa; 
+            padding: 12px; border-radius: 12px; line-height: 1.5;
+        }
+        .reg-resumo b { color: var(--up-blue); }
 
-        .crescimento-card { background: var(--glass); padding: 15px; border-radius: 20px; margin-bottom: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
-        .crescimento-titulo { font-size: 0.7em; font-weight: 900; color: #444; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 1px; }
-        .tabela-crescimento { width: 100%; border-collapse: collapse; font-size: 0.85em; }
-        .tabela-crescimento th { text-align: left; color: #888; padding-bottom: 8px; font-size: 0.9em; }
-        .tabela-crescimento td { padding: 8px 0; border-top: 1px solid rgba(0,0,0,0.05); color: #333; }
-        .tabela-crescimento b { color: var(--primary); }
+        .badge-correcao { 
+            position: absolute; top: 12px; right: 12px; 
+            background: #fff8e1; color: #f57f17; font-size: 9px; 
+            font-weight: 800; padding: 4px 8px; border-radius: 6px; 
+        }
 
-        .card-main { background: var(--glass); padding: 15px; border-radius: 20px; backdrop-filter: blur(10px); }
-        .controles { display: grid; grid-template-columns: 0.5fr 1fr 1fr 0.8fr; gap: 8px; margin-bottom: 15px; }
-        .btn { border: none; padding: 10px 5px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.75em; color: white; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; opacity: 0.85; }
-        .btn-refresh { background: var(--primary); opacity: 1; }
-        .btn-filter { background: #555; }
-        .btn-success { background: var(--success); }
-        .btn-arquivo { background: #454d55; }
-        .btn-ativo { opacity: 1; outline: 3px solid white; box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .justificativa-box { 
+            background: #fff5f5; border-left: 4px solid #ff4d4d; padding: 10px; 
+            margin-top: 10px; color: #c53030; border-radius: 8px; font-size: 0.75em; font-weight: 500;
+        }
 
-        .registro-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee; position: relative; overflow: hidden; }
-        .reg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .reg-nome { font-weight: bold; color: #222; font-size: 0.9em; }
-        .status-badge { font-size: 0.6em; padding: 4px 8px; border-radius: 6px; font-weight: 900; }
-        .badge-saida { background: #fff0f6; color: #ff0080; }
-        .badge-devolucao { background: #e6ffed; color: #28a745; }
-        .reg-resumo { font-size: 0.8em; color: #555; background: #f9f9f9; padding: 8px; border-radius: 10px; }
-        .badge-correcao { position: absolute; top: 0; right: 0; background: #ffc107; color: #333; font-size: 10px; font-weight: 800; padding: 3px 8px; border-bottom-left-radius: 12px; }
-        .modo-concluido { border-left: 8px solid #cbd5e0; opacity: 0.5; filter: grayscale(0.4); }
-        .btn-limpar { background: none; border: none; color: #bbb; font-size: 0.7em; width: 100%; margin-top: 20px; text-decoration: underline; cursor: pointer; }
+        .modo-concluido { opacity: 0.45; filter: grayscale(1); }
+        .btn-limpar { 
+            background: none; border: none; color: #dadce0; font-size: 0.65em; 
+            width: 100%; margin-top: 30px; cursor: pointer; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
     <header>
-        <h1>Up Controle Admin</h1>
-        <p style="margin:0; font-size:0.7em; opacity:0.8;">GESTÃO ESTRATÉGICA V3.2</p>
+        <h1>Up Controle</h1>
+        <p>Dashboard Administrativo • V4</p>
     </header>
 
     <div class="analytics-grid">
         <div class="card-mini"><span>Eventos/Mês</span><b id="an-mes">0</b></div>
-        <div class="card-mini"><span>Na Rua</span><b id="an-rua" style="color:var(--secondary)">0</b></div>
-        <div class="card-mini"><span>Concluídos</span><b id="an-ok" style="color:var(--success)">0</b></div>
+        <div class="card-mini"><span>Na Rua</span><b id="an-rua" style="color:var(--up-blue)">0</b></div>
+        <div class="card-mini"><span>Concluídos</span><b id="an-ok">0</b></div>
     </div>
 
     <div class="crescimento-card">
-        <span class="crescimento-titulo">📈 Crescimento Mensal</span>
+        <span class="crescimento-titulo">📈 Crescimento</span>
         <table class="tabela-crescimento">
-            <thead>
-                <tr>
-                    <th>Mês/Ano</th>
-                    <th>Eventos</th>
-                    <th>Itens</th>
-                </tr>
-            </thead>
             <tbody id="corpo-crescimento">
-                <tr><td colspan="3" style="text-align:center; color:#999;">Processando histórico...</td></tr>
+                <tr><td colspan="3" style="text-align:center;">Processando dados...</td></tr>
             </tbody>
         </table>
     </div>
 
-    <div class="card-main">
-        <div class="controles">
-            <button class="btn btn-refresh" onclick="location.reload()">🔄</button>
-            <button class="btn btn-filter" id="btn-perdas" onclick="setFiltro('perdas')">⚠️ Perdas</button>
-            <button class="btn btn-success" id="btn-devolvidos" onclick="setFiltro('devolvidos')">✅ OK</button>
-            <button class="btn btn-arquivo" id="btn-tudo" onclick="setFiltro('tudo')">📁 Tudo</button>
-        </div>
-        <div id="lista-feed"><div style="text-align:center; color:#999; padding:20px;">Carregando registros...</div></div>
-        <button class="btn-limpar" onclick="limparHistorico()">Limpar histórico do sistema</button>
+    <div class="controles">
+        <button class="btn btn-refresh" onclick="location.reload()">Sincronizar</button>
+        <button class="btn" id="btn-perdas" onclick="setFiltro('perdas')">Ocorrências</button>
+        <button class="btn" id="btn-devolvidos" onclick="setFiltro('devolvidos')">Devoluções</button>
+        <button class="btn" id="btn-tudo" onclick="setFiltro('tudo')">Histórico</button>
     </div>
+
+    <div id="lista-feed">
+        <div style="text-align:center; color:#999; padding:40px; font-size: 0.8em; font-weight: 600;">Carregando registros...</div>
+    </div>
+
+    <button class="btn-limpar" onclick="limparHistorico()">Zerar Sistema</button>
 </div>
 
 <script>
@@ -143,7 +196,6 @@
         const agora = new Date();
         const mesAtualLong = agora.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
 
-        // 1. Agrupamento de Saídas e Correções
         globalSnap.forEach(d => {
             const chaveEv = (d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, '');
             if (d.tipo === 'Correção') {
@@ -162,7 +214,6 @@
 
         let listaFinal = Object.values(eventosAgrupados);
 
-        // 2. Balanço Patrimonial e Crescimento Mensal
         listaFinal.forEach(m => {
             const dataReg = new Date(m.dataRegistro);
             const mesAnoLabel = dataReg.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
@@ -182,7 +233,6 @@
             }
         });
 
-        // 3. Cálculo do Painel Superior
         let naRuaContagem = 0;
         for (let ev in eventosMap) {
             const isFullReturn = eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v;
@@ -206,7 +256,7 @@
         corpo.innerHTML = "";
         const meses = Object.keys(map).sort((a, b) => new Date(b) - new Date(a));
         meses.forEach(m => {
-            corpo.innerHTML += `<tr><td style="text-transform:capitalize">${m}</td><td><b>${map[m].count.size}</b></td><td>${map[m].totalItens}</td></tr>`;
+            corpo.innerHTML += `<tr><td>${m}</td><td><b>${map[m].count.size}</b> eventos</td><td style="text-align:right">${map[m].totalItens} itens</td></tr>`;
         });
     }
 
@@ -224,7 +274,7 @@
         }
 
         if (filtrados.length === 0) {
-            feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">Nenhum registro encontrado.</div>`;
+            feed.innerHTML = `<div style="text-align:center; padding:40px; color:#999; font-size:0.8em; font-weight:600;">Nenhum registro encontrado.</div>`;
             return;
         }
 
@@ -236,17 +286,20 @@
 
             const chave = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
             const ok = concluidos.has(chave);
-            const badge = m.correcoes > 0 ? `<div class="badge-correcao">✏️ ${m.correcoes} CORREÇÃO</div>` : "";
+            const badge = m.correcoes > 0 ? `<div class="badge-correcao">✏️ ${m.correcoes}</div>` : "";
 
             feed.innerHTML += `
                 <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
                     ${badge}
                     <div class="reg-header">
-                        <div><div class="reg-nome">${m.evento.toUpperCase()}</div><div class="reg-data">${dt} • ${m.responsavel.toUpperCase()}</div></div>
+                        <div>
+                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                            <div class="reg-data">${dt} • ${m.responsavel.toUpperCase()}</div>
+                        </div>
                         <span class="status-badge ${m.tipo === 'Saída' ? 'badge-saida' : 'badge-devolucao'}">${m.tipo}</span>
                     </div>
-                    <div class="reg-resumo">${itTxt || 'Vazio'}</div>
-                    ${m.justificativa ? `<div style="background:#fff5f5;border:1px solid #feb2b2;padding:8px;margin-top:8px;color:#c53030;border-radius:8px;font-size:0.8em;"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
+                    <div class="reg-resumo">${itTxt || 'Nenhum item'}</div>
+                    ${m.justificativa ? `<div class="justificativa-box"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
                 </div>`;
         });
     }
