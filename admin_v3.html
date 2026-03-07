@@ -37,16 +37,23 @@
             margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
         }
 
-        /* BARRA DE TOPO FIXA */
+        /* BARRA DE TOPO FIXA COM LOGO */
         .top-header {
             position: sticky; top: 0; z-index: 1000;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0,0,0,0.06);
-            padding: 15px 20px;
+            padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .top-header h1 { margin: 0; font-size: 1.1em; font-weight: 800; color: var(--up-blue); letter-spacing: -0.5px; }
-        .top-header p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+        .header-info h1 { margin: 0; font-size: 1.1em; font-weight: 800; color: var(--up-blue); letter-spacing: -0.5px; }
+        .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+        
+        /* Estilização da Logo */
+        .app-logo {
+            width: 42px; height: 42px;
+            object-fit: contain;
+        }
 
         .admin-container { max-width: 500px; margin: auto; padding: 20px 15px; }
 
@@ -83,7 +90,7 @@
         .btn-refresh { background: var(--text-main); color: white; border: none; }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); box-shadow: 0 4px 10px rgba(26, 115, 232, 0.2); }
 
-        /* FEED DE REGISTROS (ALINHAMENTO AMPLO) */
+        /* FEED DE REGISTROS (ALINHAMENTO AMPLO CONFORME RASCUNHO) */
         .registro-card { 
             background: white; border-radius: 24px; padding: 18px; margin-bottom: 15px; 
             box-shadow: var(--card-shadow); display: flex; flex-direction: column;
@@ -105,11 +112,11 @@
         .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.95em; letter-spacing: -0.3px; }
         .reg-sub { font-size: 0.65em; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
         
-        /* Ajuste: Ocupando largura total conforme seu rascunho */
+        /* Ajuste: Ocupando largura total (eliminando a coluna de recuo) */
         .reg-resumo { 
-            font-size: 0.8em; color: var(--text-soft); 
+            font-size: 0.82em; color: var(--text-soft); 
             line-height: 1.5; background: #f8f9fa; 
-            padding: 12px; border-radius: 12px;
+            padding: 12px; border-radius: 14px;
             width: 100%; box-sizing: border-box;
         }
         .reg-resumo b { color: var(--text-main); }
@@ -133,8 +140,11 @@
 <body>
 
 <div class="top-header">
-    <h1>Up Controle Administrativo</h1>
-    <p>Gestão de Movimentação • V1.2</p>
+    <div class="header-info">
+        <h1>Up Controle</h1>
+        <p>Administrativo • V1.2</p>
+    </div>
+    <img src="logo.svg" alt="Logo" class="app-logo">
 </div>
 
 <div class="admin-container">
@@ -253,7 +263,6 @@
         const corpo = document.getElementById('corpo-crescimento');
         corpo.innerHTML = "";
         const ordenados = Object.keys(map).sort((a, b) => map[b].date - map[a].date);
-        
         const limite = verTudoStats ? ordenados.length : 2;
         ordenados.slice(0, limite).forEach(mes => {
             corpo.innerHTML += `<tr><td style="text-transform:capitalize">${mes}</td><td><b>${map[mes].count.size}</b> eventos</td><td style="text-align:right">${map[mes].itens} itens</td></tr>`;
@@ -296,7 +305,6 @@
             feed.innerHTML += `
                 <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
                     ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
-                    
                     <div class="reg-top-row">
                         <div class="icon-circle icon-${iconType}">
                             <i data-lucide="${iconName}" style="width:20px; height:20px; stroke-width:2.2"></i>
@@ -306,9 +314,7 @@
                             <div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div>
                         </div>
                     </div>
-                    
                     <div class="reg-resumo">${itTxt}</div>
-                    
                     ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
                 </div>`;
         });
