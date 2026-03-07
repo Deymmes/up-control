@@ -83,12 +83,14 @@
         .btn-refresh { background: var(--text-main); color: white; border: none; }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); box-shadow: 0 4px 10px rgba(26, 115, 232, 0.2); }
 
-        /* FEED DE REGISTROS (MODELO PREMIUM) */
+        /* FEED DE REGISTROS (ALINHAMENTO AMPLO) */
         .registro-card { 
             background: white; border-radius: 24px; padding: 18px; margin-bottom: 15px; 
-            box-shadow: var(--card-shadow); display: flex; align-items: flex-start; gap: 15px;
+            box-shadow: var(--card-shadow); display: flex; flex-direction: column;
             position: relative; overflow: hidden;
         }
+        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
+        
         .icon-circle {
             width: 48px; height: 48px; border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
@@ -103,7 +105,13 @@
         .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.95em; letter-spacing: -0.3px; }
         .reg-sub { font-size: 0.65em; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
         
-        .reg-resumo { font-size: 0.8em; color: var(--text-soft); margin-top: 8px; line-height: 1.5; background: #f8f9fa; padding: 10px; border-radius: 12px; }
+        /* Ajuste: Ocupando largura total conforme seu rascunho */
+        .reg-resumo { 
+            font-size: 0.8em; color: var(--text-soft); 
+            line-height: 1.5; background: #f8f9fa; 
+            padding: 12px; border-radius: 12px;
+            width: 100%; box-sizing: border-box;
+        }
         .reg-resumo b { color: var(--text-main); }
 
         .badge-edit { 
@@ -137,20 +145,20 @@
     </div>
 
     <div class="crescimento-card">
-        <span class="crescimento-titulo">Movimentação</span>
+        <span class="crescimento-titulo">Estatísticas</span>
         <table class="tabela-crescimento">
             <tbody id="corpo-crescimento">
                 <tr><td colspan="3" style="text-align:center;">Processando...</td></tr>
             </tbody>
         </table>
-        <button class="btn-estatisticas" onclick="toggleStats()">Estatísticas</button>
+        <button class="btn-estatisticas" onclick="toggleStats()">Ver Mais</button>
     </div>
 
     <div class="controles">
         <button class="btn btn-refresh" onclick="location.reload()">Sync</button>
         <button class="btn" id="btn-perdas" onclick="setFiltro('perdas')">Ocorrências</button>
         <button class="btn" id="btn-devolvidos" onclick="setFiltro('devolvidos')">Devoluções</button>
-        <button class="btn" id="btn-tudo" onclick="setFiltro('tudo')">Tudo</button>
+        <button class="btn" id="btn-tudo" onclick="setFiltro('tudo')">Histórico</button>
     </div>
 
     <div id="lista-feed"></div>
@@ -254,6 +262,7 @@
 
     function toggleStats() {
         verTudoStats = !verTudoStats;
+        document.querySelector('.btn-estatisticas').innerText = verTudoStats ? 'Ver Menos' : 'Ver Mais';
         processarERenderizar();
     }
 
@@ -287,15 +296,20 @@
             feed.innerHTML += `
                 <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
                     ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
-                    <div class="icon-circle icon-${iconType}">
-                        <i data-lucide="${iconName}" style="width:20px; height:20px; stroke-width:2.2"></i>
+                    
+                    <div class="reg-top-row">
+                        <div class="icon-circle icon-${iconType}">
+                            <i data-lucide="${iconName}" style="width:20px; height:20px; stroke-width:2.2"></i>
+                        </div>
+                        <div class="reg-content">
+                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                            <div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div>
+                        </div>
                     </div>
-                    <div class="reg-content">
-                        <div class="reg-nome">${m.evento.toUpperCase()}</div>
-                        <div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div>
-                        <div class="reg-resumo">${itTxt}</div>
-                        ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
-                    </div>
+                    
+                    <div class="reg-resumo">${itTxt}</div>
+                    
+                    ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
                 </div>`;
         });
         lucide.createIcons();
