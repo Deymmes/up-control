@@ -12,7 +12,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
@@ -22,18 +21,16 @@
             --bg-light: #f6f8fa;
             --text-main: #1a1c1e;
             --text-soft: #656c76;
-            --card-shadow: 0 4px 20px rgba(0,0,0,0.03); /* Sombras mais leves para o vidro */
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.03);
             
-            /* Cores dos Ícones (Soft UI) */
             --pink-bg: #fdf2f8; --pink-stroke: #db2777;
             --green-bg: #f0fdf4; --green-stroke: #16a34a;
             --blue-bg: #eff6ff; --blue-stroke: #1a73e8;
             --red-bg: #fef2f2; --red-stroke: #dc2626;
 
-            /* Configuração do Efeito Vidro (Glassmorphism) */
-            --glass-bg: rgba(255, 255, 255, 0.75); /* Branco bem transparente */
-            --glass-blur: blur(15px); /* Desfoque forte */
-            --glass-border: 1px solid rgba(255, 255, 255, 0.2); /* Borda de brilho */
+            --glass-bg: rgba(255, 255, 255, 0.85); 
+            --glass-blur: blur(15px);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         body { 
@@ -42,34 +39,30 @@
             margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
         }
 
-        /* BARRA DE TOPO FIXA COM EFEITO VIDRO */
         .top-header {
             position: sticky; top: 0; z-index: 1000;
-            background: var(--glass-bg); /* MUDANÇA: Fundo de Vidro */
-            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); /* MUDANÇA: Desfoque */
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid rgba(0,0,0,0.06);
             padding: 12px 20px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .header-info h1 { margin: 0; font-size: 1.1em; font-weight: 800; color: var(--up-blue); letter-spacing: -0.5px; }
         .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
-        
         .app-logo { width: 42px; height: 42px; object-fit: contain; }
 
         .admin-container { max-width: 500px; margin: auto; padding: 20px 15px; }
 
-        /* ANALYTICS (Branco sólido para contraste) */
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; }
         .card-mini { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); }
         .card-mini span { display: block; font-size: 0.55em; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin-bottom: 5px; }
         .card-mini b { font-size: 1.25em; font-weight: 900; }
 
-        /* ESTATÍSTICAS (Efeito Vidro Sutil) */
         .crescimento-card { 
-            background: var(--glass-bg); /* MUDANÇA: Fundo Vidro */
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); /* MUDANÇA: Desfoque sutil */
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             padding: 20px; border-radius: 24px; margin-bottom: 25px; 
-            box-shadow: var(--card-shadow); border: var(--glass-border); /* MUDANÇA: Borda brilho */
+            box-shadow: var(--card-shadow); border: var(--glass-border);
         }
         .crescimento-titulo { font-size: 0.75em; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-bottom: 15px; display: block; }
         .tabela-crescimento { width: 100%; border-collapse: collapse; font-size: 0.85em; }
@@ -78,7 +71,6 @@
         .tabela-crescimento b { color: var(--up-blue); }
         .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0 0; cursor: pointer; display: block; }
 
-        /* CONTROLES */
         .controles { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; scrollbar-width: none; }
         .controles::-webkit-scrollbar { display: none; }
         .btn { 
@@ -86,16 +78,26 @@
             border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.65em; 
             color: var(--text-soft); text-transform: uppercase; white-space: nowrap; transition: 0.2s;
         }
-        .btn-refresh { background: var(--text-main); color: white; border: none; }
+
+        /* ANIMAÇÃO PULSE NO STATUS */
+        @keyframes pulse-green {
+            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15); }
+            50% { transform: scale(1.03); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15); }
+        }
+
+        .btn-refresh { 
+            background: #a7f3d0; color: #065f46; border: none; 
+            animation: pulse-green 3s infinite ease-in-out; /* Aplicação da animação */
+        }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); box-shadow: 0 4px 10px rgba(26, 115, 232, 0.2); }
 
-        /* CARDS CONFORME RASCUNHO (Efeito Vidro Reforçado) */
         .registro-card { 
-            background: rgba(255, 255, 255, 0.6); /* MUDANÇA: Fundo Vidro mais transparente */
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); /* MUDANÇA: Desfoque */
-            border: var(--glass-border); /* MUDANÇA: Borda brilho */
+            background: rgba(255, 255, 255, 0.9); /* Aumentado o alpha para uniformizar o cinza */
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: var(--glass-border);
             border-radius: 24px; padding: 18px; margin-bottom: 15px; 
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04); /* Sombras mais "glassy" */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.02);
             display: flex; flex-direction: column;
             position: relative; overflow: hidden;
         }
@@ -114,8 +116,8 @@
         .reg-sub { font-size: 0.65em; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
         
         .reg-resumo { 
-            font-size: 0.8em; color: var(--text-soft); 
-            line-height: 1.5; background: rgba(248, 249, 250, 0.5); /* MUDANÇA: Fundo interno semi-transparente */
+            font-size: 0.82em; color: var(--text-soft); 
+            line-height: 1.5; background: #f8f9fa; 
             padding: 12px; border-radius: 14px; width: 100%; box-sizing: border-box;
         }
         .reg-resumo b { color: var(--text-main); }
