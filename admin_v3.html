@@ -54,13 +54,12 @@
         .admin-container { max-width: 500px; margin: auto; padding: 20px 15px; }
 
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .card-mini { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); }
+        .card-mini { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); border: 1px solid #f1f3f5; }
         .card-mini span { display: block; font-size: 0.55em; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin-bottom: 5px; }
         .card-mini b { font-size: 1.25em; font-weight: 900; }
 
         .crescimento-card { 
-            background: white; 
-            padding: 20px; border-radius: 24px; margin-bottom: 25px; 
+            background: white; padding: 20px; border-radius: 24px; margin-bottom: 25px; 
             box-shadow: var(--card-shadow); border: var(--glass-border);
         }
         .crescimento-titulo { font-size: 0.75em; font-weight: 800; color: var(--text-main); text-transform: uppercase; margin-bottom: 15px; display: block; }
@@ -70,10 +69,10 @@
         .tabela-crescimento b { color: var(--up-blue); }
         .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0 0; cursor: pointer; display: block; }
 
-        /* CONTROLES COM ALINHAMENTO CENTRALIZADO */
+        /* CONTROLES CENTRALIZADOS */
         .controles { 
             display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; 
-            scrollbar-width: none; 
+            scrollbar-width: none; justify-content: flex-start;
         }
         .controles::-webkit-scrollbar { display: none; }
         
@@ -82,27 +81,26 @@
             border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.65em; 
             color: var(--text-soft); text-transform: uppercase; white-space: nowrap; 
             transition: 0.2s; position: relative; overflow: hidden;
-            /* Centralização do texto */
             display: flex; align-items: center; justify-content: center;
-            min-width: 100px;
+            min-width: 90px;
         }
 
-        /* ANIMAÇÃO SOFT BREATHE INTERNA */
+        /* ANIMAÇÃO SOFT BREATHE INTERNA (PULSAÇÃO PARA DENTRO) */
         @keyframes inner-breathe {
             0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
-            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.35); border-color: rgba(16, 185, 129, 0.4); }
             100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
         }
 
         .btn-refresh { 
             background: white; 
             color: #065f46; 
-            animation: inner-breathe 3.5s infinite ease-in-out;
+            animation: inner-breathe 3s infinite ease-in-out;
             border: 1px solid #e9ecef;
         }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); }
 
-        /* CARDS UNIFORMES */
+        /* CARDS UNIFORMES E LEGÍVEIS */
         .registro-card { 
             background: #ffffff; 
             border: var(--glass-border);
@@ -111,8 +109,14 @@
             display: flex; flex-direction: column;
             position: relative;
         }
-        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
         
+        /* CORREÇÃO DO HISTÓRICO: Mantém contraste alto */
+        .modo-concluido { 
+            border-left: 4px solid #dee2e6; /* Sinaliza que está pronto sem apagar o texto */
+        }
+        .modo-concluido .icon-circle { filter: grayscale(1); opacity: 0.5; }
+
+        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
         .icon-circle {
             width: 48px; height: 48px; border-radius: 16px;
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -125,17 +129,17 @@
         .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.95em; letter-spacing: -0.3px; }
         .reg-sub { font-size: 0.65em; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
         
+        /* Resumo com alto contraste para Maria/Batizado */
         .reg-resumo { 
-            font-size: 0.82em; color: var(--text-soft); 
-            line-height: 1.5; background: #f8f9fa; 
+            font-size: 0.82em; color: #374151; /* Cinza grafite forte */
+            line-height: 1.5; background: #f1f3f5; 
             padding: 12px; border-radius: 14px; width: 100%; box-sizing: border-box;
         }
-        .reg-resumo b { color: var(--text-main); }
+        .reg-resumo b { color: #000000; font-weight: 900; }
 
         .badge-edit { position: absolute; top: 15px; right: 15px; background: #fff9db; color: #f08c00; font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 6px; }
         .justificativa-box { background: #fff5f5; padding: 10px; margin-top: 10px; color: #c92a2a; border-radius: 10px; font-size: 0.7em; font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-        .modo-concluido { opacity: 0.4; filter: grayscale(1); }
         .btn-limpar { background: none; border: none; color: #dee2e6; font-size: 0.65em; width: 100%; margin: 20px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
