@@ -28,7 +28,7 @@
             --blue-bg: #eff6ff; --blue-stroke: #1a73e8;
             --red-bg: #fef2f2; --red-stroke: #dc2626;
 
-            --glass-bg: rgba(255, 255, 255, 0.95); /* Quase sólido para evitar variação de tom */
+            --glass-bg: rgba(255, 255, 255, 0.95); 
             --glass-blur: blur(15px);
             --glass-border: 1px solid rgba(0,0,0,0.05);
         }
@@ -59,7 +59,7 @@
         .card-mini b { font-size: 1.25em; font-weight: 900; }
 
         .crescimento-card { 
-            background: white; /* Sólido para evitar transparência indesejada */
+            background: white; 
             padding: 20px; border-radius: 24px; margin-bottom: 25px; 
             box-shadow: var(--card-shadow); border: var(--glass-border);
         }
@@ -70,33 +70,41 @@
         .tabela-crescimento b { color: var(--up-blue); }
         .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0 0; cursor: pointer; display: block; }
 
-        .controles { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; scrollbar-width: none; }
+        /* CONTROLES COM ALINHAMENTO CENTRALIZADO */
+        .controles { 
+            display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; 
+            scrollbar-width: none; 
+        }
         .controles::-webkit-scrollbar { display: none; }
+        
         .btn { 
             background: white; border: 1px solid #e9ecef; padding: 10px 18px; 
             border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.65em; 
-            color: var(--text-soft); text-transform: uppercase; white-space: nowrap; transition: 0.2s;
-            position: relative; overflow: hidden;
+            color: var(--text-soft); text-transform: uppercase; white-space: nowrap; 
+            transition: 0.2s; position: relative; overflow: hidden;
+            /* Centralização do texto */
+            display: flex; align-items: center; justify-content: center;
+            min-width: 100px;
         }
 
-        /* ANIMAÇÃO SOFT BREATHE INTERNA (PULSAÇÃO PARA DENTRO) */
+        /* ANIMAÇÃO SOFT BREATHE INTERNA */
         @keyframes inner-breathe {
             0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
-            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.3); }
             100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
         }
 
         .btn-refresh { 
             background: white; 
             color: #065f46; 
-            animation: inner-breathe 3s infinite ease-in-out;
+            animation: inner-breathe 3.5s infinite ease-in-out;
             border: 1px solid #e9ecef;
         }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); }
 
-        /* CARDS UNIFORMES (CORREÇÃO ALICE/PEDRO) */
+        /* CARDS UNIFORMES */
         .registro-card { 
-            background: #ffffff; /* Sólido para garantir que todos fiquem iguais */
+            background: #ffffff; 
             border: var(--glass-border);
             border-radius: 24px; padding: 18px; margin-bottom: 15px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
