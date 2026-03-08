@@ -28,8 +28,9 @@
             --blue-bg: #eff6ff; --blue-stroke: #1a73e8;
             --red-bg: #fef2f2; --red-stroke: #dc2626;
 
-            --glass-bg: rgba(255, 255, 255, 0.95); 
-            --glass-blur: blur(15px);
+            /* Configuração para o efeito de vidro */
+            --glass-bg: rgba(255, 255, 255, 0.75); 
+            --glass-blur: blur(12px);
             --glass-border: 1px solid rgba(0,0,0,0.05);
         }
 
@@ -39,10 +40,12 @@
             margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
         }
 
+        /* HEADER COM EFEITO FROSTED GLASS */
         .top-header {
             position: sticky; top: 0; z-index: 1000;
             background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur); 
+            -webkit-backdrop-filter: var(--glass-blur); /* Suporte iOS */
             border-bottom: 1px solid rgba(0,0,0,0.06);
             padding: 12px 20px;
             display: flex; justify-content: space-between; align-items: center;
