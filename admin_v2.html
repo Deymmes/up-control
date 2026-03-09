@@ -3,132 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Up Controle - Admin</title>
+    <title>Up Controle - Admin V1.2</title>
     
     <link rel="manifest" href="manifest_admin.json" crossorigin="use-credentials">
     <link rel="apple-touch-icon" href="iconadmin.png">
     <link rel="icon" type="image/png" href="iconadmin.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <style>
         :root { 
-            --primary: #1a73e8; 
-            --secondary: #ff0080; 
-            --bg: #f0f2f5; 
-            --success: #25D366;
-            --glass: rgba(255, 255, 255, 0.85);
+            --up-blue: #1a73e8; 
+            --bg-light: #f6f8fa;
+            --text-main: #1a1c1e;
+            --text-soft: #656c76;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            
+            --pink-bg: #fdf2f8; --pink-stroke: #db2777;
+            --green-bg: #f0fdf4; --green-stroke: #16a34a;
+            --blue-bg: #eff6ff; --blue-stroke: #1a73e8;
+            --red-bg: #fef2f2; --red-stroke: #dc2626;
+
+            --glass-bg: rgba(255, 255, 255, 0.4); 
+            --glass-blur: blur(20px);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         body { 
-            font-family: 'Segoe UI', sans-serif; 
-            /* Camada de contraste sobre o fundo oficial do Admin */
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('fundoadmin.jpg'); 
-            background-size: cover; 
-            background-attachment: fixed;
-            background-position: center;
-            margin: 0; padding: 15px; 
-            min-height: 100vh;
+            font-family: -apple-system, system-ui, sans-serif; 
+            background-color: var(--bg-light); color: var(--text-main);
+            margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
         }
 
-        .admin-container { max-width: 600px; margin: auto; }
-
-        header { 
-            background: linear-gradient(135deg, rgba(26, 115, 232, 0.9), rgba(255, 0, 128, 0.9));
-            color: white; padding: 30px 15px; border-radius: 20px; 
-            margin-bottom: 20px; text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        .top-header {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur); 
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            padding: 12px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        header h1 { margin: 0; font-size: 1.4em; text-transform: uppercase; letter-spacing: 2px; }
-        header p { margin: 5px 0 0; font-size: 0.8em; opacity: 0.8; }
+        .header-info h1 { margin: 0; font-size: 1.1em; font-weight: 800; color: var(--up-blue); letter-spacing: -0.5px; }
+        .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+        .app-logo { width: 42px; height: 42px; object-fit: contain; }
 
-        .resumo-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .resumo-card { 
-            background: var(--glass); 
-            padding: 20px; border-radius: 18px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05); text-align: center;
-            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);
+        .admin-container { max-width: 500px; margin: auto; padding: 20px 15px; }
+
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .card-mini { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); border: 1px solid #f1f3f5; }
+        .card-mini span { display: block; font-size: 0.55em; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin-bottom: 5px; }
+        .card-mini b { font-size: 1.25em; font-weight: 900; }
+
+        .crescimento-card { 
+            background: #eef2ff; 
+            padding: 20px; border-radius: 24px; margin-bottom: 25px; 
+            box-shadow: var(--card-shadow); border: 1px solid rgba(26, 115, 232, 0.1);
         }
-        .resumo-card span { display: block; font-size: 0.65em; color: #666; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
-        .resumo-card b { font-size: 1.4em; color: var(--primary); }
-
-        .ranking-card { 
-            background: var(--glass); padding: 15px; border-radius: 18px; 
-            margin-bottom: 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.05); 
-            border-left: 6px solid var(--secondary);
-            backdrop-filter: blur(10px);
+        .crescimento-titulo { 
+            font-size: 0.75em; font-weight: 800; color: var(--up-blue); 
+            text-transform: uppercase; margin-bottom: 15px; 
+            display: flex; align-items: center; gap: 8px; 
         }
-        .ranking-titulo { font-size: 0.75em; font-weight: 900; color: #444; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        .ranking-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.9em; }
+        .tabela-crescimento { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        .tabela-crescimento td { padding: 12px 0; border-top: 1px solid rgba(26, 115, 232, 0.05); color: var(--text-soft); }
+        .tabela-crescimento td:first-child { color: var(--text-main); font-weight: 700; text-transform: capitalize; }
+        .tabela-crescimento b { color: var(--up-blue); }
+        .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0 0; cursor: pointer; display: block; }
 
-        .card-main { background: var(--glass); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
-        .controles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .controles { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; scrollbar-width: none; }
+        .controles::-webkit-scrollbar { display: none; }
         
-        .btn { border: none; padding: 12px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.8em; color: white; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .btn-refresh { background: var(--primary); }
-        .btn-filter { background: #555; }
-
-        .registro-card {
-            background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee;
+        .btn { 
+            background: white; border: 1px solid #e9ecef; padding: 10px 18px; 
+            border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.65em; 
+            color: var(--text-soft); text-transform: uppercase; white-space: nowrap; 
+            transition: 0.2s; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            min-width: 90px;
         }
-        .reg-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .reg-nome { font-weight: bold; color: #222; font-size: 0.95em; }
-        .reg-data { font-size: 0.75em; color: #999; }
-        .status-badge { font-size: 0.65em; padding: 4px 8px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
-        .badge-saida { background: #fff0f6; color: #ff0080; }
-        .badge-devolucao { background: #e6ffed; color: #28a745; }
+
+        @keyframes inner-breathe {
+            0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
+            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.35); border-color: rgba(16, 185, 129, 0.4); }
+            100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .btn-refresh { 
+            background: white; color: #065f46; 
+            animation: inner-breathe 3s infinite ease-in-out;
+            border: 1px solid #e9ecef;
+        }
+        .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); }
+
+        .registro-card { 
+            background: #ffffff; border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 24px; padding: 18px; margin-bottom: 15px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; position: relative;
+        }
+        .modo-concluido { border-left: 4px solid #f1f3f5; }
+
+        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
+        .icon-circle { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .icon-saida { background: var(--pink-bg); color: var(--pink-stroke); }
+        .icon-devolucao { background: var(--green-bg); color: var(--green-stroke); }
+        .icon-pendente { background: var(--blue-bg); color: var(--blue-stroke); }
+        .icon-erro { background: var(--red-bg); color: var(--red-stroke); }
+
+        .reg-nome { font-weight: 800; color: var(--text-main); font-size: 0.95em; letter-spacing: -0.3px; }
+        .reg-sub { font-size: 0.65em; color: var(--text-soft); font-weight: 600; margin-top: 2px; }
         
-        .reg-resumo { font-size: 0.85em; color: #555; line-height: 1.4; background: #f9f9f9; padding: 10px; border-radius: 10px; }
-        .justificativa-box { 
-            background: #fff5f5; border: 1px solid #feb2b2; padding: 10px; 
-            margin-top: 10px; color: #c53030; border-radius: 10px; font-size: 0.85em;
-        }
+        .reg-resumo { font-size: 0.82em; color: var(--text-soft); line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 14px; width: 100%; box-sizing: border-box; }
+        .reg-resumo b { font-weight: 900; color: #000000; }
 
-        .btn-limpar { background: none; border: none; color: #bbb; font-size: 0.7em; width: 100%; margin-top: 30px; text-decoration: underline; cursor: pointer; }
+        .badge-edit { position: absolute; top: 15px; right: 15px; background: #fff9db; color: #f08c00; font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 6px; }
+        .justificativa-box { background: #fff5f5; padding: 10px; margin-top: 10px; color: #c92a2a; border-radius: 10px; font-size: 0.7em; font-weight: 600; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
 
+<div class="top-header">
+    <div class="header-info">
+        <h1>Up Controle</h1>
+        <p>Administrativo • V1.2</p>
+    </div>
+    <img src="logo.svg" alt="Logo" class="app-logo">
+</div>
+
 <div class="admin-container">
-    <header>
-        <h1>Painel Admin</h1>
-        <p>UP ENTRETENIMENTO • GESTÃO REALTIME</p>
-    </header>
-
-    <div class="resumo-cards">
-        <div class="resumo-card">
-            <span>Movimentações</span>
-            <b id="total-mov">0</b>
-        </div>
-        <div class="resumo-card">
-            <span>Ocorrências</span>
-            <b id="total-perdas" style="color: var(--secondary)">0</b>
-        </div>
+    <div class="analytics-grid">
+        <div class="card-mini"><span>Externo</span><b id="an-rua" style="color:var(--up-blue)">0</b></div>
+        <div class="card-mini"><span>Entregue</span><b id="an-ok" style="color:var(--green-stroke)">0</b></div>
+        <div class="card-mini"><span>Total Ano</span><b id="an-ano">0</b></div>
     </div>
 
-    <div id="card-ranking" class="ranking-card" style="display:none;">
-        <span class="ranking-titulo">🏆 Ranking de Ocorrências</span>
-        <div id="lista-ranking"></div>
+    <div class="crescimento-card">
+        <span class="crescimento-titulo">
+            <i data-lucide="bar-chart-3" style="width:16px; height:16px;"></i>
+            Estatísticas
+        </span>
+        <table class="tabela-crescimento">
+            <tbody id="corpo-crescimento">
+                <tr><td colspan="3" style="text-align:center;">Processando...</td></tr>
+            </tbody>
+        </table>
+        <button class="btn-estatisticas" onclick="toggleStats()">Ver Mais</button>
     </div>
 
-    <div class="card-main">
-        <div class="controles">
-            <button class="btn btn-refresh" onclick="location.reload()">🔄 Atualizar</button>
-            <button class="btn btn-filter" id="btn-filtro" onclick="alternarFiltro()">⚠️ Ver Perdas</button>
-        </div>
-
-        <div id="lista-feed">
-            <div style="text-align:center; color:#999; padding:20px;">Carregando registros...</div>
-        </div>
-
-        <button class="btn-limpar" onclick="limparHistorico()">Limpar histórico do sistema</button>
+    <div class="controles">
+        <button class="btn btn-refresh" onclick="location.reload()">Recente</button>
+        <button class="btn" id="btn-devolvidos" onclick="setFiltro('devolvidos')">Devoluções</button>
+        <button class="btn" id="btn-perdas" onclick="setFiltro('perdas')">Ocorrências</button>
+        <button class="btn" id="btn-tudo" onclick="setFiltro('tudo')">Histórico</button>
     </div>
+
+    <div id="lista-feed"></div>
 </div>
 
 <script>
@@ -144,103 +178,161 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let mostrarSomentePerdas = false;
-    let dadosCompletos = [];
+    let filtroAtivo = 'ativos';
+    let globalSnap = [];
+    let verTudoStats = false;
 
     db.collection("movimentacoes").orderBy("dataRegistro", "desc").onSnapshot(snap => {
-        dadosCompletos = [];
-        let rankingMap = {};
-        let perdasTotais = 0;
+        globalSnap = [];
+        snap.forEach(doc => globalSnap.push({id: doc.id, ...doc.data()}));
+        processarERenderizar();
+    });
 
-        snap.forEach(doc => {
-            let d = doc.data();
-            d.id = doc.id;
-            dadosCompletos.push(d);
-
-            if(d.justificativa) {
-                perdasTotais++;
-                let resp = d.responsavel.toUpperCase();
-                rankingMap[resp] = (rankingMap[resp] || 0) + 1;
+    function processarERenderizar() {
+        let eventosAgrupados = {};
+        let eventosMap = {}; 
+        let crescimentoMap = {};
+        let eventosConcluidos = new Set();
+        
+        globalSnap.forEach(d => {
+            const chaveEv = (d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, '');
+            if (d.tipo === 'Correção') {
+                const chaveOriginal = chaveEv + 'Saída';
+                if (eventosAgrupados[chaveOriginal]) {
+                    eventosAgrupados[chaveOriginal].itens = d.itens;
+                    eventosAgrupados[chaveOriginal].correcoes = (eventosAgrupados[chaveOriginal].correcoes || 0) + 1;
+                }
+                return;
+            }
+            const chaveCard = chaveEv + d.tipo;
+            if (!eventosAgrupados[chaveCard]) {
+                eventosAgrupados[chaveCard] = { ...d, correcoes: 0 };
             }
         });
 
-        document.getElementById('total-mov').innerText = dadosCompletos.length;
-        document.getElementById('total-perdas').innerText = perdasTotais;
-        
-        gerarRanking(rankingMap);
-        renderizarFeed();
-    });
+        let listaFinal = Object.values(eventosAgrupados);
 
-    function gerarRanking(map) {
-        const lista = document.getElementById('lista-ranking');
-        const card = document.getElementById('card-ranking');
-        lista.innerHTML = "";
-        const ordenado = Object.entries(map).sort((a, b) => b[1] - a[1]);
+        listaFinal.forEach(m => {
+            const dReg = new Date(m.dataRegistro);
+            const mesAbrev = dReg.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
+            const chaveEv = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
+            
+            if (!eventosMap[chaveEv]) eventosMap[chaveEv] = { s: 0, v: 0 };
+            let soma = Object.values(m.itens).reduce((a, b) => a + (parseInt(b) || 0), 0);
+            
+            if (m.tipo === 'Saída') {
+                eventosMap[chaveEv].s += soma;
+                if (!crescimentoMap[mesAbrev]) crescimentoMap[mesAbrev] = { count: new Set(), itens: 0, date: dReg };
+                crescimentoMap[mesAbrev].count.add(chaveEv);
+                crescimentoMap[mesAbrev].itens += soma;
+            }
+            if (m.tipo === 'Devolução') eventosMap[chaveEv].v += soma;
+        });
 
-        if (ordenado.length > 0) {
-            card.style.display = "block";
-            ordenado.forEach(([nome, qtd]) => {
-                lista.innerHTML += `
-                    <div class="ranking-item">
-                        <span>👤 ${nome}</span>
-                        <b>${qtd}</b>
-                    </div>`;
-            });
-        } else {
-            card.style.display = "none";
+        let naRuaTotal = 0;
+        for (let ev in eventosMap) {
+            if (eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v) {
+                eventosConcluidos.add(ev);
+            } else if (eventosMap[ev].s > 0) {
+                naRuaTotal++;
+            }
         }
+
+        let totalAnoEventos = 0;
+        for (let mes in crescimentoMap) {
+            totalAnoEventos += crescimentoMap[mes].count.size;
+        }
+
+        document.getElementById('an-rua').innerText = naRuaTotal;
+        document.getElementById('an-ok').innerText = eventosConcluidos.size;
+        document.getElementById('an-ano').innerText = totalAnoEventos;
+
+        renderizarTabela(crescimentoMap);
+        renderizarFeed(listaFinal, eventosConcluidos);
     }
 
-    function renderizarFeed() {
+    function renderizarTabela(map) {
+        const corpo = document.getElementById('corpo-crescimento');
+        corpo.innerHTML = "";
+        const ordenados = Object.keys(map).sort((a, b) => map[b].date - map[a].date);
+        const limite = verTudoStats ? ordenados.length : 2;
+        ordenados.slice(0, limite).forEach(mes => {
+            corpo.innerHTML += `<tr><td style="text-transform:capitalize">${mes}</td><td><b>${map[mes].count.size}</b> eventos</td><td style="text-align:right">${map[mes].itens} itens</td></tr>`;
+        });
+    }
+
+    function toggleStats() {
+        verTudoStats = !verTudoStats;
+        document.querySelector('.btn-estatisticas').innerText = verTudoStats ? 'Ver Menos' : 'Ver Mais';
+        processarERenderizar();
+    }
+
+    function renderizarFeed(lista, concluidos) {
         const feed = document.getElementById('lista-feed');
         feed.innerHTML = "";
-        const filtrados = mostrarSomentePerdas ? dadosCompletos.filter(d => d.justificativa) : dadosCompletos;
-
-        if (filtrados.length === 0) {
-            feed.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>Nenhum registro encontrado.</div>";
-            return;
+        
+        let filtrados = lista;
+        if (filtroAtivo === 'ativos') {
+            filtrados = lista.filter(d => d.tipo === 'Saída' && !concluidos.has((d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, '')));
+        } else if (filtroAtivo === 'perdas') {
+            filtrados = lista.filter(d => d.justificativa);
+        } else if (filtroAtivo === 'devolvidos') {
+            filtrados = lista.filter(d => d.tipo === 'Devolução');
         }
 
         filtrados.forEach(m => {
-            const dataReg = m.dataRegistro ? new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}) : "--";
-            let listaItens = "";
-            for (let item in m.itens) {
-                if(m.itens[item] > 0) listaItens += `<b>${m.itens[item]}</b> ${item}, `;
-            }
-            listaItens = listaItens.replace(/, $/ , "");
+            const dt = new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+            let itTxt = "";
+            for (let i in m.itens) if(m.itens[i] > 0) itTxt += `<b>${m.itens[i]}</b> ${i}, `;
+            itTxt = itTxt.replace(/, $/ , "");
+
+            const chave = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
+            const ok = concluidos.has(chave);
+
+            let iconType = "pendente"; let iconName = "clock";
+            if(m.tipo === 'Saída') { iconType = "saida"; iconName = "external-link"; }
+            if(m.tipo === 'Devolução') { iconType = "devolucao"; iconName = "check-circle"; }
+            if(m.justificativa) { iconType = "erro"; iconName = "alert-triangle"; }
 
             feed.innerHTML += `
-                <div class="registro-card">
-                    <div class="reg-header">
-                        <div>
-                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
-                            <div class="reg-data">${dataReg} • Por: ${m.responsavel.toUpperCase()}</div>
+                <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
+                    ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
+                    <div class="reg-top-row">
+                        <div class="icon-circle icon-${iconType}">
+                            <i data-lucide="${iconName}" style="width:20px; height:20px; stroke-width:2.2"></i>
                         </div>
-                        <span class="status-badge ${m.tipo === 'Saída' ? 'badge-saida' : 'badge-devolucao'}">${m.tipo}</span>
+                        <div class="reg-content">
+                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                            <div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div>
+                        </div>
                     </div>
-                    <div class="reg-resumo">${listaItens || 'Sem itens listados'}</div>
-                    ${m.justificativa ? `<div class="justificativa-box"><b>⚠️ Ocorrência:</b> ${m.justificativa}</div>` : ''}
-                </div>
-            `;
+                    <div class="reg-resumo">${itTxt}</div>
+                    ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
+                </div>`;
         });
+        lucide.createIcons();
     }
 
-    function alternarFiltro() {
-        mostrarSomentePerdas = !mostrarSomentePerdas;
-        const btn = document.getElementById('btn-filtro');
-        btn.innerText = mostrarSomentePerdas ? "✅ VER TUDO" : "⚠️ SÓ PERDAS";
-        renderizarFeed();
+    function setFiltro(t) {
+        filtroAtivo = (filtroAtivo === t) ? 'ativos' : t;
+        document.querySelectorAll('.btn').forEach(b => b.classList.remove('btn-ativo'));
+        if(filtroAtivo !== 'ativos') document.getElementById('btn-' + t).classList.add('btn-ativo');
+        processarERenderizar();
     }
 
+    /* MANUTENÇÃO FUTURA:
+       Para zerar o sistema manualmente no futuro, abra o console do navegador (F12) 
+       e digite: limparHistorico()
+    */
     async function limparHistorico() {
         const senha = prompt("Senha Master:");
         if (senha === "admin123") {
-            if (confirm("Isso apagará todos os dados do servidor. Confirma?")) {
-                const registros = await db.collection("movimentacoes").get();
+            if (confirm("Deseja apagar TODOS os registros do banco permanentemente?")) {
+                const res = await db.collection("movimentacoes").get();
                 const batch = db.batch();
-                registros.forEach(doc => batch.delete(doc.ref));
+                res.forEach(doc => batch.delete(doc.ref));
                 await batch.commit();
-                alert("Sistema zerado com sucesso.");
+                location.reload();
             }
         }
     }
