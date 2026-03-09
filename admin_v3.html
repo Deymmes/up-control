@@ -28,7 +28,6 @@
             --blue-bg: #eff6ff; --blue-stroke: #1a73e8;
             --red-bg: #fef2f2; --red-stroke: #dc2626;
 
-            /* AJUSTE PREMIUM: Vidro mais translúcido e desfoque maior */
             --glass-bg: rgba(255, 255, 255, 0.4); 
             --glass-blur: blur(20px);
             --glass-border: 1px solid rgba(255, 255, 255, 0.2);
@@ -40,12 +39,11 @@
             margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER COM EFEITO FROSTED GLASS TRANSLÚCIDO */
         .top-header {
             position: sticky; top: 0; z-index: 1000;
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur); 
-            -webkit-backdrop-filter: var(--glass-blur); /* Suporte iOS */
+            -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid rgba(0,0,0,0.04);
             padding: 12px 20px;
             display: flex; justify-content: space-between; align-items: center;
@@ -125,7 +123,6 @@
 
         .badge-edit { position: absolute; top: 15px; right: 15px; background: #fff9db; color: #f08c00; font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 6px; }
         .justificativa-box { background: #fff5f5; padding: 10px; margin-top: 10px; color: #c92a2a; border-radius: 10px; font-size: 0.7em; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .btn-limpar { background: none; border: none; color: #dee2e6; font-size: 0.65em; width: 100%; margin: 20px 0; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -166,8 +163,6 @@
     </div>
 
     <div id="lista-feed"></div>
-
-    <button class="btn-limpar" onclick="limparHistorico()">Zerar Sistema</button>
 </div>
 
 <script>
@@ -325,10 +320,14 @@
         processarERenderizar();
     }
 
+    /* MANUTENÇÃO FUTURA:
+       Para zerar o sistema manualmente no futuro, abra o console do navegador (F12) 
+       e digite: limparHistorico()
+    */
     async function limparHistorico() {
         const senha = prompt("Senha Master:");
         if (senha === "admin123") {
-            if (confirm("Deseja zerar o sistema?")) {
+            if (confirm("Deseja apagar TODOS os registros do banco permanentemente?")) {
                 const res = await db.collection("movimentacoes").get();
                 const batch = db.batch();
                 res.forEach(doc => batch.delete(doc.ref));
