@@ -53,7 +53,7 @@
         .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
         .app-logo { width: 42px; height: 42px; object-fit: contain; }
 
-        /* AJUSTE VITAL: max-width permite que o app encolha em telas menores que 500px */
+        /* AJUSTE PARA ADAPTAÇÃO AUTOMÁTICA EM QUALQUER CELULAR */
         .admin-container { 
             max-width: 500px; 
             width: 100%; 
@@ -68,8 +68,7 @@
         .card-mini b { font-size: 1.25em; font-weight: 900; }
 
         .crescimento-card { 
-            background: #eef2ff; 
-            padding: 20px; border-radius: 24px; margin-bottom: 25px; 
+            background: #eef2ff; padding: 20px; border-radius: 24px; margin-bottom: 25px; 
             box-shadow: var(--card-shadow); border: 1px solid rgba(26, 115, 232, 0.1);
         }
         .crescimento-titulo { 
@@ -81,7 +80,7 @@
         .tabela-crescimento td { padding: 12px 0; border-top: 1px solid rgba(26, 115, 232, 0.05); color: var(--text-soft); }
         .tabela-crescimento td:first-child { color: var(--text-main); font-weight: 700; text-transform: capitalize; }
         .tabela-crescimento b { color: var(--up-blue); }
-        .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0; cursor: pointer; display: block; }
+        .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0 0; cursor: pointer; display: block; }
 
         .controles { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; scrollbar-width: none; }
         .controles::-webkit-scrollbar { display: none; }
@@ -151,15 +150,8 @@
     </div>
 
     <div class="crescimento-card">
-        <span class="crescimento-titulo">
-            <i data-lucide="bar-chart-3" style="width:16px; height:16px;"></i>
-            Estatísticas
-        </span>
-        <table class="tabela-crescimento">
-            <tbody id="corpo-crescimento">
-                <tr><td colspan="3" style="text-align:center;">Processando...</td></tr>
-            </tbody>
-        </table>
+        <span class="crescimento-titulo"><i data-lucide="bar-chart-3" style="width:16px; height:16px;"></i>Estatísticas</span>
+        <table class="tabela-crescimento"><tbody id="corpo-crescimento"><tr><td colspan="3" style="text-align:center;">Processando...</td></tr></tbody></table>
         <button class="btn-estatisticas" onclick="toggleStats()">Ver Mais</button>
     </div>
 
@@ -197,11 +189,7 @@
     });
 
     function processarERenderizar() {
-        let eventosAgrupados = {};
-        let eventosMap = {}; 
-        let crescimentoMap = {};
-        let eventosConcluidos = new Set();
-        
+        let eventosAgrupados = {}; let eventosMap = {}; let crescimentoMap = {}; let eventosConcluidos = new Set();
         globalSnap.forEach(d => {
             const chaveEv = (d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, '');
             if (d.tipo === 'Correção') {
@@ -213,21 +201,15 @@
                 return;
             }
             const chaveCard = chaveEv + d.tipo;
-            if (!eventosAgrupados[chaveCard]) {
-                eventosAgrupados[chaveCard] = { ...d, correcoes: 0 };
-            }
+            if (!eventosAgrupados[chaveCard]) { eventosAgrupados[chaveCard] = { ...d, correcoes: 0 }; }
         });
-
         let listaFinal = Object.values(eventosAgrupados);
-
         listaFinal.forEach(m => {
             const dReg = new Date(m.dataRegistro);
             const mesAbrev = dReg.toLocaleString('pt-BR', { month: 'short' }).replace('.', '');
             const chaveEv = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
-            
             if (!eventosMap[chaveEv]) eventosMap[chaveEv] = { s: 0, v: 0 };
             let soma = Object.values(m.itens).reduce((a, b) => a + (parseInt(b) || 0), 0);
-            
             if (m.tipo === 'Saída') {
                 eventosMap[chaveEv].s += soma;
                 if (!crescimentoMap[mesAbrev]) crescimentoMap[mesAbrev] = { count: new Set(), itens: 0, date: dReg };
@@ -236,32 +218,21 @@
             }
             if (m.tipo === 'Devolução') eventosMap[chaveEv].v += soma;
         });
-
         let naRuaTotal = 0;
         for (let ev in eventosMap) {
-            if (eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v) {
-                eventosConcluidos.add(ev);
-            } else if (eventosMap[ev].s > 0) {
-                naRuaTotal++;
-            }
+            if (eventosMap[ev].s > 0 && eventosMap[ev].s === eventosMap[ev].v) { eventosConcluidos.add(ev); } 
+            else if (eventosMap[ev].s > 0) { naRuaTotal++; }
         }
-
         let totalAnoEventos = 0;
-        for (let mes in crescimentoMap) {
-            totalAnoEventos += crescimentoMap[mes].count.size;
-        }
-
+        for (let mes in crescimentoMap) { totalAnoEventos += crescimentoMap[mes].count.size; }
         document.getElementById('an-rua').innerText = naRuaTotal;
         document.getElementById('an-ok').innerText = eventosConcluidos.size;
         document.getElementById('an-ano').innerText = totalAnoEventos;
-
-        renderizarTabela(crescimentoMap);
-        renderizarFeed(listaFinal, eventosConcluidos);
+        renderizarTabela(crescimentoMap); renderizarFeed(listaFinal, eventosConcluidos);
     }
 
     function renderizarTabela(map) {
-        const corpo = document.getElementById('corpo-crescimento');
-        corpo.innerHTML = "";
+        const corpo = document.getElementById('corpo-crescimento'); corpo.innerHTML = "";
         const ordenados = Object.keys(map).sort((a, b) => map[b].date - map[a].date);
         const limite = verTudoStats ? ordenados.length : 2;
         ordenados.slice(0, limite).forEach(mes => {
@@ -276,47 +247,30 @@
     }
 
     function renderizarFeed(lista, concluidos) {
-        const feed = document.getElementById('lista-feed');
-        feed.innerHTML = "";
-        
+        const feed = document.getElementById('lista-feed'); feed.innerHTML = "";
         let filtrados = lista;
-        if (filtroAtivo === 'ativos') {
-            filtrados = lista.filter(d => d.tipo === 'Saída' && !concluidos.has((d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, '')));
-        } else if (filtroAtivo === 'perdas') {
-            filtrados = lista.filter(d => d.justificativa);
-        } else if (filtroAtivo === 'devolvidos') {
-            filtrados = lista.filter(d => d.tipo === 'Devolução');
-        }
-
+        if (filtroAtivo === 'ativos') { filtrados = lista.filter(d => d.tipo === 'Saída' && !concluidos.has((d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, ''))); } 
+        else if (filtroAtivo === 'perdas') { filtrados = lista.filter(d => d.justificativa); } 
+        else if (filtroAtivo === 'devolvidos') { filtrados = lista.filter(d => d.tipo === 'Devolução'); }
         filtrados.forEach(m => {
             const dt = new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
-            let itTxt = "";
-            for (let i in m.itens) if(m.itens[i] > 0) itTxt += `<b>${m.itens[i]}</b> ${i}, `;
+            let itTxt = ""; for (let i in m.itens) if(m.itens[i] > 0) itTxt += `<b>${m.itens[i]}</b> ${i}, `;
             itTxt = itTxt.replace(/, $/ , "");
-
             const chave = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
             const ok = concluidos.has(chave);
-
             let iconType = "pendente"; let iconName = "clock";
             if(m.tipo === 'Saída') { iconType = "saida"; iconName = "external-link"; }
             if(m.tipo === 'Devolução') { iconType = "devolucao"; iconName = "check-circle"; }
             if(m.justificativa) { iconType = "erro"; iconName = "alert-triangle"; }
-
-            feed.innerHTML += `
-                <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
-                    ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
-                    <div class="reg-top-row">
-                        <div class="icon-circle icon-${iconType}">
-                            <i data-lucide="${iconName}" style="width:20px; height:20px; stroke-width:2.2"></i>
-                        </div>
-                        <div class="reg-content">
-                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
-                            <div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div>
-                        </div>
-                    </div>
-                    <div class="reg-resumo">${itTxt}</div>
-                    ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
-                </div>`;
+            feed.innerHTML += `<div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
+                ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
+                <div class="reg-top-row">
+                    <div class="icon-circle icon-${iconType}"><i data-lucide="${iconName}" style="width:20px; height:20px;"></i></div>
+                    <div class="reg-content"><div class="reg-nome">${m.evento.toUpperCase()}</div><div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div></div>
+                </div>
+                <div class="reg-resumo">${itTxt}</div>
+                ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
+            </div>`;
         });
         lucide.createIcons();
     }
@@ -328,17 +282,15 @@
         processarERenderizar();
     }
 
-    async function limparHistorico() {
-        const senha = prompt("Senha Master:");
-        if (senha === "admin123") {
-            if (confirm("Deseja apagar TODOS os registros do banco permanentemente?")) {
-                const res = await db.collection("movimentacoes").get();
-                const batch = db.batch();
-                res.forEach(doc => batch.delete(doc.ref));
-                await batch.commit();
-                location.reload();
-            }
-        }
+    // REGISTRO DO SERVICE WORKER (Ativa o botão de "Instalar" no Android)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('SW registrado!', reg);
+            }).catch(err => {
+                console.log('Erro no SW:', err);
+            });
+        });
     }
 </script>
 </body>
