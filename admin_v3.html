@@ -37,7 +37,7 @@
             font-family: -apple-system, system-ui, sans-serif; 
             background-color: var(--bg-light); color: var(--text-main);
             margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
-            width: 100%; /* Garante ocupação total */
+            width: 100%;
         }
 
         .top-header {
@@ -53,8 +53,14 @@
         .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
         .app-logo { width: 42px; height: 42px; object-fit: contain; }
 
-        /* CORREÇÃO AQUI: max-width em vez de width fixo */
-        .admin-container { max-width: 500px; width: 100%; margin: auto; padding: 20px 15px; box-sizing: border-box; }
+        /* AJUSTE VITAL: max-width permite que o app encolha em telas menores que 500px */
+        .admin-container { 
+            max-width: 500px; 
+            width: 100%; 
+            margin: auto; 
+            padding: 20px 15px; 
+            box-sizing: border-box; 
+        }
 
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; }
         .card-mini { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); border: 1px solid #f1f3f5; }
@@ -62,7 +68,8 @@
         .card-mini b { font-size: 1.25em; font-weight: 900; }
 
         .crescimento-card { 
-            background: #eef2ff; padding: 20px; border-radius: 24px; margin-bottom: 25px; 
+            background: #eef2ff; 
+            padding: 20px; border-radius: 24px; margin-bottom: 25px; 
             box-shadow: var(--card-shadow); border: 1px solid rgba(26, 115, 232, 0.1);
         }
         .crescimento-titulo { 
@@ -74,7 +81,7 @@
         .tabela-crescimento td { padding: 12px 0; border-top: 1px solid rgba(26, 115, 232, 0.05); color: var(--text-soft); }
         .tabela-crescimento td:first-child { color: var(--text-main); font-weight: 700; text-transform: capitalize; }
         .tabela-crescimento b { color: var(--up-blue); }
-        .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0 0; cursor: pointer; display: block; }
+        .btn-estatisticas { background: none; border: none; color: var(--up-blue); font-size: 0.75em; font-weight: 700; padding: 12px 0; cursor: pointer; display: block; }
 
         .controles { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 20px; scrollbar-width: none; }
         .controles::-webkit-scrollbar { display: none; }
