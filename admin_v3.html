@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Up Controle - Admin V1.2</title>
     
     <link rel="manifest" href="manifest_admin.json" crossorigin="use-credentials">
@@ -37,6 +37,7 @@
             font-family: -apple-system, system-ui, sans-serif; 
             background-color: var(--bg-light); color: var(--text-main);
             margin: 0; padding: 0; -webkit-font-smoothing: antialiased;
+            width: 100%; /* Garante ocupação total */
         }
 
         .top-header {
@@ -52,7 +53,8 @@
         .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
         .app-logo { width: 42px; height: 42px; object-fit: contain; }
 
-        .admin-container { max-width: 500px; margin: auto; padding: 20px 15px; }
+        /* CORREÇÃO AQUI: max-width em vez de width fixo */
+        .admin-container { max-width: 500px; width: 100%; margin: auto; padding: 20px 15px; box-sizing: border-box; }
 
         .analytics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; }
         .card-mini { background: white; padding: 15px 10px; border-radius: 20px; text-align: center; box-shadow: var(--card-shadow); border: 1px solid #f1f3f5; }
@@ -60,8 +62,7 @@
         .card-mini b { font-size: 1.25em; font-weight: 900; }
 
         .crescimento-card { 
-            background: #eef2ff; 
-            padding: 20px; border-radius: 24px; margin-bottom: 25px; 
+            background: #eef2ff; padding: 20px; border-radius: 24px; margin-bottom: 25px; 
             box-shadow: var(--card-shadow); border: 1px solid rgba(26, 115, 232, 0.1);
         }
         .crescimento-titulo { 
@@ -320,10 +321,6 @@
         processarERenderizar();
     }
 
-    /* MANUTENÇÃO FUTURA:
-       Para zerar o sistema manualmente no futuro, abra o console do navegador (F12) 
-       e digite: limparHistorico()
-    */
     async function limparHistorico() {
         const senha = prompt("Senha Master:");
         if (senha === "admin123") {
