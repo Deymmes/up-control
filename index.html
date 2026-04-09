@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Up Controle - Oficial</title>
     
     <link rel="manifest" href="manifest.json">
@@ -17,16 +17,16 @@
         :root { --primary: #1a73e8; --secondary: #ff0080; --bg: #f4f7f6; --success: #25D366; }
         
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', -apple-system, sans-serif; 
             margin: 0; padding: 0; 
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh;
             background-image: url('fundo.jpg'); 
             background-size: cover; background-position: center; 
             background-repeat: no-repeat; background-attachment: fixed;
+            width: 100%;
         }
 
-        /* SETUP VIEW - PRESERVADA */
         .app-container { 
             width: 90%; max-width: 450px; 
             background: rgba(255, 255, 255, 0.75);
@@ -49,7 +49,6 @@
         .tela { padding: 12px 25px; display: none; }
         .ativa { display: block; }
 
-        /* PAINEL DE PROGRESSO INTERNO */
         #painel-progresso {
             background: white; margin: 10px 15px; padding: 15px; border-radius: 18px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; display: none;
@@ -58,18 +57,20 @@
         .barra-fill { background: var(--secondary); height: 100%; width: 0%; transition: 0.4s; }
         .texto-progresso { font-size: 0.9em; font-weight: bold; color: #555; }
 
-        /* CARDS OPERACIONAIS */
         .card-categoria {
             background: white; margin: 10px 15px; border-radius: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.03);
         }
         .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         
+        /* CORES DAS CATEGORIAS */
         .cat-principais { background: #454d55; } 
         .cat-opcionais { background: #9c27b0; }  
         .cat-camarim { background: #d81b60; }    
         .cat-espuma { background: #2980b9; }     
         .cat-inflavel { background: #e67e22; }   
+        .cat-oficinas { background: #16a34a; } /* Verde para Oficinas */
+        .cat-pintura { background: #f1c40f; color: #000; } /* Amarelo para Pintura */
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
@@ -84,8 +85,8 @@
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
 
-        .btn-corrigir-estilo { background: #94a3b8 !important; color: white !important; } 
-        .btn-finalizar-estilo { background: #16a34a !important; color: white !important; font-weight: 800 !important; }
+        .btn-corrigir-estilo { background: #94a3b8 !important; } 
+        .btn-finalizar-estilo { background: #16a34a !important; font-weight: 800 !important; }
 
         #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
         input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
@@ -151,7 +152,6 @@
     let conferidos = {};
     let emAndamento = false;
 
-    // PROTEÇÃO CONTRA FECHAMENTO ACIDENTAL
     window.onbeforeunload = function(e) {
         if (emAndamento) {
             e.preventDefault();
@@ -159,9 +159,13 @@
         }
     };
 
+    // ESTOQUE ATUALIZADO COM AS NOVAS CATEGORIAS
     const estoqueRaw = {
         "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
         "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
+        "Oficina de Gesso": { cor: "cat-oficinas", itens: ["Mesas", "Cadeiras", "Prateleira", "Plástico + Pano", "Tintas", "Pincéis", "Florzinha", "Copos para água"] },
+        "Pulseira da Amizade": { cor: "cat-oficinas", itens: ["Miçangas", "Mesas", "Cadeiras", "Potinho vermelho"] },
+        "Pintura Facial": { cor: "cat-pintura", itens: ["Maleta com tintas"] },
         "Camarim": { cor: "cat-camarim", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
         "Espuma": { cor: "cat-espuma", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
         "Inflável": { cor: "cat-inflavel", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
@@ -194,7 +198,6 @@
             }
         }
 
-        const dataFormatada = dataEvento.split('-').reverse().join('/');
         document.getElementById('info-header').innerHTML = `👤 ${usuario.toUpperCase()} • 🎈 ${evento.toUpperCase()}`;
         
         if(acao === 'Devolução') {
@@ -215,11 +218,6 @@
     }
 
     function desenhar() {
-        const container = document.getElementById('categorias-container');
-        if(!container) {
-           const listDiv = document.getElementById('lista-itens');
-           listDiv.innerHTML = '<div id="categorias-container"></div>';
-        }
         const target = document.getElementById('categorias-container');
         target.innerHTML = "";
         for(let nomeCat in estoque) {
@@ -330,6 +328,17 @@
     function voltarParaLista() {
         document.getElementById('tela-perda').style.display = 'none';
         document.getElementById('tela-app').style.display = 'block';
+    }
+
+    // REGISTRO DO SERVICE WORKER (Para o Android reconhecer como App)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('SW ok!', reg);
+            }).catch(err => {
+                console.log('Erro SW:', err);
+            });
+        });
     }
 </script>
 </body>
