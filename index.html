@@ -63,46 +63,21 @@
         }
         
         .categoria-header { 
-            padding: 14px 20px; 
-            font-size: 0.85em; 
-            font-weight: bold; 
-            color: white; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            /* Sombra no texto reforçada para os fundos mais escuros */
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5); 
+            padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; 
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; 
+            display: flex; justify-content: space-between; align-items: center; 
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2); 
         }
         
-        /* 🔥 DEFINIÇÃO DOS 8 GRADIENTES EXCLUSIVOS E MAIS ESCUROS 🔥 */
-        /* Baseados na referência de cores, mas em tons fechados */
-        
-        /* 1. Ouro/Laranja Fechado (Baseado no Gradiente 1) */
-        .cat-principais { background: linear-gradient(135deg, #B8860B 0%, #8B4513 100%); } 
-        
-        /* 2. Roxo/Lavanda Profundo (Baseado no Gradiente 2) */
-        .cat-opcionais { background: linear-gradient(135deg, #4B0082 0%, #2F004F 100%); }  
-        
-        /* 3. Rosa Fechado/Azul Petróleo (Baseado no Gradiente 3) */
-        .cat-gesso { background: linear-gradient(135deg, #A85675 0%, #005F6B 100%); }      
-        
-        /* 4. Menta Escura/Pêssego Queimado (Baseado no Gradiente 4) */
-        .cat-pulseira { background: linear-gradient(135deg, #1A6B54 0%, #8B5A42 100%); }   
-        
-        /* 5. Azul/Verde Soft Fechado (Baseado no Gradiente 5) */
-        .cat-pintura { background: linear-gradient(135deg, #3A5F8B 0%, #1A5B3A 100%); }    
-        
-        /* 6. Azul Royal Profundo (Baseado no Gradiente 6) */
-        .cat-camarim { background: linear-gradient(135deg, #001F5B 0%, #004F9B 100%); }    
-        
-        /* 7. Cereja/Uva Escuro (Baseado no Gradiente 7) */
-        .cat-espuma { background: linear-gradient(135deg, #6B1A3A 0%, #2A1A4F 100%); }     
-        
-        /* 8. Cobre/Tijolo (Exclusivo e sem repetições) */
-        .cat-inflavel { background: linear-gradient(135deg, #8B3A1A 0%, #5B1F0A 100%); }   
+        /* 🔥 GRADIENTES EXCLUSIVOS (SEM REPETIÇÃO) 🔥 */
+        .color-1 { background: linear-gradient(135deg, #FF9E9E 0%, #FFCCBB 100%); } 
+        .color-2 { background: linear-gradient(135deg, #CAB8E9 0%, #E9C6CB 100%); }  
+        .color-3 { background: linear-gradient(135deg, #FFBBDD 0%, #AADDEE 100%); }   
+        .color-4 { background: linear-gradient(135deg, #99EEDD 0%, #FFCCAA 100%); }    
+        .color-5 { background: linear-gradient(135deg, #B9C6EA 0%, #D4EADD 100%); }   
+        .color-6 { background: linear-gradient(135deg, #7A8BC9 0%, #6CCEF9 100%); }     
+        .color-7 { background: linear-gradient(135deg, #DB6A8F 0%, #8C7DE1 100%); }   
+        .color-8 { background: linear-gradient(135deg, #6CCEF9 0%, #AADDEE 100%); }   
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
@@ -116,10 +91,6 @@
         
         .contador { font-weight: bold; font-size: 1.1em; min-width: 30px; text-align: center; color: #333; }
         .btn-grande { width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 1em; font-weight: bold; cursor: pointer; color: white; margin-top: 8px; }
-
-        .btn-corrigir-estilo { background: #94a3b8 !important; } 
-        .btn-finalizar-estilo { background: #16a34a !important; font-weight: 800 !important; }
-
         #info-header { margin: 10px 15px; padding: 12px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; font-size: 0.85em; font-weight: bold; color: #555; }
         input, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; box-sizing: border-box; font-size: 16px; background: rgba(255, 255, 255, 0.8); }
         .label-bold { font-weight: bold; display: block; margin-bottom: 3px; color: #222; font-size: 0.9em; }
@@ -139,7 +110,7 @@
         <input type="text" id="nome-evento" placeholder="Nome da festa/escola">
         <button class="btn-grande" style="background: var(--primary)" onclick="fluxo('Saída')">RETIRAR MATERIAL</button>
         <button class="btn-grande" style="background: var(--success)" onclick="fluxo('Devolução')">DEVOLVER MATERIAL</button>
-        <button class="btn-grande btn-corrigir-estilo" onclick="fluxo('Correção')">CORRIGIR</button>
+        <button class="btn-grande" style="background: #94a3b8" onclick="fluxo('Correção')">CORRIGIR</button>
     </div>
 
     <div id="tela-app" class="tela" style="padding:0">
@@ -150,7 +121,7 @@
         </div>
         <div id="categorias-container"></div>
         <div style="padding:15px">
-            <button id="btn-finalizar" class="btn-grande btn-finalizar-estilo" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
+            <button id="btn-finalizar" class="btn-grande" style="background: #16a34a" onclick="verificarFinalizacao()">FINALIZAR REGISTRO</button>
         </div>
     </div>
 
@@ -192,14 +163,14 @@
     };
 
     const estoqueRaw = {
-        "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
-        "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
-        "Oficina de Gesso": { cor: "cat-gesso", itens: ["Mesas", "Cadeiras", "Prateleira", "Plástico + Pano", "Tintas", "Pincéis", "Florzinha", "Copos para água"] },
-        "Pulseira da Amizade": { cor: "cat-pulseira", itens: ["Miçangas", "Mesas", "Cadeiras", "Potinho vermelho"] },
-        "Pintura Facial": { cor: "cat-pintura", itens: ["Maleta com tintas"] },
-        "Camarim": { cor: "cat-camarim", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
-        "Espuma": { cor: "cat-espuma", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
-        "Inflável": { cor: "cat-inflavel", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
+        "Itens Principais": { cor: "color-1", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
+        "Materiais Opcionais": { cor: "color-2", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
+        "Oficina de Gesso": { cor: "color-3", itens: ["Mesas", "Cadeiras", "Prateleira", "Plástico + Pano", "Tintas", "Pincéis", "Florzinha", "Copos para água"] },
+        "Pulseira da Amizade": { cor: "color-4", itens: ["Miçangas", "Mesas", "Cadeiras", "Potinho vermelho"] },
+        "Pintura Facial": { cor: "color-5", itens: ["Maleta com tintas"] },
+        "Camarim": { cor: "color-6", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
+        "Espuma": { cor: "color-7", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
+        "Inflável": { cor: "color-8", itens: ["Motor", "Extensão", "Tatames", "Toalhas", "Pesos", "Carrinho", "Detergente", "Bola", "Silicone", "Mangueira"] }
     };
 
     const estoque = {};
@@ -212,14 +183,11 @@
         evento = document.getElementById('nome-evento').value.trim();
         dataEvento = document.getElementById('data-evento').value;
         if(!usuario || !evento || !dataEvento) return alert("Preencha tudo!");
-        
         tipoAcao = acao;
         emAndamento = true;
-
         for(let cat in estoque) {
             estoque[cat].itens.forEach(i => { contagem[i] = 0; conferidos[i] = false; });
         }
-
         if(acao === 'Devolução' || acao === 'Correção') {
             const q = await db.collection("movimentacoes").where("evento", "==", evento).where("dataEvento", "==", dataEvento).where("tipo", "==", "Saída").get();
             if(!q.empty) {
@@ -228,9 +196,7 @@
                 contagem = {...doc.itens};
             }
         }
-
         document.getElementById('info-header').innerHTML = `👤 ${usuario.toUpperCase()} • 🎈 ${evento.toUpperCase()}`;
-        
         if(acao === 'Devolução') {
             document.getElementById('painel-progresso').style.display = 'block';
             atualizarHUD();
@@ -266,15 +232,11 @@
         const seta = document.getElementById(`seta-${nome}`);
         const card = document.getElementById("card-" + nome.replace(/\s+/g, '-'));
         const estaAberto = div.style.display === "block";
-
         if (estaAberto && !forcar) return;
-
         document.querySelectorAll('.lista-conteudo').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.categoria-header span').forEach(s => s.innerText = '▼');
-
         div.style.display = "block";
         seta.innerText = "▲";
-
         const headerHeight = document.querySelector('header').offsetHeight + 40;
         window.scrollTo({ top: card.offsetTop - headerHeight, behavior: 'smooth' });
     }
@@ -361,7 +323,6 @@
         document.getElementById('tela-app').style.display = 'block';
     }
 
-    // REGISTRO DO SERVICE WORKER (Ativa o botão de "Instalar" no Android)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').then(reg => {
