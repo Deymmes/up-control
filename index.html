@@ -73,32 +73,18 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            /* Sombra no texto para garantir leitura nos gradientes claros */
             text-shadow: 0 1px 3px rgba(0,0,0,0.2); 
         }
         
-        /* 🔥 DEFINIÇÃO DOS 7 NOVOS GRADIENTES SUAVES (PASTEL) DA IMAGEM 🔥 */
-        
-        /* Gradiente 1: Coral/Pêssego */
-        .cat-principais { background: linear-gradient(135deg, #FF9E9E 0%, #FFCCBB 100%); } 
-        
-        /* Gradiente 2: Lavanda/Lilás */
-        .cat-opcionais { background: linear-gradient(135deg, #CAB8E9 0%, #E9C6CB 100%); }  
-        
-        /* Gradiente 3: Rosa Claro/Turquesa Pálido */
-        .cat-oficinas { background: linear-gradient(135deg, #FFBBDD 0%, #AADDEE 100%); }   
-        
-        /* Gradiente 4: Azul Pastel/Coral Suave */
-        .cat-pintura { background: linear-gradient(135deg, #99EEDD 0%, #FFCCAA 100%); }    
-        
-        /* Gradiente 5: Violeta Claro/Menta Pálida */
-        .cat-camarim { background: linear-gradient(135deg, #B9C6EA 0%, #D4EADD 100%); }   
-        
-        /* Gradiente 6: Azul Royal Suave/Azul Elétrico */
-        .cat-espuma { background: linear-gradient(135deg, #7A8BC9 0%, #6CCEF9 100%); }     
-        
-        /* Gradiente 7: Cereja/Uva Pastel */
-        .cat-inflavel { background: linear-gradient(135deg, #DB6A8F 0%, #8C7DE1 100%); }   
+        /* 🔥 PALETA FIEL À IMAGEM (GRADIENTES EXCLUSIVOS PARA CADA CATEGORIA) 🔥 */
+        .cat-principais { background: linear-gradient(135deg, #FF9E9E 0%, #FFCCBB 100%); } /* Coral */
+        .cat-opcionais { background: linear-gradient(135deg, #CAB8E9 0%, #E9C6CB 100%); }  /* Lavanda */
+        .cat-gesso { background: linear-gradient(135deg, #FFBBDD 0%, #AADDEE 100%); }      /* Rosa/Azul */
+        .cat-pulseira { background: linear-gradient(135deg, #99EEDD 0%, #FFCCAA 100%); }   /* Menta/Pêssego */
+        .cat-pintura { background: linear-gradient(135deg, #B9C6EA 0%, #D4EADD 100%); }    /* Azul/Verde Soft */
+        .cat-camarim { background: linear-gradient(135deg, #7A8BC9 0%, #6CCEF9 100%); }    /* Azul Royal */
+        .cat-espuma { background: linear-gradient(135deg, #DB6A8F 0%, #8C7DE1 100%); }     /* Cereja/Uva */
+        .cat-inflavel { background: linear-gradient(135deg, #FF7E5F 0%, #FEB47B 100%); }   /* Sunset (Adicional) */
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
@@ -187,12 +173,11 @@
         }
     };
 
-    // MANTIDA A ESTRUTURA DE ESTOQUE ATUALIZADA
     const estoqueRaw = {
         "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
         "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
-        "Oficina de Gesso": { cor: "cat-oficinas", itens: ["Mesas", "Cadeiras", "Prateleira", "Plástico + Pano", "Tintas", "Pincéis", "Florzinha", "Copos para água"] },
-        "Pulseira da Amizade": { cor: "cat-oficinas", itens: ["Miçangas", "Mesas", "Cadeiras", "Potinho vermelho"] },
+        "Oficina de Gesso": { cor: "cat-gesso", itens: ["Mesas", "Cadeiras", "Prateleira", "Plástico + Pano", "Tintas", "Pincéis", "Florzinha", "Copos para água"] },
+        "Pulseira da Amizade": { cor: "cat-pulseira", itens: ["Miçangas", "Mesas", "Cadeiras", "Potinho vermelho"] },
         "Pintura Facial": { cor: "cat-pintura", itens: ["Maleta com tintas"] },
         "Camarim": { cor: "cat-camarim", itens: ["Perna", "Base", "Espelho", "Tapete", "Luz", "Extensão", "Flores", "Caixa das fitas", "Caixa maquiagem"] },
         "Espuma": { cor: "cat-espuma", itens: ["Canhão", "Boca do canhão", "Tripé", "Galão com motor", "Espumante", "Extensão", "Lona"] },
@@ -358,7 +343,6 @@
         document.getElementById('tela-app').style.display = 'block';
     }
 
-    // REGISTRO DO SERVICE WORKER (Ativa o botão de "Instalar" no Android)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').then(reg => {
