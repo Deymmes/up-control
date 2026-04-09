@@ -61,16 +61,16 @@
             background: white; margin: 10px 15px; border-radius: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; border: 1px solid rgba(0,0,0,0.03);
         }
-        .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .categoria-header { padding: 14px 20px; font-size: 0.85em; font-weight: bold; color: white; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
         
-        /* CORES DAS CATEGORIAS */
-        .cat-principais { background: #454d55; } 
-        .cat-opcionais { background: #9c27b0; }  
-        .cat-camarim { background: #d81b60; }    
-        .cat-espuma { background: #2980b9; }     
-        .cat-inflavel { background: #e67e22; }   
-        .cat-oficinas { background: #16a34a; } /* Verde para Oficinas */
-        .cat-pintura { background: #f1c40f; color: #000; } /* Amarelo para Pintura */
+        /* 🔥 DEFINIÇÃO DOS 7 GRADIENTES DA IMAGEM 🔥 */
+        .cat-principais { background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); } /* Gradiente 1: Ouro/Laranja */
+        .cat-opcionais { background: linear-gradient(135deg, #FF00FF 0%, #800080 100%); } /* Gradiente 2: Rosa/Roxo */
+        .cat-oficinas { background: linear-gradient(135deg, #FF6347 0%, #8B0000 100%); }  /* Gradiente 3: Vermelho/Vinho */
+        .cat-pintura { background: linear-gradient(135deg, #00CED1 0%, #00008B 100%); }   /* Gradiente 4: Turquesa/Azul Escuro */
+        .cat-camarim { background: linear-gradient(135deg, #4169E1 0%, #4B0082 100%); }   /* Gradiente 5: Azul Royal/Índigo */
+        .cat-espuma { background: linear-gradient(135deg, #00BFFF 0%, #0000FF 100%); }    /* Gradiente 6: Azul Céu/Azul Puro */
+        .cat-inflavel { background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%); }   /* Gradiente 7: Carmesim/Vermelho Escuro */
 
         .lista-conteudo { padding: 5px 15px; display: none; background: white; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f1f1; }
@@ -159,7 +159,7 @@
         }
     };
 
-    // ESTOQUE ATUALIZADO COM AS NOVAS CATEGORIAS
+    // MANTIDA A ESTRUTURA DE ESTOQUE ATUALIZADA
     const estoqueRaw = {
         "Itens Principais": { cor: "cat-principais", itens: ["Bola grande", "Bola pequena", "Fitas coloridas", "Cartas de personagens", "Cartas de letras", "Up coins", "Livro das marcas", "Livro dos personagens", "Venda", "Cones", "Corda", "Extensão", "Baldes", "Bolinhas", "Pregadores", "Compressor de ar", "Balões", "Som", "Microfone", "Tripé", "Pulseira"] },
         "Materiais Opcionais": { cor: "cat-opcionais", itens: ["Corrida de saco", "Pega fitas", "Peteca", "Fantasia", "Esponja", "Bambolê", "Desenhos", "Canetinhas", "Apitos", "Coletes", "Oficinas", "Tatame"] },
@@ -330,13 +330,13 @@
         document.getElementById('tela-app').style.display = 'block';
     }
 
-    // REGISTRO DO SERVICE WORKER (Para o Android reconhecer como App)
+    // REGISTRO DO SERVICE WORKER (Ativa o botão de "Instalar" no Android)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').then(reg => {
-                console.log('SW ok!', reg);
+                console.log('SW registrado!', reg);
             }).catch(err => {
-                console.log('Erro SW:', err);
+                console.log('Erro no SW:', err);
             });
         });
     }
