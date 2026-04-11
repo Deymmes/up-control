@@ -53,7 +53,6 @@
         .header-info p { margin: 0; font-size: 0.65em; color: var(--text-soft); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
         .app-logo { width: 42px; height: 42px; object-fit: contain; }
 
-        /* AJUSTE PARA ADAPTAÇÃO AUTOMÁTICA EM QUALQUER CELULAR */
         .admin-container { 
             max-width: 500px; 
             width: 100%; 
@@ -94,15 +93,8 @@
             min-width: 90px;
         }
 
-        @keyframes inner-breathe {
-            0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
-            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.35); border-color: rgba(16, 185, 129, 0.4); }
-            100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
         .btn-refresh { 
             background: white; color: #065f46; 
-            animation: inner-breathe 3s infinite ease-in-out;
             border: 1px solid #e9ecef;
         }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); }
@@ -115,7 +107,7 @@
         }
         .modo-concluido { border-left: 4px solid #f1f3f5; }
 
-        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
+        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; padding-right: 30px; }
         .icon-circle { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .icon-saida { background: var(--pink-bg); color: var(--pink-stroke); }
         .icon-devolucao { background: var(--green-bg); color: var(--green-stroke); }
@@ -128,7 +120,16 @@
         .reg-resumo { font-size: 0.82em; color: var(--text-soft); line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 14px; width: 100%; box-sizing: border-box; }
         .reg-resumo b { font-weight: 900; color: #000000; }
 
-        .badge-edit { position: absolute; top: 15px; right: 15px; background: #fff9db; color: #f08c00; font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 6px; }
+        /* ESTILO DO BOTÃO EXCLUIR */
+        .btn-excluir {
+            position: absolute; top: 18px; right: 18px;
+            background: none; border: none; color: #ced4da;
+            padding: 5px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-excluir:hover { color: #fa5252; }
+
+        .badge-edit { margin-bottom: 8px; align-self: flex-start; background: #fff9db; color: #f08c00; font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 6px; }
         .justificativa-box { background: #fff5f5; padding: 10px; margin-top: 10px; color: #c92a2a; border-radius: 10px; font-size: 0.7em; font-weight: 600; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
@@ -187,6 +188,19 @@
         snap.forEach(doc => globalSnap.push({id: doc.id, ...doc.data()}));
         processarERenderizar();
     });
+
+    async function excluirRegistro(id, nomeEvento) {
+        const confirmar = confirm(`Tem certeza que deseja excluir o registro de "${nomeEvento}" permanentemente?`);
+        if (confirmar) {
+            try {
+                await db.collection("movimentacoes").doc(id).delete();
+                alert("Registro excluído com sucesso.");
+            } catch (error) {
+                console.error("Erro ao excluir:", error);
+                alert("Erro ao excluir o registro.");
+            }
+        }
+    }
 
     function processarERenderizar() {
         let eventosAgrupados = {}; let eventosMap = {}; let crescimentoMap = {}; let eventosConcluidos = new Set();
@@ -252,25 +266,35 @@
         if (filtroAtivo === 'ativos') { filtrados = lista.filter(d => d.tipo === 'Saída' && !concluidos.has((d.evento.toUpperCase().trim() + d.dataEvento).replace(/\s+/g, ''))); } 
         else if (filtroAtivo === 'perdas') { filtrados = lista.filter(d => d.justificativa); } 
         else if (filtroAtivo === 'devolvidos') { filtrados = lista.filter(d => d.tipo === 'Devolução'); }
+        
         filtrados.forEach(m => {
             const dt = new Date(m.dataRegistro).toLocaleString("pt-BR", {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
             let itTxt = ""; for (let i in m.itens) if(m.itens[i] > 0) itTxt += `<b>${m.itens[i]}</b> ${i}, `;
             itTxt = itTxt.replace(/, $/ , "");
             const chave = (m.evento.toUpperCase().trim() + m.dataEvento).replace(/\s+/g, '');
             const ok = concluidos.has(chave);
+            
             let iconType = "pendente"; let iconName = "clock";
             if(m.tipo === 'Saída') { iconType = "saida"; iconName = "external-link"; }
             if(m.tipo === 'Devolução') { iconType = "devolucao"; iconName = "check-circle"; }
             if(m.justificativa) { iconType = "erro"; iconName = "alert-triangle"; }
-            feed.innerHTML += `<div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
-                ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
-                <div class="reg-top-row">
-                    <div class="icon-circle icon-${iconType}"><i data-lucide="${iconName}" style="width:20px; height:20px;"></i></div>
-                    <div class="reg-content"><div class="reg-nome">${m.evento.toUpperCase()}</div><div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div></div>
-                </div>
-                <div class="reg-resumo">${itTxt}</div>
-                ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
-            </div>`;
+            
+            feed.innerHTML += `
+                <div class="registro-card ${ok && filtroAtivo === 'tudo' ? 'modo-concluido' : ''}">
+                    <button class="btn-excluir" onclick="excluirRegistro('${m.id}', '${m.evento}')">
+                        <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
+                    </button>
+                    ${m.correcoes > 0 ? `<div class="badge-edit">✏️ EDITADO</div>` : ""}
+                    <div class="reg-top-row">
+                        <div class="icon-circle icon-${iconType}"><i data-lucide="${iconName}" style="width:20px; height:20px;"></i></div>
+                        <div class="reg-content">
+                            <div class="reg-nome">${m.evento.toUpperCase()}</div>
+                            <div class="reg-sub">${dt} • ${m.responsavel.toUpperCase()}</div>
+                        </div>
+                    </div>
+                    <div class="reg-resumo">${itTxt}</div>
+                    ${m.justificativa ? `<div class="justificativa-box"><i data-lucide="info" style="width:12px"></i> ${m.justificativa}</div>` : ''}
+                </div>`;
         });
         lucide.createIcons();
     }
@@ -282,7 +306,6 @@
         processarERenderizar();
     }
 
-    // REGISTRO DO SERVICE WORKER (Ativa o botão de "Instalar" no Android)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').then(reg => {
