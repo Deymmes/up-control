@@ -93,8 +93,16 @@
             min-width: 90px;
         }
 
+        /* VOLTANDO A ANIMAÇÃO DO PULSE VERDE */
+        @keyframes inner-breathe {
+            0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
+            50% { box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.35); border-color: rgba(16, 185, 129, 0.4); }
+            100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
         .btn-refresh { 
             background: white; color: #065f46; 
+            animation: inner-breathe 3s infinite ease-in-out;
             border: 1px solid #e9ecef;
         }
         .btn-ativo { background: var(--up-blue); color: white; border-color: var(--up-blue); }
@@ -107,7 +115,7 @@
         }
         .modo-concluido { border-left: 4px solid #f1f3f5; }
 
-        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; padding-right: 30px; }
+        .reg-top-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; padding-right: 35px; }
         .icon-circle { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .icon-saida { background: var(--pink-bg); color: var(--pink-stroke); }
         .icon-devolucao { background: var(--green-bg); color: var(--green-stroke); }
@@ -120,7 +128,6 @@
         .reg-resumo { font-size: 0.82em; color: var(--text-soft); line-height: 1.5; background: #f8f9fa; padding: 12px; border-radius: 14px; width: 100%; box-sizing: border-box; }
         .reg-resumo b { font-weight: 900; color: #000000; }
 
-        /* ESTILO DO BOTÃO EXCLUIR */
         .btn-excluir {
             position: absolute; top: 18px; right: 18px;
             background: none; border: none; color: #ced4da;
@@ -194,9 +201,7 @@
         if (confirmar) {
             try {
                 await db.collection("movimentacoes").doc(id).delete();
-                alert("Registro excluído com sucesso.");
             } catch (error) {
-                console.error("Erro ao excluir:", error);
                 alert("Erro ao excluir o registro.");
             }
         }
